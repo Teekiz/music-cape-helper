@@ -5,18 +5,18 @@ import net.runelite.api.coords.WorldPoint;
 
 public enum Music
 {
-	SEVENTH_REALM("7th Realm", false, new WorldPoint(2743, 3154, 0), false, Region.KARAMJA, "Unlocked in the Brimhaven Dungeon", ""),
-	ADVENTURE("Adventure", false, new WorldPoint(3234, 3465, 0), false, Region.MITHALIN, "Unlocked in Varrock", ""),
+	SEVENTH_REALM("7th Realm", true, new WorldPoint(2743, 3154, 0), false, Region.KARAMJA, "Unlocked in the Brimhaven Dungeon", ""),
+	ADVENTURE("Adventure", true, new WorldPoint(3234, 3465, 0), false, Region.MITHALIN, "Unlocked in Varrock", ""),
 	;
 
 	@Getter
-	private final String song_name;
+	private final String songName;
 	@Getter
-	private final boolean is_required;
+	private final boolean isRequired;
 	@Getter
-	private final WorldPoint song_unlock_point;
+	private final WorldPoint songUnlockPoint;
 	@Getter
-	private final boolean is_quest;
+	private final boolean isQuest;
 	@Getter
 	private final Region region;
 	@Getter
@@ -25,12 +25,12 @@ public enum Music
 	private final String notes; //things like key required or level
 
 
-	Music(String song_name, boolean is_required, WorldPoint song_unlock_point, boolean is_quest, Region region, String description, String notes)
+	Music(String songName, boolean isRequired, WorldPoint songUnlockPoint, boolean isQuest, Region region, String description, String notes)
 	{
-		this.song_name = song_name;
-		this.is_required = is_required;
-		this.song_unlock_point = song_unlock_point;
-		this.is_quest = is_quest;
+		this.songName = songName;
+		this.isRequired = isRequired;
+		this.songUnlockPoint = songUnlockPoint;
+		this.isQuest = isQuest;
 		this.region = region;
 		this.description = description;
 		this.notes = notes;

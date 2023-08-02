@@ -46,7 +46,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-		musicCapeHelperPanel = new MusicCapeHelperPanel();
+		musicCapeHelperPanel = new MusicCapeHelperPanel(this);
 
 		//TODO change
 		final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "/skill_icons/overall.png");
