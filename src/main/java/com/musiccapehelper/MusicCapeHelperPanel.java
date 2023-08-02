@@ -49,7 +49,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 
 		for (Music song : Music.values())
 		{
-			JPanel musicRow = buildMusicRows(song);
+			JPanel musicRow = new MusicCapeHelperMusicRow(song, true);
 			musicPanel.add(musicRow);
 		}
 	}
@@ -74,7 +74,9 @@ public class MusicCapeHelperPanel extends PluginPanel
 		// -- Completed --
 		String[] completedComboText = {"All", "Locked Only", "Unlocked Only"};
 		JLabel completedLabel = new JLabel("Show: ");
+		completedLabel.setToolTipText("Filters music tracks based on whether they have been discovered or not.");
 		completedCombo = new JComboBox<>(completedComboText);
+		completedCombo.setToolTipText("Filters music tracks based on whether they have been discovered or not.");
 		completedLabel.setLabelFor(completedCombo);
 		completedCombo.setPreferredSize(new Dimension(80 ,20));
 		//todo - add listener
@@ -82,9 +84,11 @@ public class MusicCapeHelperPanel extends PluginPanel
 		settingsPanel.add(completedCombo);
 
 		// -- Unlocked During Quest
-		String[] unlockedDuringQuestText = {"All", "Yes", "No"};
-		JLabel unlockedDuringQuestLabel = new JLabel("Quest Unlocks: ");
+		String[] unlockedDuringQuestText = {"Yes", "No"};
+		JLabel unlockedDuringQuestLabel = new JLabel("Include Quest Unlocks: ");
+		unlockedDuringQuestLabel.setToolTipText("Filters music tracks unlocked during quests.");
 		unlockedDuringQuestCombo = new JComboBox<>(unlockedDuringQuestText);
+		unlockedDuringQuestCombo.setToolTipText("Filters music tracks unlocked during quests.");
 		unlockedDuringQuestLabel.setLabelFor(unlockedDuringQuestCombo);
 		unlockedDuringQuestLabel.setPreferredSize(new Dimension(80 ,20));
 		//todo - add listener
@@ -94,7 +98,9 @@ public class MusicCapeHelperPanel extends PluginPanel
 		// -- Region --
 		JLabel regionLabel = new JLabel("Region: ");
 		regionCombo = new JComboBox<>();
+		regionCombo.setToolTipText("Filters music based on the region they are unlocked in.");
 		regionLabel.setLabelFor(regionCombo);
+		regionLabel.setToolTipText("Filters music based on the region they are unlocked in.");
 		regionCombo.addItem("All");
 		for (Region regionName : Region.values()) {regionCombo.addItem(regionName.getName());}
 		regionCombo.setPreferredSize(new Dimension(80 ,20));
@@ -103,9 +109,11 @@ public class MusicCapeHelperPanel extends PluginPanel
 		settingsPanel.add(regionCombo);
 
 		// -- Order by --
-		String[] orderText = {"A-Z", "Z-A"};
+		String[] orderText = {"A-Z", "Z-A", "Region", "Required First", "Optional First"};
 		JLabel orderLabel = new JLabel("Order by: ");
+		orderLabel.setToolTipText("The order the tracks are shown in.");
 		orderCombo = new JComboBox<>(orderText);
+		orderCombo.setToolTipText("The order the tracks are shown in.");
 		orderLabel.setLabelFor(orderCombo);
 		orderCombo.setPreferredSize(new Dimension(80 ,20));
 		//todo - add listener
@@ -128,10 +136,13 @@ public class MusicCapeHelperPanel extends PluginPanel
 		musicHeaderPanel = new JPanel();
 		musicHeaderPanel.setLayout(new GridLayout(0, 3, 5, 5));
 		JLabel songNameLabelHeader = new JLabel("Name");
+		songNameLabelHeader.setToolTipText("The name of the music track.");
 		songNameLabelHeader.setFont(FontManager.getRunescapeBoldFont());
 		JLabel songRegionLabelHeader = new JLabel("Region");
+		songRegionLabelHeader.setToolTipText("The region the music track is unlocked in or where the associated quest starts.");
 		songRegionLabelHeader.setFont(FontManager.getRunescapeBoldFont());
 		JLabel songIsRequiredLabelHeader = new JLabel("Required?");
+		songIsRequiredLabelHeader.setToolTipText("Seasonal tracks are not required for the untrimmed cape.");
 		songIsRequiredLabelHeader.setFont(FontManager.getRunescapeBoldFont());
 		musicHeaderPanel.add(songNameLabelHeader);
 		musicHeaderPanel.add(songRegionLabelHeader);
@@ -140,25 +151,5 @@ public class MusicCapeHelperPanel extends PluginPanel
 		add(musicPanel);
 		musicPanel.add(musicHeaderPanel);
 		musicPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-	}
-
-	public JPanel buildMusicRows(Music song)
-	{
-		JPanel musicRow = new JPanel();
-		musicRow.setLayout(new GridLayout(0, 3, 5, 5));
-
-		JLabel songNameLabel = new JLabel(song.getSongName());
-		songNameLabel.setFont(FontManager.getRunescapeSmallFont());
-		JLabel songRegionLabel = new JLabel(song.getRegion().getName());
-		songRegionLabel.setFont(FontManager.getRunescapeSmallFont());
-		JLabel songIsRequiredLabel = new JLabel();
-		if (song.isRequired()){songIsRequiredLabel.setText("Yes");}
-		else {songIsRequiredLabel.setText("No");}
-		songIsRequiredLabel.setFont(FontManager.getRunescapeSmallFont());
-
-		musicRow.add(songNameLabel);
-		musicRow.add(songRegionLabel);
-		musicRow.add(songIsRequiredLabel);
-		return musicRow;
 	}
 }
