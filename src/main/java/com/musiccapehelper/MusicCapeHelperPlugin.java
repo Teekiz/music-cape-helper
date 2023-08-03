@@ -3,9 +3,13 @@ package com.musiccapehelper;
 import com.google.inject.Provides;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
@@ -42,11 +46,18 @@ public class MusicCapeHelperPlugin extends Plugin
 
 	private MusicCapeHelperPanel musicCapeHelperPanel;
 	private Widget[] musicList;
+	@Getter @Setter
+	private List<Widget> musicListFiltered;
 
 	@Override
 	protected void startUp() throws Exception
 	{
-		musicCapeHelperPanel = new MusicCapeHelperPanel(this);
+
+		//TODO remove later
+		//.filter(c -> Integer.toHexString(c.getTextColor()).equals("ff0000"))
+		//client.getWorldMap().setWorldMapPositionTarget(Music.ADVENTURE.getSong_unlock_point());
+
+		musicCapeHelperPanel = new MusicCapeHelperPanel(this, config);
 
 		//TODO change
 		final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "/skill_icons/overall.png");
@@ -67,31 +78,17 @@ public class MusicCapeHelperPlugin extends Plugin
 	}
 
 	@Subscribe
-	public void onGameStateChanged(GameStateChanged gameStateChanged)
-	{
-		if (gameStateChanged.getGameState() == GameState.LOGGED_IN)
-		{
-			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Example says " + config.greeting(), null);
-		}
-	}
-
-	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded widgetLoaded)
 	{
+		if (widgetLoaded.getGroupId() != 239) {}
 		clientThread.invokeAtTickEnd(() ->
 		{
 			musicList = client.getWidget(239, 6).getChildren();
-
-			List<Widget> filteredList = Arrays.stream(musicList)
-				.filter(c -> Integer.toHexString(c.getTextColor()).equals("ff0000"))
+			musicListFiltered = Arrays.stream(musicList)
 				.collect(Collectors.toList());
-
-			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", "Widget loaded ABC: " + filteredList.size(), null);
-
-			//client.getWorldMap().setWorldMapPositionTarget(Music.ADVENTURE.getSong_unlock_point());
+			musicCapeHelperPanel.updateAllMusicPanelRows();
 		});
 	}
-
 
 	@Provides
 	MusicCapeHelperConfig provideConfig(ConfigManager configManager)

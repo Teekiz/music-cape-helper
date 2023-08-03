@@ -1,21 +1,22 @@
 package com.musiccapehelper;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.util.EnumSet;
-import java.util.Enumeration;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import lombok.Getter;
+import lombok.Setter;
+import net.runelite.api.widgets.Widget;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.DynamicGridLayout;
 import net.runelite.client.ui.FontManager;
@@ -25,6 +26,7 @@ import net.runelite.client.ui.components.IconTextField;
 public class MusicCapeHelperPanel extends PluginPanel
 {
 	private MusicCapeHelperPlugin plugin;
+	private MusicCapeHelperConfig config;
 	//settings and search components
 	private IconTextField searchBar;
 	private JPanel settingsPanel;
@@ -36,10 +38,13 @@ public class MusicCapeHelperPanel extends PluginPanel
 	//music row components
 	private JPanel musicPanel;
 	private JPanel musicHeaderPanel;
+	private List<MusicCapeHelperPanelMusicRow> musicRows;
 
-	public MusicCapeHelperPanel(MusicCapeHelperPlugin plugin)
+	public MusicCapeHelperPanel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
 		this.plugin = plugin;
+		this.config = config;
+
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(new EmptyBorder(10, 10, 10, 10));
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
@@ -47,11 +52,8 @@ public class MusicCapeHelperPanel extends PluginPanel
 		buildSearchAndSettings();
 		buildMusicPanel();
 
-		for (Music song : Music.values())
-		{
-			JPanel musicRow = new MusicCapeHelperMusicRow(song, true);
-			musicPanel.add(musicRow);
-		}
+		musicRows = createMusicRows();
+		addMusicRows();
 	}
 
 	public void buildSearchAndSettings()
@@ -148,8 +150,64 @@ public class MusicCapeHelperPanel extends PluginPanel
 		musicHeaderPanel.add(songRegionLabelHeader);
 		musicHeaderPanel.add(songIsRequiredLabelHeader);
 
+		add(musicHeaderPanel);
 		add(musicPanel);
-		musicPanel.add(musicHeaderPanel);
-		musicPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+	}
+
+	public List<MusicCapeHelperPanelMusicRow> createMusicRows()
+	{
+		List<MusicCapeHelperPanelMusicRow> musicList = new ArrayList<>();
+
+		if (plugin.getMusicListFiltered() != null)
+		{
+			for (Music music : Music.values())
+			{
+				for (Widget widget : plugin.getMusicListFiltered())
+				{
+					if (music.getSongName().equals(widget.getText()))
+					{
+						if (Integer.toHexString(widget.getTextColor()).equals("dc10d"))
+						{
+							musicList.add(new MusicCapeHelperPanelMusicRow(music, true));
+						}
+						else
+						{
+							musicList.add(new MusicCapeHelperPanelMusicRow(music, false));
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			for (Music music : Music.values())
+			{
+				musicList.add(new MusicCapeHelperPanelMusicRow(music, false));
+			}
+		}
+		return musicList;
+	}
+
+	public void addMusicRows()
+	{
+		if (musicPanel != null)
+		{
+			for (MusicCapeHelperPanelMusicRow row : musicRows)
+			{
+				musicPanel.add(row);
+			}
+		}
+	}
+
+	public void updateAllMusicPanelRows()
+	{
+		SwingUtilities.invokeLater(() ->
+			{
+				musicPanel.removeAll();
+				musicRows = createMusicRows();
+				addMusicRows();
+				musicPanel.revalidate();
+				musicPanel.repaint();
+			});
 	}
 }

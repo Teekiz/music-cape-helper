@@ -1,28 +1,39 @@
 package com.musiccapehelper;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
+import lombok.Getter;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
-public class MusicCapeHelperMusicRow extends JPanel
+public class MusicCapeHelperPanelMusicRow extends JPanel
 {
+	@Getter
 	private Music music;
+	@Getter
 	private boolean completed;
+	private Color labelColour;
 
-	public MusicCapeHelperMusicRow(Music song, boolean completed)
+	public MusicCapeHelperPanelMusicRow(Music song, boolean completed)
 	{
 		this.music = song;
 		this.completed = completed;
 
 		setLayout(new GridLayout(0, 3, 5, 5));
+		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
+
+		if (completed) {labelColour = Color.GREEN;}
+		else {labelColour = Color.RED;}
 
 		JLabel songNameLabel = new JLabel(song.getSongName());
 		songNameLabel.setFont(FontManager.getRunescapeSmallFont());
+		songNameLabel.setForeground(labelColour);
 		JLabel songRegionLabel = new JLabel(song.getRegion().getName());
 		songRegionLabel.setFont(FontManager.getRunescapeSmallFont());
 		JLabel songIsRequiredLabel = new JLabel();
