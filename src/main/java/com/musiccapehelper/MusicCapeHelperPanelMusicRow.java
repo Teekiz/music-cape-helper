@@ -1,5 +1,6 @@
 package com.musiccapehelper;
 
+import com.musiccapehelper.enums.Music;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;

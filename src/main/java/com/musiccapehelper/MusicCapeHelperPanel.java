@@ -1,24 +1,22 @@
 package com.musiccapehelper;
 
-import java.awt.Color;
+import com.musiccapehelper.enums.Locked;
+import com.musiccapehelper.enums.OrderBy;
+import com.musiccapehelper.enums.Region;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import lombok.Getter;
-import lombok.Setter;
-import net.runelite.api.Client;
-import net.runelite.api.widgets.Widget;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.DynamicGridLayout;
 import net.runelite.client.ui.FontManager;
@@ -33,8 +31,9 @@ public class MusicCapeHelperPanel extends PluginPanel
 	private IconTextField searchBar;
 	private JPanel settingsPanel;
 	private JComboBox<String> completedCombo;
-	private JComboBox<String> unlockedDuringQuestCombo;
 	private JComboBox<String> regionCombo;
+	private JComboBox<String> unlockedDuringQuestCombo;
+	private JComboBox<String> includeOptionalCombo;
 	private JComboBox<String> orderCombo;
 
 	//music row components
@@ -71,33 +70,31 @@ public class MusicCapeHelperPanel extends PluginPanel
 		//Order of the panel Components - Search Bar, Settings tab, Music List
 		// -- Settings Panel --
 		settingsPanel = new JPanel();
-		settingsPanel.setLayout(new DynamicGridLayout(4, 2, 5, 5));
+		settingsPanel.setLayout(new DynamicGridLayout(5, 2, 5, 5));
 		settingsPanel.setBorder(new EmptyBorder(10, 0, 10, 0));
 		settingsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		// -- Completed --
-		String[] completedComboText = {"All", "Locked Only", "Unlocked Only"};
 		JLabel completedLabel = new JLabel("Show: ");
 		completedLabel.setToolTipText("Filters music tracks based on whether they have been discovered or not.");
-		completedCombo = new JComboBox<>(completedComboText);
+		completedCombo = new JComboBox<>();
 		completedCombo.setToolTipText("Filters music tracks based on whether they have been discovered or not.");
 		completedLabel.setLabelFor(completedCombo);
+		for (Locked locked : Locked.values()) {completedCombo.addItem(locked.getText());}
 		completedCombo.setPreferredSize(new Dimension(80 ,20));
 		//todo - add listener
+		if (config.panelSettingLocked() != null) {completedCombo.setSelectedItem(config.panelSettingLocked());}
+		else {completedCombo.setSelectedIndex(0);}
+		completedCombo.addActionListener(e ->
+		{
+			config.panelSettingLocked(
+				Arrays.stream(Locked.values())
+				.filter(n -> n.getText().equals(completedCombo.getSelectedItem()))
+				.findFirst().orElse(Locked.ALL));
+		});
+
 		settingsPanel.add(completedLabel);
 		settingsPanel.add(completedCombo);
-
-		// -- Unlocked During Quest
-		String[] unlockedDuringQuestText = {"Yes", "No"};
-		JLabel unlockedDuringQuestLabel = new JLabel("Include Quest Unlocks: ");
-		unlockedDuringQuestLabel.setToolTipText("Filters music tracks unlocked during quests.");
-		unlockedDuringQuestCombo = new JComboBox<>(unlockedDuringQuestText);
-		unlockedDuringQuestCombo.setToolTipText("Filters music tracks unlocked during quests.");
-		unlockedDuringQuestLabel.setLabelFor(unlockedDuringQuestCombo);
-		unlockedDuringQuestLabel.setPreferredSize(new Dimension(80 ,20));
-		//todo - add listener
-		settingsPanel.add(unlockedDuringQuestLabel);
-		settingsPanel.add(unlockedDuringQuestCombo);
 
 		// -- Region --
 		JLabel regionLabel = new JLabel("Region: ");
@@ -112,13 +109,37 @@ public class MusicCapeHelperPanel extends PluginPanel
 		settingsPanel.add(regionLabel);
 		settingsPanel.add(regionCombo);
 
+		// -- Unlocked During Quest
+		String[] unlockedDuringQuestText = {"Yes", "No"};
+		JLabel unlockedDuringQuestLabel = new JLabel("Include Quest Unlocks: ");
+		unlockedDuringQuestLabel.setToolTipText("Filters music tracks unlocked during quests.");
+		unlockedDuringQuestCombo = new JComboBox<>(unlockedDuringQuestText);
+		unlockedDuringQuestCombo.setToolTipText("Filters music tracks unlocked during quests.");
+		unlockedDuringQuestLabel.setLabelFor(unlockedDuringQuestCombo);
+		unlockedDuringQuestLabel.setPreferredSize(new Dimension(80 ,20));
+		//todo - add listener
+		settingsPanel.add(unlockedDuringQuestLabel);
+		settingsPanel.add(unlockedDuringQuestCombo);
+
+		// -- Included Optional
+		String[] includeOptionalText = {"Yes", "No"};
+		JLabel includeOptionalLabel = new JLabel("Include Optional Unlocks: ");
+		includeOptionalLabel.setToolTipText("Filters music tracks that are not required for the basic music cape unlock.");
+		includeOptionalCombo = new JComboBox<>(includeOptionalText);
+		includeOptionalCombo.setToolTipText("Filters music tracks that are not required for the basic music cape unlock.");
+		includeOptionalLabel.setLabelFor(includeOptionalCombo);
+		includeOptionalLabel.setPreferredSize(new Dimension(80 ,20));
+		//todo - add listener
+		settingsPanel.add(includeOptionalLabel);
+		settingsPanel.add(includeOptionalCombo);
+
 		// -- Order by --
-		String[] orderText = {"A-Z", "Z-A", "Region", "Required First", "Optional First"};
 		JLabel orderLabel = new JLabel("Order by: ");
 		orderLabel.setToolTipText("The order the tracks are shown in.");
-		orderCombo = new JComboBox<>(orderText);
+		orderCombo = new JComboBox<>();
 		orderCombo.setToolTipText("The order the tracks are shown in.");
 		orderLabel.setLabelFor(orderCombo);
+		for (OrderBy order : OrderBy.values()) {orderCombo.addItem(order.getText());}
 		orderCombo.setPreferredSize(new Dimension(80 ,20));
 		//todo - add listener
 		settingsPanel.add(orderLabel);

@@ -1,4 +1,4 @@
-package com.musiccapehelper;
+package com.musiccapehelper.enums;
 
 import lombok.Getter;
 import net.runelite.api.coords.WorldPoint;
@@ -35,21 +35,4 @@ public enum Music
 		this.description = description;
 		this.notes = notes;
 	}
-}
-
-enum Region
-{
-	ASGARNIA("Asgarnia"), FREMENNIK_PROVINCE("Fremennik"), GREAT_KOUREND("Kourend"),
-	KANDARIN("Kandarin"), KARAMJA("Karamja"), KEBOS_LOWLANDS("Kebos"),
-	KHARIDIAN_DESERT("Desert"), MITHALIN("Mithalin"), MORYTANIA("Morytania"),
-	TIRANNWN("Tirannwn"), WILDERNESS("Wilderness"), OTHER("Other");
-
-	@Getter
-	private String name;
-	Region(String name)
-	{
-		this.name = name;
-	}
-
-
 }

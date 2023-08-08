@@ -1,41 +1,28 @@
 package com.musiccapehelper;
 
 import com.google.inject.Provides;
+import com.musiccapehelper.enums.Music;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.events.ClientTick;
-import net.runelite.api.events.GameStateChanged;
-import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.worldmap.WorldMap;
-import net.runelite.api.worldmap.WorldMapData;
-import net.runelite.api.worldmap.WorldMapRenderer;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.worldmap.WorldMapPlugin;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
-import net.runelite.client.ui.overlay.worldmap.WorldMapOverlay;
-import net.runelite.client.ui.overlay.worldmap.WorldMapPoint;
 import net.runelite.client.ui.overlay.worldmap.WorldMapPointManager;
 import net.runelite.client.util.ImageUtil;
-import org.w3c.dom.events.Event;
 
 @Slf4j
 @PluginDescriptor(
@@ -114,7 +101,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	{
 		for (Widget widget : client.getWidget(239, 6).getChildren())
 		{
-			for (Music music : musicList.keySet())
+			for (Music music : Music.values())
 			{
 				if (widget.getText().equals(music.getSongName()))
 				{
@@ -126,6 +113,11 @@ public class MusicCapeHelperPlugin extends Plugin
 			}
 		}
 		musicCapeHelperPanel.updateAllMusicPanelRows();
+	}
+
+	public void filterMusicList(Music music, boolean completed)
+	{
+
 	}
 
 	public void rowClicked(MusicCapeHelperPanelMusicRow row)
@@ -140,27 +132,22 @@ public class MusicCapeHelperPlugin extends Plugin
 		if (check == null)
 		{
 			mapPoints.add(new MusicCapeHelperWorldMapPoint(row.getMusic(), row.isCompleted()));
-			addMarkerToMap();
 		}
 		else
 		{
 			mapPoints.remove(check);
-			removeMarkerFromMap(check);
 		}
+
+		updateMarkersOnMap();
 	}
 
-	public void addMarkerToMap()
+	public void updateMarkersOnMap()
 	{
 		worldMapPointManager.removeIf(MusicCapeHelperWorldMapPoint.class::isInstance);
 		for (MusicCapeHelperWorldMapPoint point : mapPoints)
 		{
 			worldMapPointManager.add(new MusicCapeHelperWorldMapPoint(point.music, point.completed));
 		}
-	}
-
-	public void removeMarkerFromMap(MusicCapeHelperWorldMapPoint point)
-	{
-		worldMapPointManager.remove(point);
 	}
 
 	@Provides
