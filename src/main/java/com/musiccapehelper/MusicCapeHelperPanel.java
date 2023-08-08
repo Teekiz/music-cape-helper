@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import lombok.Getter;
 import lombok.Setter;
+import net.runelite.api.Client;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.DynamicGridLayout;
@@ -156,36 +158,10 @@ public class MusicCapeHelperPanel extends PluginPanel
 
 	public List<MusicCapeHelperPanelMusicRow> createMusicRows()
 	{
-		List<MusicCapeHelperPanelMusicRow> musicList = new ArrayList<>();
-
-		if (plugin.getMusicListFiltered() != null)
-		{
-			for (Music music : Music.values())
-			{
-				for (Widget widget : plugin.getMusicListFiltered())
-				{
-					if (music.getSongName().equals(widget.getText()))
-					{
-						if (Integer.toHexString(widget.getTextColor()).equals("dc10d"))
-						{
-							musicList.add(new MusicCapeHelperPanelMusicRow(music, true));
-						}
-						else
-						{
-							musicList.add(new MusicCapeHelperPanelMusicRow(music, false));
-						}
-					}
-				}
-			}
-		}
-		else
-		{
-			for (Music music : Music.values())
-			{
-				musicList.add(new MusicCapeHelperPanelMusicRow(music, false));
-			}
-		}
-		return musicList;
+		//todo add filters base on what the current settings are
+		List<MusicCapeHelperPanelMusicRow> musicListRow = new ArrayList<>();
+		plugin.getMusicList().forEach((key, value) -> musicListRow.add(new MusicCapeHelperPanelMusicRow(key, value, plugin)));
+		return musicListRow;
 	}
 
 	public void addMusicRows()

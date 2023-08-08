@@ -18,11 +18,13 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 	@Getter
 	private boolean completed;
 	private Color labelColour;
+	private MusicCapeHelperPlugin plugin;
 
-	public MusicCapeHelperPanelMusicRow(Music song, boolean completed)
+	public MusicCapeHelperPanelMusicRow(Music song, boolean completed, MusicCapeHelperPlugin plugin)
 	{
 		this.music = song;
 		this.completed = completed;
+		this.plugin = plugin;
 
 		setLayout(new GridLayout(0, 3, 5, 5));
 		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
@@ -67,6 +69,8 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 				//todo - what happens when mouse is clicked
 				//check if client is logged in
 				//right click, left click?
+				//dispatchEvent(e);
+				plugin.rowClicked(MusicCapeHelperPanelMusicRow.this);
 			}
 		});
 	}

@@ -1,5 +1,6 @@
 package com.musiccapehelper;
 
+import java.util.HashMap;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -16,4 +17,19 @@ public interface MusicCapeHelperConfig extends Config
 	{
 		return "Hello";
 	}
+
+	@ConfigItem(
+		keyName = "musicList",
+		name = "",
+		description = "",
+		hidden = true
+	)
+	HashMap<Music, Boolean> musicList();
+
+	@ConfigItem(
+		keyName = "mustList",
+		name = "",
+		description = ""
+	)
+	void musicList(HashMap<Music, Boolean> musicList);
 }

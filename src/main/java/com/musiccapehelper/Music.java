@@ -6,7 +6,7 @@ import net.runelite.api.coords.WorldPoint;
 public enum Music
 {
 	SEVENTH_REALM("7th Realm", true, new WorldPoint(2743, 3154, 0), false, Region.KARAMJA, "Unlocked in the Brimhaven Dungeon", ""),
-	ADVENTURE("Adventure", true, new WorldPoint(3234, 3465, 0), false, Region.MITHALIN, "Unlocked in Varrock", ""),
+	ADVENTURE("Adventure", true, new WorldPoint(3245, 3465, 0), false, Region.MITHALIN, "Unlocked in Varrock", ""),
 	;
 
 	@Getter
