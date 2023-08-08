@@ -112,10 +112,7 @@ public class MusicCapeHelperPlugin extends Plugin
 
 	public void updateMusicList()
 	{
-		List<Widget> musicListFiltered = Arrays.stream(client.getWidget(239, 6).getChildren())
-			.collect(Collectors.toList());
-
-		for (Widget widget : musicListFiltered)
+		for (Widget widget : client.getWidget(239, 6).getChildren())
 		{
 			for (Music music : musicList.keySet())
 			{
