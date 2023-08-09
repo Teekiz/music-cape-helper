@@ -1,7 +1,9 @@
 package com.musiccapehelper;
 
 import com.musiccapehelper.enums.Locked;
+import com.musiccapehelper.enums.Optional;
 import com.musiccapehelper.enums.OrderBy;
+import com.musiccapehelper.enums.Quest;
 import com.musiccapehelper.enums.Region;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -100,7 +102,6 @@ public class MusicCapeHelperPanel extends PluginPanel
 		regionCombo.setToolTipText("Filters music based on the region they are unlocked in.");
 		regionLabel.setLabelFor(regionCombo);
 		regionLabel.setToolTipText("Filters music based on the region they are unlocked in.");
-		regionCombo.addItem("All");
 		for (Region regionName : Region.values()) {regionCombo.addItem(regionName.getName());}
 		regionCombo.setPreferredSize(new Dimension(80 ,20));
 		if (config.panelSettingRegion() != null) {regionCombo.setSelectedItem(config.panelSettingRegion().getName());}
@@ -116,37 +117,39 @@ public class MusicCapeHelperPanel extends PluginPanel
 		settingsPanel.add(regionCombo);
 
 		// -- Unlocked During Quest
-		String[] unlockedDuringQuestText = {"Yes", "No"};
 		JLabel unlockedDuringQuestLabel = new JLabel("Include Quest Unlocks: ");
 		unlockedDuringQuestLabel.setToolTipText("Filters music tracks unlocked during quests.");
-		unlockedDuringQuestCombo = new JComboBox<>(unlockedDuringQuestText);
+		unlockedDuringQuestCombo = new JComboBox<>();
 		unlockedDuringQuestCombo.setToolTipText("Filters music tracks unlocked during quests.");
+		for (Quest quest : Quest.values()) {unlockedDuringQuestCombo.addItem(quest.getText());}
 		unlockedDuringQuestLabel.setLabelFor(unlockedDuringQuestCombo);
 		unlockedDuringQuestLabel.setPreferredSize(new Dimension(80 ,20));
-		if (config.panelSettingQuest()) {unlockedDuringQuestCombo.setSelectedIndex(0);}
-		else {unlockedDuringQuestCombo.setSelectedIndex(1);}
+		if (config.panelSettingQuest() != null) {unlockedDuringQuestCombo.setSelectedItem(config.panelSettingQuest().getText());}
 		unlockedDuringQuestCombo.addActionListener(e ->
 		{
-			if (unlockedDuringQuestCombo.getSelectedIndex() == 0) {config.panelSettingQuest(true);}
-			else {config.panelSettingQuest(false);}
+			config.panelSettingQuest(
+				Arrays.stream(Quest.values())
+					.filter(n -> n.getText().equals(unlockedDuringQuestCombo.getSelectedItem()))
+					.findFirst().orElse(Quest.ALL));
 		});
 		settingsPanel.add(unlockedDuringQuestLabel);
 		settingsPanel.add(unlockedDuringQuestCombo);
 
 		// -- Included Optional
-		String[] includeOptionalText = {"Yes", "No"};
 		JLabel includeOptionalLabel = new JLabel("Include Optional Unlocks: ");
 		includeOptionalLabel.setToolTipText("Filters music tracks that are not required for the basic music cape unlock.");
-		includeOptionalCombo = new JComboBox<>(includeOptionalText);
+		includeOptionalCombo = new JComboBox<>();
+		for (Optional optional : Optional.values()) {includeOptionalCombo.addItem(optional.getText());}
 		includeOptionalCombo.setToolTipText("Filters music tracks that are not required for the basic music cape unlock.");
 		includeOptionalLabel.setLabelFor(includeOptionalCombo);
 		includeOptionalLabel.setPreferredSize(new Dimension(80 ,20));
-		if (config.panelSettingOptional()) {includeOptionalCombo.setSelectedIndex(0);}
-		else {includeOptionalCombo.setSelectedIndex(1);}
+		if (config.panelSettingOptional() != null) {includeOptionalCombo.setSelectedItem(config.panelSettingOptional().getText());}
 		includeOptionalCombo.addActionListener(e ->
 		{
-			if (includeOptionalCombo.getSelectedIndex() == 0) {config.panelSettingOptional(true);}
-			else {config.panelSettingOptional(false);}
+			config.panelSettingOptional(
+				Arrays.stream(Optional.values())
+					.filter(n -> n.getText().equals(includeOptionalCombo.getSelectedItem()))
+					.findFirst().orElse(Optional.ALL));
 		});
 		settingsPanel.add(includeOptionalLabel);
 		settingsPanel.add(includeOptionalCombo);
@@ -207,8 +210,10 @@ public class MusicCapeHelperPanel extends PluginPanel
 	{
 		//todo add filters base on what the current settings are
 		List<MusicCapeHelperPanelMusicRow> musicListRow = new ArrayList<>();
-		plugin.getMusicList().forEach((key, value) -> musicListRow.add(new MusicCapeHelperPanelMusicRow(key, value, plugin)));
+		plugin.filterMusicList().forEach((key, value) -> musicListRow.add(new MusicCapeHelperPanelMusicRow(key, value, plugin)));
 		return musicListRow;
+
+		//getMusicList()
 	}
 
 	public void addMusicRows()

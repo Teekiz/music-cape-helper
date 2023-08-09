@@ -1,11 +1,18 @@
 package com.musiccapehelper;
 
 import com.google.inject.Provides;
+import com.musiccapehelper.enums.Locked;
 import com.musiccapehelper.enums.Music;
+import com.musiccapehelper.enums.Optional;
+import com.musiccapehelper.enums.OrderBy;
+import com.musiccapehelper.enums.Quest;
+import com.musiccapehelper.enums.Region;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,8 +22,10 @@ import net.runelite.api.GameState;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
@@ -61,11 +70,13 @@ public class MusicCapeHelperPlugin extends Plugin
 			for (Music music : Music.values())
 			{
 				musicList.put(music, false);
+				clientThread.invokeAtTickEnd(this::updateMusicList);
 			}
 		}
 		else
 		{
 			musicList = config.musicList();
+			clientThread.invokeAtTickEnd(this::updateMusicList);
 		}
 
 		musicCapeHelperPanel = new MusicCapeHelperPanel(this, config);
@@ -92,6 +103,12 @@ public class MusicCapeHelperPlugin extends Plugin
 	}
 
 	@Subscribe
+	public void onConfigChanged(ConfigChanged configChanged)
+	{
+		clientThread.invokeAtTickEnd(this::updateMusicList);
+	}
+
+	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded widgetLoaded)
 	{
 		if (widgetLoaded.getGroupId() != 239)
@@ -104,25 +121,85 @@ public class MusicCapeHelperPlugin extends Plugin
 
 	public void updateMusicList()
 	{
-		for (Widget widget : client.getWidget(239, 6).getChildren())
+		for (Music music : Music.values())
 		{
-			for (Music music : Music.values())
+			if (client.getWidget(239, 6) != null)
 			{
-				if (widget.getText().equals(music.getSongName()))
+				for (Widget widget : client.getWidget(239, 6).getChildren())
 				{
-					if (Integer.toHexString(widget.getTextColor()).equals("dc10d"))
+					if (widget.getText().equals(music.getSongName()))
 					{
-						musicList.put(music, true);
+						if (Integer.toHexString(widget.getTextColor()).equals("dc10d"))
+						{
+
+							musicList.put(music, true);
+						}
+						else
+						{
+							musicList.put(music, false);
+						}
 					}
 				}
 			}
+			else
+			{
+				musicList.put(music, false);
+			}
 		}
 		musicCapeHelperPanel.updateAllMusicPanelRows();
+
 	}
 
-	public void filterMusicList(Music music, boolean completed)
+	public HashMap<Music, Boolean> filterMusicList()
 	{
+		HashMap<Music, Boolean> filteredList = musicList;
 
+		//check one - does the music match the selected settings for quest discovered status
+		if (!config.panelSettingLocked().equals(Locked.ALL))
+		{
+			if (config.panelSettingLocked().equals(Locked.LOCKED))
+			{
+				filteredList.entrySet().removeIf(b -> b.getValue());
+			}
+			else
+			{
+				filteredList.entrySet().removeIf(b -> !b.getValue());
+			}
+		}
+
+		//check two - does the music match the selected settings for the selected region
+		if (!config.panelSettingRegion().equals(Region.ALL))
+		{
+			filteredList.entrySet().removeIf(r -> !r.getKey().getRegion().equals(config.panelSettingRegion()));
+		}
+
+		//check three - does the music match the selected settings for the selected quest option
+		if (!config.panelSettingQuest().equals(Quest.ALL))
+		{
+			if (config.panelSettingQuest().equals(Quest.NOT_QUEST_UNLOCK))
+			{
+				filteredList.entrySet().removeIf(q -> q.getKey().isQuest());
+			}
+			else
+			{
+				filteredList.entrySet().removeIf(q -> !q.getKey().isQuest());
+			}
+		}
+
+		//check four - does the music match the selected settings for the selected optional option
+		if (!config.panelSettingOptional().equals(Optional.ALL))
+		{
+			if (config.panelSettingOptional().equals(Optional.OPTIONAL_ONLY))
+			{
+				filteredList.entrySet().removeIf(q -> q.getKey().isRequired());
+			}
+			else
+			{
+				filteredList.entrySet().removeIf(q -> !q.getKey().isRequired());
+			}
+		}
+
+		return filteredList;
 	}
 
 	public void rowClicked(MusicCapeHelperPanelMusicRow row)

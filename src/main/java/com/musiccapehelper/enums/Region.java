@@ -4,10 +4,11 @@ import lombok.Getter;
 
 public enum Region
 {
-	ASGARNIA("Asgarnia"), FREMENNIK_PROVINCE("Fremennik"), GREAT_KOUREND("Kourend"),
-	KANDARIN("Kandarin"), KARAMJA("Karamja"), KEBOS_LOWLANDS("Kebos"),
-	KHARIDIAN_DESERT("Desert"), MITHALIN("Mithalin"), MORYTANIA("Morytania"),
-	TIRANNWN("Tirannwn"), WILDERNESS("Wilderness"), OTHER("Other"), ALL("All");
+	ALL("All"), ASGARNIA("Asgarnia"), FREMENNIK_PROVINCE("Fremennik"),
+	GREAT_KOUREND("Kourend"), KANDARIN("Kandarin"), KARAMJA("Karamja"),
+	KEBOS_LOWLANDS("Kebos"), KHARIDIAN_DESERT("Desert"), MITHALIN("Mithalin"),
+	MORYTANIA("Morytania"), TIRANNWN("Tirannwn"), WILDERNESS("Wilderness"),
+	OTHER("Other");
 
 	@Getter
 	private String name;
