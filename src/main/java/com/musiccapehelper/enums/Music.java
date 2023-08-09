@@ -7,6 +7,7 @@ public enum Music
 {
 	SEVENTH_REALM("7th Realm", true, new WorldPoint(2743, 3154, 0), false, Region.KARAMJA, "Unlocked in the Brimhaven Dungeon", ""),
 	ADVENTURE("Adventure", true, new WorldPoint(3245, 3465, 0), false, Region.MITHALIN, "Unlocked in Varrock", ""),
+	EASTER_JIG("Easter Jig", false, new WorldPoint(3245, 3465, 0), false, Region.OTHER, "This track unlocks during an Easter event.", ""),
 	;
 
 	@Getter

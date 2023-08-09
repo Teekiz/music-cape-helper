@@ -15,22 +15,6 @@ import net.runelite.client.config.ConfigSection;
 @ConfigGroup("MusicCapeHelperConfig")
 public interface MusicCapeHelperConfig extends Config
 {
-	//Saved values
-	@ConfigItem(
-		keyName = "musicList",
-		name = "",
-		description = "",
-		hidden = true
-	)
-	HashMap<Music, Boolean> musicList();
-
-	@ConfigItem(
-		keyName = "mustList",
-		name = "",
-		description = ""
-	)
-	void musicList(HashMap<Music, Boolean> musicList);
-
 	//Panel settings
 	@ConfigSection(
 		name = "PanelSettings",

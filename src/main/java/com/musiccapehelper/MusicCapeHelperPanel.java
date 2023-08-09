@@ -212,8 +212,6 @@ public class MusicCapeHelperPanel extends PluginPanel
 		List<MusicCapeHelperPanelMusicRow> musicListRow = new ArrayList<>();
 		plugin.filterMusicList().forEach((key, value) -> musicListRow.add(new MusicCapeHelperPanelMusicRow(key, value, plugin)));
 		return musicListRow;
-
-		//getMusicList()
 	}
 
 	public void addMusicRows()

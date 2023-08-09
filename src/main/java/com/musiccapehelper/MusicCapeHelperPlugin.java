@@ -63,23 +63,11 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-		//todo - check at startup for config
-		if (config.musicList() == null)
+		musicList = new HashMap<>();
+		for (Music music : Music.values())
 		{
-			musicList = new HashMap<>();
-			for (Music music : Music.values())
-			{
-				musicList.put(music, false);
-				clientThread.invokeAtTickEnd(this::updateMusicList);
-			}
+			musicList.put(music, false);
 		}
-		else
-		{
-			musicList = config.musicList();
-			clientThread.invokeAtTickEnd(this::updateMusicList);
-		}
-
-		musicCapeHelperPanel = new MusicCapeHelperPanel(this, config);
 
 		//TODO change
 		final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "/skill_icons/overall.png");
@@ -92,14 +80,15 @@ public class MusicCapeHelperPlugin extends Plugin
 
 		clientToolbar.addNavigation(navigationButton);
 
+		clientThread.invokeAtTickEnd(() -> musicCapeHelperPanel.updateAllMusicPanelRows());
+
 		mapPoints = new ArrayList<>();
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
-		//saves the music list
-		config.musicList(musicList);
+
 	}
 
 	@Subscribe
@@ -140,10 +129,6 @@ public class MusicCapeHelperPlugin extends Plugin
 						}
 					}
 				}
-			}
-			else
-			{
-				musicList.put(music, false);
 			}
 		}
 		musicCapeHelperPanel.updateAllMusicPanelRows();
