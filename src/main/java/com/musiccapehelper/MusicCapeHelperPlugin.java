@@ -63,6 +63,10 @@ public class MusicCapeHelperPlugin extends Plugin
 				musicList.put(music, false);
 			}
 		}
+		else
+		{
+			musicList = config.musicList();
+		}
 
 		musicCapeHelperPanel = new MusicCapeHelperPanel(this, config);
 
@@ -83,7 +87,8 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Override
 	protected void shutDown() throws Exception
 	{
-
+		//saves the music list
+		config.musicList(musicList);
 	}
 
 	@Subscribe

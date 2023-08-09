@@ -148,9 +148,6 @@ public class MusicCapeHelperPanel extends PluginPanel
 			if (includeOptionalCombo.getSelectedIndex() == 0) {config.panelSettingOptional(true);}
 			else {config.panelSettingOptional(false);}
 		});
-		settingsPanel.add(unlockedDuringQuestLabel);
-		settingsPanel.add(unlockedDuringQuestCombo);
-
 		settingsPanel.add(includeOptionalLabel);
 		settingsPanel.add(includeOptionalCombo);
 

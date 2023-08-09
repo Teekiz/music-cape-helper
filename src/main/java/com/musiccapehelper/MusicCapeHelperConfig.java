@@ -5,25 +5,13 @@ import com.musiccapehelper.enums.OrderBy;
 import com.musiccapehelper.enums.Region;
 import com.musiccapehelper.enums.Locked;
 import java.util.HashMap;
-import lombok.Getter;
-import lombok.Setter;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
-@ConfigGroup("example")
+@ConfigGroup("MusicCapeHelperConfig")
 public interface MusicCapeHelperConfig extends Config
 {
-	@ConfigItem(
-		keyName = "greeting",
-		name = "Welcome Greeting",
-		description = "The message to show to the user when they login"
-	)
-	default String greeting()
-	{
-		return "Hello";
-	}
-
 	//Panel settings
 	@ConfigItem(
 		keyName = "panelSettingLocked",
@@ -48,7 +36,7 @@ public interface MusicCapeHelperConfig extends Config
 		description = "Used in panel for combo-box quest",
 		hidden = true
 	)
-	boolean panelSettingQuest();
+	default boolean panelSettingQuest() {return true;}
 
 	@ConfigItem(
 		keyName = "panelSettingQuest",
@@ -74,14 +62,13 @@ public interface MusicCapeHelperConfig extends Config
 	)
 	void panelSettingRegion(Region region);
 
-
 	@ConfigItem(
 		keyName = "panelSettingOptional",
 		name = "",
 		description = "Used in panel for combo-box optional",
 		hidden = true
 	)
-	boolean panelSettingOptional();
+	default boolean panelSettingOptional() {return true;}
 
 	@ConfigItem(
 		keyName = "panelSettingOptional",
