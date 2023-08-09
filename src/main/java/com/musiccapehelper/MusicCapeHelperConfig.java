@@ -37,7 +37,8 @@ public interface MusicCapeHelperConfig extends Config
 	@ConfigItem(
 		keyName = "panelSettingLocked",
 		name = "",
-		description = "Used in panel for combo-box locked"
+		description = "Used in panel for combo-box locked",
+		hidden = true
 	)
 	void panelSettingLocked(Locked locked);
 
@@ -47,7 +48,7 @@ public interface MusicCapeHelperConfig extends Config
 		description = "Used in panel for combo-box quest",
 		hidden = true
 	)
-	default boolean panelSettingQuest() {return true;}
+	boolean panelSettingQuest();
 
 	@ConfigItem(
 		keyName = "panelSettingQuest",
@@ -63,7 +64,7 @@ public interface MusicCapeHelperConfig extends Config
 		description = "Used in panel for combo-box region",
 		hidden = true
 	)
-	default Region panelSettingRegion() {return Region.ALL;}
+	Region panelSettingRegion();
 
 	@ConfigItem(
 		keyName = "panelSettingRegion",
@@ -80,7 +81,7 @@ public interface MusicCapeHelperConfig extends Config
 		description = "Used in panel for combo-box optional",
 		hidden = true
 	)
-	default boolean panelSettingOptional() {return true;}
+	boolean panelSettingOptional();
 
 	@ConfigItem(
 		keyName = "panelSettingOptional",
@@ -96,7 +97,7 @@ public interface MusicCapeHelperConfig extends Config
 		description = "Used in panel for combo-box optional",
 		hidden = true
 	)
-	default OrderBy panelSettingOrderBy() {return OrderBy.AZ;}
+	OrderBy panelSettingOrderBy();
 
 	@ConfigItem(
 		keyName = "panelSettingOrderBy",

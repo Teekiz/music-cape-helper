@@ -82,8 +82,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 		completedLabel.setLabelFor(completedCombo);
 		for (Locked locked : Locked.values()) {completedCombo.addItem(locked.getText());}
 		completedCombo.setPreferredSize(new Dimension(80 ,20));
-		//todo - add listener
-		if (config.panelSettingLocked() != null) {completedCombo.setSelectedItem(config.panelSettingLocked());}
+		if (config.panelSettingLocked() != null) {completedCombo.setSelectedItem(config.panelSettingLocked().getText());}
 		else {completedCombo.setSelectedIndex(0);}
 		completedCombo.addActionListener(e ->
 		{
@@ -92,7 +91,6 @@ public class MusicCapeHelperPanel extends PluginPanel
 				.filter(n -> n.getText().equals(completedCombo.getSelectedItem()))
 				.findFirst().orElse(Locked.ALL));
 		});
-
 		settingsPanel.add(completedLabel);
 		settingsPanel.add(completedCombo);
 
@@ -105,7 +103,15 @@ public class MusicCapeHelperPanel extends PluginPanel
 		regionCombo.addItem("All");
 		for (Region regionName : Region.values()) {regionCombo.addItem(regionName.getName());}
 		regionCombo.setPreferredSize(new Dimension(80 ,20));
-		//todo - add listener
+		if (config.panelSettingRegion() != null) {regionCombo.setSelectedItem(config.panelSettingRegion().getName());}
+		else {regionCombo.setSelectedIndex(0);}
+		regionCombo.addActionListener(e ->
+		{
+			config.panelSettingRegion(
+				Arrays.stream(Region.values())
+					.filter(n -> n.getName().equals(regionCombo.getSelectedItem()))
+					.findFirst().orElse(Region.ALL));
+		});
 		settingsPanel.add(regionLabel);
 		settingsPanel.add(regionCombo);
 
@@ -117,7 +123,13 @@ public class MusicCapeHelperPanel extends PluginPanel
 		unlockedDuringQuestCombo.setToolTipText("Filters music tracks unlocked during quests.");
 		unlockedDuringQuestLabel.setLabelFor(unlockedDuringQuestCombo);
 		unlockedDuringQuestLabel.setPreferredSize(new Dimension(80 ,20));
-		//todo - add listener
+		if (config.panelSettingQuest()) {unlockedDuringQuestCombo.setSelectedIndex(0);}
+		else {unlockedDuringQuestCombo.setSelectedIndex(1);}
+		unlockedDuringQuestCombo.addActionListener(e ->
+		{
+			if (unlockedDuringQuestCombo.getSelectedIndex() == 0) {config.panelSettingQuest(true);}
+			else {config.panelSettingQuest(false);}
+		});
 		settingsPanel.add(unlockedDuringQuestLabel);
 		settingsPanel.add(unlockedDuringQuestCombo);
 
@@ -129,7 +141,16 @@ public class MusicCapeHelperPanel extends PluginPanel
 		includeOptionalCombo.setToolTipText("Filters music tracks that are not required for the basic music cape unlock.");
 		includeOptionalLabel.setLabelFor(includeOptionalCombo);
 		includeOptionalLabel.setPreferredSize(new Dimension(80 ,20));
-		//todo - add listener
+		if (config.panelSettingOptional()) {includeOptionalCombo.setSelectedIndex(0);}
+		else {includeOptionalCombo.setSelectedIndex(1);}
+		includeOptionalCombo.addActionListener(e ->
+		{
+			if (includeOptionalCombo.getSelectedIndex() == 0) {config.panelSettingOptional(true);}
+			else {config.panelSettingOptional(false);}
+		});
+		settingsPanel.add(unlockedDuringQuestLabel);
+		settingsPanel.add(unlockedDuringQuestCombo);
+
 		settingsPanel.add(includeOptionalLabel);
 		settingsPanel.add(includeOptionalCombo);
 
@@ -141,7 +162,15 @@ public class MusicCapeHelperPanel extends PluginPanel
 		orderLabel.setLabelFor(orderCombo);
 		for (OrderBy order : OrderBy.values()) {orderCombo.addItem(order.getText());}
 		orderCombo.setPreferredSize(new Dimension(80 ,20));
-		//todo - add listener
+		if (config.panelSettingOrderBy() != null) {orderCombo.setSelectedItem(config.panelSettingOrderBy().getText());}
+		else {orderCombo.setSelectedIndex(0);}
+		orderCombo.addActionListener(e ->
+		{
+			config.panelSettingOrderBy(
+				Arrays.stream(OrderBy.values())
+					.filter(n -> n.getText().equals(orderCombo.getSelectedItem()))
+					.findFirst().orElse(OrderBy.AZ));
+		});
 		settingsPanel.add(orderLabel);
 		settingsPanel.add(orderCombo);
 
