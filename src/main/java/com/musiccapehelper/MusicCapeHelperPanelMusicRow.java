@@ -5,10 +5,13 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 import lombok.Getter;
+import lombok.Setter;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
@@ -18,6 +21,8 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 	private Music music;
 	@Getter
 	private boolean completed;
+	@Getter @Setter
+	private boolean enabled;
 	private Color labelColour;
 	private MusicCapeHelperPlugin plugin;
 
@@ -26,6 +31,7 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 		this.music = song;
 		this.completed = completed;
 		this.plugin = plugin;
+		enabled = false;
 
 		setLayout(new GridLayout(0, 3, 5, 5));
 		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
@@ -43,6 +49,10 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 		if (song.isRequired()){songIsRequiredLabel.setText("Yes");}
 		else {songIsRequiredLabel.setText("No");}
 		songIsRequiredLabel.setFont(FontManager.getRunescapeSmallFont());
+
+		//todo - add plus/minus to row
+		if (enabled) {}
+		else {}
 
 		add(songNameLabel);
 		add(songRegionLabel);
@@ -70,7 +80,6 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 				//todo - what happens when mouse is clicked
 				//check if client is logged in
 				//right click, left click?
-				//dispatchEvent(e);
 				plugin.rowClicked(MusicCapeHelperPanelMusicRow.this);
 			}
 		});

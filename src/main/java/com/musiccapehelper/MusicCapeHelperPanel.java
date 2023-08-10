@@ -6,6 +6,7 @@ import com.musiccapehelper.enums.Optional;
 import com.musiccapehelper.enums.OrderBy;
 import com.musiccapehelper.enums.Quest;
 import com.musiccapehelper.enums.Region;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -284,10 +285,27 @@ public class MusicCapeHelperPanel extends PluginPanel
 		musicRowHeaderPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
 
 		JLabel rowLabel = new JLabel();
+		JLabel spaceLabel = new JLabel("");
+		JLabel addedRemoveAllIcon = new JLabel();
+
+		addedRemoveAllIcon.setText("Remove");
+		addedRemoveAllIcon.setToolTipText("Use this button to remove all map markers");
+		//todo add action listener
 
 		if (config.panelSettingOrderBy().equals(OrderBy.REGION))
 		{
 			rowLabel.setText(music.getRegion().getName());
+
+			//the default is to assume they are all enabled, if there is a match that is not enabled, then set the icon to add all
+			musicRows.stream().filter(m -> m.getMusic().getRegion().equals(music.getRegion())).forEach(o ->
+				{
+					if (!o.isEnabled())
+					{
+						addedRemoveAllIcon.setText("Add");
+						addedRemoveAllIcon.setToolTipText("Use this button to add all map markers");
+					}
+				}
+			);
 		}
 		else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
 		{
@@ -299,20 +317,29 @@ public class MusicCapeHelperPanel extends PluginPanel
 			{
 				rowLabel.setText("Optional tracks: ");
 			}
-		}
 
-		JLabel spaceLabel = new JLabel("");
-		//todo change when add or remove is called
-		JButton addedRemoveAllButton = new JButton();
-		addedRemoveAllButton.setText("Add or Remove");
-		addedRemoveAllButton.setToolTipText("Use this button to add or remove map markers");
-		//todo add action listener
+			//the default is to assume they are all enabled, if there is a match that is not enabled, then set the icon to add all
+			musicRows.stream().filter(m -> m.getMusic().isRequired() == music.isRequired()).forEach(o ->
+				{
+					if (!o.isEnabled())
+					{
+						addedRemoveAllIcon.setText("Add");
+						addedRemoveAllIcon.setToolTipText("Use this button to add all map markers");
+					}
+				}
+			);
+		}
 
 		musicRowHeaderPanel.add(rowLabel);
 		musicRowHeaderPanel.add(spaceLabel);
-		musicRowHeaderPanel.add(addedRemoveAllButton);
+		musicRowHeaderPanel.add(addedRemoveAllIcon);
 
 		return musicRowHeaderPanel;
+	}
+
+	public void updateMusicRowStatus(MusicCapeHelperPanelMusicRow row)
+	{
+		musicRows.get(musicRows.indexOf(row)).setEnabled(!isEnabled());
 	}
 
 	public void updateAllMusicPanelRows()

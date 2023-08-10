@@ -205,6 +205,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		}
 
 		updateMarkersOnMap();
+		musicCapeHelperPanel.updateMusicRowStatus(row);
 	}
 
 	public void updateMarkersOnMap()
