@@ -1,12 +1,10 @@
 package com.musiccapehelper;
 
 import com.musiccapehelper.enums.Locked;
-import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.Optional;
 import com.musiccapehelper.enums.OrderBy;
 import com.musiccapehelper.enums.Quest;
 import com.musiccapehelper.enums.Region;
-import java.util.HashMap;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;

@@ -9,6 +9,7 @@ import com.musiccapehelper.enums.Quest;
 import com.musiccapehelper.enums.Region;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -49,13 +50,10 @@ public class MusicCapeHelperPlugin extends Plugin
 	private ClientToolbar clientToolbar;
 	@Inject
 	private WorldMapPointManager worldMapPointManager;
-
 	private NavigationButton navigationButton;
 	private MusicCapeHelperPanel musicCapeHelperPanel;
-	@Getter @Setter
 	private HashMap<Music, Boolean> musicList;
 	private List<MusicCapeHelperWorldMapPoint> mapPoints;
-
 
 	//button at bottom of panel to add list
 	//instead of multiple lists, create a hashmap at start up
@@ -69,6 +67,8 @@ public class MusicCapeHelperPlugin extends Plugin
 			musicList.put(music, false);
 		}
 
+		musicCapeHelperPanel = new MusicCapeHelperPanel(this, config);
+
 		//TODO change
 		final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "/skill_icons/overall.png");
 
@@ -80,7 +80,7 @@ public class MusicCapeHelperPlugin extends Plugin
 
 		clientToolbar.addNavigation(navigationButton);
 
-		clientThread.invokeAtTickEnd(() -> musicCapeHelperPanel.updateAllMusicPanelRows());
+		clientThread.invokeAtTickEnd(this::updateMusicList);
 
 		mapPoints = new ArrayList<>();
 	}
@@ -88,7 +88,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Override
 	protected void shutDown() throws Exception
 	{
-
+		clientToolbar.removeNavigation(navigationButton);
 	}
 
 	@Subscribe
@@ -110,9 +110,9 @@ public class MusicCapeHelperPlugin extends Plugin
 
 	public void updateMusicList()
 	{
-		for (Music music : Music.values())
+		if (client.getWidget(239, 6) != null)
 		{
-			if (client.getWidget(239, 6) != null)
+			for (Music music : Music.values())
 			{
 				for (Widget widget : client.getWidget(239, 6).getChildren())
 				{
@@ -132,12 +132,11 @@ public class MusicCapeHelperPlugin extends Plugin
 			}
 		}
 		musicCapeHelperPanel.updateAllMusicPanelRows();
-
 	}
 
 	public HashMap<Music, Boolean> filterMusicList()
 	{
-		HashMap<Music, Boolean> filteredList = musicList;
+		HashMap<Music, Boolean> filteredList = new HashMap<>(musicList);
 
 		//check one - does the music match the selected settings for quest discovered status
 		if (!config.panelSettingLocked().equals(Locked.ALL))
@@ -183,7 +182,7 @@ public class MusicCapeHelperPlugin extends Plugin
 				filteredList.entrySet().removeIf(q -> !q.getKey().isRequired());
 			}
 		}
-
+		log.info(String.valueOf("filer 3 " + musicList.size()));
 		return filteredList;
 	}
 

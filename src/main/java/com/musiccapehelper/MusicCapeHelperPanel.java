@@ -1,6 +1,7 @@
 package com.musiccapehelper;
 
 import com.musiccapehelper.enums.Locked;
+import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.Optional;
 import com.musiccapehelper.enums.OrderBy;
 import com.musiccapehelper.enums.Quest;
@@ -12,8 +13,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -208,21 +211,108 @@ public class MusicCapeHelperPanel extends PluginPanel
 
 	public List<MusicCapeHelperPanelMusicRow> createMusicRows()
 	{
-		//todo add filters base on what the current settings are
 		List<MusicCapeHelperPanelMusicRow> musicListRow = new ArrayList<>();
 		plugin.filterMusicList().forEach((key, value) -> musicListRow.add(new MusicCapeHelperPanelMusicRow(key, value, plugin)));
 		return musicListRow;
+	}
+
+	public List<MusicCapeHelperPanelMusicRow> sortMusicRows(List<MusicCapeHelperPanelMusicRow> unsortedList)
+	{
+		if (config.panelSettingOrderBy().equals(OrderBy.AZ))
+		{
+			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
+		}
+		else if (config.panelSettingOrderBy().equals(OrderBy.ZA))
+		{
+			unsortedList.sort((s1, s2) -> s2.getMusic().getSongName().compareTo(s1.getMusic().getSongName()));
+		}
+
+		else if (config.panelSettingOrderBy().equals(OrderBy.REGION))
+		{
+			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getRegion().getName()));
+		}
+
+		else if (config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
+		{
+			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
+			unsortedList.sort((s1, s2) -> Boolean.compare(s1.getMusic().isRequired(), s2.getMusic().isRequired()));
+		}
+
+		else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST))
+		{
+			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
+			unsortedList.sort((s1, s2) -> Boolean.compare(s2.getMusic().isRequired(), s1.getMusic().isRequired()));
+		}
+
+		return unsortedList;
 	}
 
 	public void addMusicRows()
 	{
 		if (musicPanel != null)
 		{
-			for (MusicCapeHelperPanelMusicRow row : musicRows)
+			for (MusicCapeHelperPanelMusicRow row : sortMusicRows(musicRows))
 			{
+				//this checks the order by and then added a header for each section
+				if (config.panelSettingOrderBy().equals(OrderBy.REGION) || config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST)
+					|| config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
+				{
+					if (musicRows.indexOf(row) == 0)
+					{
+						musicPanel.add(buildMusicRowHeaderPanel(row.getMusic()));
+					}
+					else if (config.panelSettingOrderBy().equals(OrderBy.REGION)
+						&& !musicRows.get(musicRows.indexOf(row)-1).getMusic().getRegion().equals(row.getMusic().getRegion()))
+					{
+						musicPanel.add(buildMusicRowHeaderPanel(row.getMusic()));
+					}
+					else if ((config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
+					&& !musicRows.get(musicRows.indexOf(row)-1).getMusic().isRequired() == row.getMusic().isRequired())
+					{
+						musicPanel.add(buildMusicRowHeaderPanel(row.getMusic()));
+					}
+				}
 				musicPanel.add(row);
 			}
 		}
+	}
+
+	public JPanel buildMusicRowHeaderPanel(Music music)
+	{
+		JPanel musicRowHeaderPanel = new JPanel();
+		musicRowHeaderPanel.setLayout(new GridLayout(0, 3, 5, 5));
+		musicRowHeaderPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
+
+		JLabel rowLabel = new JLabel();
+
+		if (config.panelSettingOrderBy().equals(OrderBy.REGION))
+		{
+			rowLabel.setText(music.getRegion().getName());
+		}
+		else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
+		{
+			if (music.isRequired())
+			{
+				rowLabel.setText("Required tracks: ");
+			}
+			else
+			{
+				rowLabel.setText("Optional tracks: ");
+			}
+		}
+
+		JLabel spaceLabel = new JLabel("");
+		//todo change when add or remove is called
+		JButton addedRemoveAllButton = new JButton();
+		addedRemoveAllButton.setText("Add or Remove");
+		addedRemoveAllButton.setToolTipText("Use this button to add or remove map markers");
+		//todo add action listener
+
+		musicRowHeaderPanel.add(rowLabel);
+		musicRowHeaderPanel.add(spaceLabel);
+		musicRowHeaderPanel.add(addedRemoveAllButton);
+
+		return musicRowHeaderPanel;
 	}
 
 	public void updateAllMusicPanelRows()
