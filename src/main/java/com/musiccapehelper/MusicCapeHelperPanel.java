@@ -58,9 +58,6 @@ public class MusicCapeHelperPanel extends PluginPanel
 
 		buildSearchAndSettings();
 		buildMusicPanel();
-
-		musicRows = createMusicRows();
-		addMusicRows();
 	}
 
 	public void buildSearchAndSettings()
@@ -260,17 +257,17 @@ public class MusicCapeHelperPanel extends PluginPanel
 				{
 					if (musicRows.indexOf(row) == 0)
 					{
-						musicPanel.add(buildMusicRowHeaderPanel(row.getMusic()));
+						musicPanel.add(new MusicCapeHelperMusicRowHeader(config, row.getMusic()));
 					}
 					else if (config.panelSettingOrderBy().equals(OrderBy.REGION)
 						&& !musicRows.get(musicRows.indexOf(row)-1).getMusic().getRegion().equals(row.getMusic().getRegion()))
 					{
-						musicPanel.add(buildMusicRowHeaderPanel(row.getMusic()));
+						musicPanel.add(new MusicCapeHelperMusicRowHeader(config, row.getMusic()));
 					}
 					else if ((config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
 					&& !musicRows.get(musicRows.indexOf(row)-1).getMusic().isRequired() == row.getMusic().isRequired())
 					{
-						musicPanel.add(buildMusicRowHeaderPanel(row.getMusic()));
+						musicPanel.add(new MusicCapeHelperMusicRowHeader(config, row.getMusic()));
 					}
 				}
 				musicPanel.add(row);
@@ -278,68 +275,24 @@ public class MusicCapeHelperPanel extends PluginPanel
 		}
 	}
 
-	public JPanel buildMusicRowHeaderPanel(Music music)
+	public void updateMusicRowStatus()
 	{
-		JPanel musicRowHeaderPanel = new JPanel();
-		musicRowHeaderPanel.setLayout(new GridLayout(0, 3, 5, 5));
-		musicRowHeaderPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
+		//this doesn't work because it is reset each time it is updated
+		//musicRows.get(musicRows.indexOf(row)).updateMusicRow();
 
-		JLabel rowLabel = new JLabel();
-		JLabel spaceLabel = new JLabel("");
-		JLabel addedRemoveAllIcon = new JLabel();
-
-		addedRemoveAllIcon.setText("Remove");
-		addedRemoveAllIcon.setToolTipText("Use this button to remove all map markers");
-		//todo add action listener
-
-		if (config.panelSettingOrderBy().equals(OrderBy.REGION))
+		for (MusicCapeHelperPanelMusicRow row : musicRows)
 		{
-			rowLabel.setText(music.getRegion().getName());
-
-			//the default is to assume they are all enabled, if there is a match that is not enabled, then set the icon to add all
-			musicRows.stream().filter(m -> m.getMusic().getRegion().equals(music.getRegion())).forEach(o ->
-				{
-					if (!o.isEnabled())
-					{
-						addedRemoveAllIcon.setText("Add");
-						addedRemoveAllIcon.setToolTipText("Use this button to add all map markers");
-					}
-				}
-			);
-		}
-		else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
-		{
-			if (music.isRequired())
+			//if there is a map point but the row does not return enabled
+			if (plugin.getMapPoints().stream().anyMatch(m -> m.music.equals(row.getMusic())) && !row.isEnabled())
 			{
-				rowLabel.setText("Required tracks: ");
+				row.updateMusicRow();
 			}
-			else
+			//if there isn't a map point but the row returns enabled
+			else if (plugin.getMapPoints().stream().noneMatch(m -> m.music.equals(row.getMusic())) && row.isEnabled())
 			{
-				rowLabel.setText("Optional tracks: ");
+				row.updateMusicRow();
 			}
-
-			//the default is to assume they are all enabled, if there is a match that is not enabled, then set the icon to add all
-			musicRows.stream().filter(m -> m.getMusic().isRequired() == music.isRequired()).forEach(o ->
-				{
-					if (!o.isEnabled())
-					{
-						addedRemoveAllIcon.setText("Add");
-						addedRemoveAllIcon.setToolTipText("Use this button to add all map markers");
-					}
-				}
-			);
 		}
-
-		musicRowHeaderPanel.add(rowLabel);
-		musicRowHeaderPanel.add(spaceLabel);
-		musicRowHeaderPanel.add(addedRemoveAllIcon);
-
-		return musicRowHeaderPanel;
-	}
-
-	public void updateMusicRowStatus(MusicCapeHelperPanelMusicRow row)
-	{
-		musicRows.get(musicRows.indexOf(row)).setEnabled(!isEnabled());
 	}
 
 	public void updateAllMusicPanelRows()

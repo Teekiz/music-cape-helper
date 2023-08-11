@@ -25,6 +25,10 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 	private boolean enabled;
 	private Color labelColour;
 	private MusicCapeHelperPlugin plugin;
+	private JLabel songNameLabel;
+	private JLabel songRegionLabel;
+	private JLabel songIsRequiredLabel;
+	private JLabel enabledDisabled;
 
 	public MusicCapeHelperPanelMusicRow(Music song, boolean completed, MusicCapeHelperPlugin plugin)
 	{
@@ -33,30 +37,30 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 		this.plugin = plugin;
 		enabled = false;
 
-		setLayout(new GridLayout(0, 3, 5, 5));
+		setLayout(new GridLayout(0, 4, 5, 5));
 		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 
 		if (completed) {labelColour = Color.GREEN;}
 		else {labelColour = Color.RED;}
 
-		JLabel songNameLabel = new JLabel(song.getSongName());
+		songNameLabel = new JLabel(song.getSongName());
 		songNameLabel.setFont(FontManager.getRunescapeSmallFont());
 		songNameLabel.setForeground(labelColour);
-		JLabel songRegionLabel = new JLabel(song.getRegion().getName());
+		songRegionLabel = new JLabel(song.getRegion().getName());
 		songRegionLabel.setFont(FontManager.getRunescapeSmallFont());
-		JLabel songIsRequiredLabel = new JLabel();
+		songIsRequiredLabel = new JLabel();
 		if (song.isRequired()){songIsRequiredLabel.setText("Yes");}
 		else {songIsRequiredLabel.setText("No");}
 		songIsRequiredLabel.setFont(FontManager.getRunescapeSmallFont());
 
-		//todo - add plus/minus to row
-		if (enabled) {}
-		else {}
+		enabledDisabled = new JLabel();
+		enabledDisabled.setText("+");
 
 		add(songNameLabel);
 		add(songRegionLabel);
 		add(songIsRequiredLabel);
+		add(enabledDisabled);
 
 		setToolTipText(song.getDescription());
 
@@ -83,5 +87,18 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 				plugin.rowClicked(MusicCapeHelperPanelMusicRow.this);
 			}
 		});
+	}
+
+	public void updateMusicRow()
+	{
+		enabled = !enabled;
+		if (enabled)
+		{
+			enabledDisabled.setText("+");
+		}
+		else
+		{
+			enabledDisabled.setText("-");
+		}
 	}
 }

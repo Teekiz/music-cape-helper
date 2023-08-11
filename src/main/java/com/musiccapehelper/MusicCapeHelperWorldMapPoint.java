@@ -1,11 +1,13 @@
 package com.musiccapehelper;
 import com.musiccapehelper.enums.Music;
+import lombok.Getter;
 import net.runelite.api.Point;
 import net.runelite.client.ui.overlay.worldmap.WorldMapPoint;
 import net.runelite.client.util.ImageUtil;
 
 public class MusicCapeHelperWorldMapPoint extends WorldMapPoint
 {
+	@Getter
 	Music music;
 	boolean completed;
 

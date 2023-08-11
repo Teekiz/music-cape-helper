@@ -50,13 +50,22 @@ public class MusicCapeHelperPlugin extends Plugin
 	private ClientToolbar clientToolbar;
 	@Inject
 	private WorldMapPointManager worldMapPointManager;
+	@Getter @Setter
+	private List<MusicCapeHelperWorldMapPoint> mapPoints;
 	private NavigationButton navigationButton;
 	private MusicCapeHelperPanel musicCapeHelperPanel;
 	private HashMap<Music, Boolean> musicList;
-	private List<MusicCapeHelperWorldMapPoint> mapPoints;
 
 	//button at bottom of panel to add list
 	//instead of multiple lists, create a hashmap at start up
+
+	/*
+		Map Marker Creation
+		1) When the plugin is enabled a list of a music enums is created.
+		2) Update Music List is called, this checks to see if there has been any changes (requires the widget of music to be loaded)
+		3) This calls the panel update method which adds new rows then places them on the panel
+		4) Repeat step 2 for every update
+	 */
 
 	@Override
 	protected void startUp() throws Exception
@@ -182,7 +191,6 @@ public class MusicCapeHelperPlugin extends Plugin
 				filteredList.entrySet().removeIf(q -> !q.getKey().isRequired());
 			}
 		}
-		log.info(String.valueOf("filer 3 " + musicList.size()));
 		return filteredList;
 	}
 
@@ -203,9 +211,8 @@ public class MusicCapeHelperPlugin extends Plugin
 		{
 			mapPoints.remove(check);
 		}
-
 		updateMarkersOnMap();
-		musicCapeHelperPanel.updateMusicRowStatus(row);
+		musicCapeHelperPanel.updateMusicRowStatus();
 	}
 
 	public void updateMarkersOnMap()
