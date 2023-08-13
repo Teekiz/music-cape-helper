@@ -5,13 +5,10 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 import lombok.Getter;
-import lombok.Setter;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
@@ -21,7 +18,7 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 	private Music music;
 	@Getter
 	private boolean completed;
-	@Getter @Setter
+	@Getter
 	private boolean enabled;
 	private Color labelColour;
 	private MusicCapeHelperPlugin plugin;
@@ -30,9 +27,9 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 	private JLabel songIsRequiredLabel;
 	private JLabel enabledDisabled;
 
-	public MusicCapeHelperPanelMusicRow(Music song, boolean completed, MusicCapeHelperPlugin plugin)
+	public MusicCapeHelperPanelMusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin)
 	{
-		this.music = song;
+		this.music = music;
 		this.completed = completed;
 		this.plugin = plugin;
 		enabled = false;
@@ -44,25 +41,25 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 		if (completed) {labelColour = Color.GREEN;}
 		else {labelColour = Color.RED;}
 
-		songNameLabel = new JLabel(song.getSongName());
+		songNameLabel = new JLabel(music.getSongName());
 		songNameLabel.setFont(FontManager.getRunescapeSmallFont());
 		songNameLabel.setForeground(labelColour);
-		songRegionLabel = new JLabel(song.getRegion().getName());
+		songRegionLabel = new JLabel(music.getRegion().getName());
 		songRegionLabel.setFont(FontManager.getRunescapeSmallFont());
 		songIsRequiredLabel = new JLabel();
-		if (song.isRequired()){songIsRequiredLabel.setText("Yes");}
+		if (music.isRequired()){songIsRequiredLabel.setText("Yes");}
 		else {songIsRequiredLabel.setText("No");}
 		songIsRequiredLabel.setFont(FontManager.getRunescapeSmallFont());
-
 		enabledDisabled = new JLabel();
-		enabledDisabled.setText("+");
+		enabled = plugin.getMapPoints().stream().anyMatch(m -> m.music.equals(this.getMusic()));
+		updateMusicRow();
 
 		add(songNameLabel);
 		add(songRegionLabel);
 		add(songIsRequiredLabel);
 		add(enabledDisabled);
 
-		setToolTipText(song.getDescription());
+		setToolTipText(music.getDescription());
 
 		addMouseListener(new MouseAdapter()
 		{
@@ -89,16 +86,15 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 		});
 	}
 
+	public void setEnabledDisabled(Boolean isOnMap)
+	{
+		enabled = isOnMap;
+		updateMusicRow();
+	}
+
 	public void updateMusicRow()
 	{
-		enabled = !enabled;
-		if (enabled)
-		{
-			enabledDisabled.setText("+");
-		}
-		else
-		{
-			enabledDisabled.setText("-");
-		}
+		if (enabled) enabledDisabled.setText("-");
+		else enabledDisabled.setText("+");
 	}
 }

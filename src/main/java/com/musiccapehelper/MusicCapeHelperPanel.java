@@ -6,23 +6,20 @@ import com.musiccapehelper.enums.Optional;
 import com.musiccapehelper.enums.OrderBy;
 import com.musiccapehelper.enums.Quest;
 import com.musiccapehelper.enums.Region;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import net.runelite.api.ChatMessageType;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.DynamicGridLayout;
 import net.runelite.client.ui.FontManager;
@@ -189,7 +186,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 		musicPanel.setBorder(new EmptyBorder(10, 0, 10, 0));
 
 		musicHeaderPanel = new JPanel();
-		musicHeaderPanel.setLayout(new GridLayout(0, 3, 5, 5));
+		musicHeaderPanel.setLayout(new GridLayout(0, 4, 5, 5));
 		JLabel songNameLabelHeader = new JLabel("Name");
 		songNameLabelHeader.setToolTipText("The name of the music track.");
 		songNameLabelHeader.setFont(FontManager.getRunescapeBoldFont());
@@ -199,9 +196,11 @@ public class MusicCapeHelperPanel extends PluginPanel
 		JLabel songIsRequiredLabelHeader = new JLabel("Required?");
 		songIsRequiredLabelHeader.setToolTipText("Seasonal tracks are not required for the untrimmed cape.");
 		songIsRequiredLabelHeader.setFont(FontManager.getRunescapeBoldFont());
+		JLabel blankSpace = new JLabel("");
 		musicHeaderPanel.add(songNameLabelHeader);
 		musicHeaderPanel.add(songRegionLabelHeader);
 		musicHeaderPanel.add(songIsRequiredLabelHeader);
+		musicHeaderPanel.add(blankSpace);
 
 		add(musicHeaderPanel);
 		add(musicPanel);
@@ -275,24 +274,63 @@ public class MusicCapeHelperPanel extends PluginPanel
 		}
 	}
 
-	public void updateMusicRowStatus()
+	public void updateMusicRow(Music music, boolean isOnMap)
 	{
-		//this doesn't work because it is reset each time it is updated
-		//musicRows.get(musicRows.indexOf(row)).updateMusicRow();
+		//there should not be multiple rows of music
+		Arrays.stream(musicPanel.getComponents())
+			.filter(r -> r instanceof MusicCapeHelperPanelMusicRow)
+			.filter(r -> ((MusicCapeHelperPanelMusicRow) r).getMusic().equals(music))
+			.forEach(r -> ((MusicCapeHelperPanelMusicRow) r).setEnabledDisabled(isOnMap));
+	}
 
-		for (MusicCapeHelperPanelMusicRow row : musicRows)
-		{
-			//if there is a map point but the row does not return enabled
-			if (plugin.getMapPoints().stream().anyMatch(m -> m.music.equals(row.getMusic())) && !row.isEnabled())
+	public void checkAndUpdateAllMusicRowHeader()
+	{
+		Arrays.stream(musicPanel.getComponents())
+			.filter(r -> r instanceof MusicCapeHelperMusicRowHeader)
+			.forEach(r ->
 			{
-				row.updateMusicRow();
-			}
-			//if there isn't a map point but the row returns enabled
-			else if (plugin.getMapPoints().stream().noneMatch(m -> m.music.equals(row.getMusic())) && row.isEnabled())
-			{
-				row.updateMusicRow();
-			}
-		}
+				String label = ((MusicCapeHelperMusicRowHeader) r).getRowLabel().getText();
+				//checks to see if there are any matches to the region that of the label that are not enabled
+				if (config.panelSettingOrderBy().equals(OrderBy.REGION))
+				{
+					if (Arrays.stream(musicPanel.getComponents())
+						.filter(s -> s instanceof MusicCapeHelperPanelMusicRow)
+						.filter(s -> ((MusicCapeHelperPanelMusicRow) s).getMusic().getRegion().getName().equals(label))
+						.anyMatch(s -> !s.isEnabled()))
+					{
+						//if there is one or more matches, then set the header to false (+)
+						((MusicCapeHelperMusicRowHeader) r).setHeader(false);
+					}
+					else
+					{
+						//other set it to true (-)
+						((MusicCapeHelperMusicRowHeader) r).setHeader(true);
+					}
+				}
+				else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
+				{
+					if (label.equals("Required tracks: ") && Arrays.stream(musicPanel.getComponents())
+						.filter(s -> s instanceof MusicCapeHelperPanelMusicRow)
+						.filter(s -> ((MusicCapeHelperPanelMusicRow) s).getMusic().isRequired())
+						.anyMatch(s -> !s.isEnabled()))
+					{
+						//if there is one or more matches, then set the header to false
+						((MusicCapeHelperMusicRowHeader) r).setHeader(false);
+					}
+					else if (label.equals("Optional tracks: ") && Arrays.stream(musicPanel.getComponents())
+						.filter(s -> s instanceof MusicCapeHelperPanelMusicRow)
+						.filter(s -> !((MusicCapeHelperPanelMusicRow) s).getMusic().isRequired())
+						.anyMatch(s -> !s.isEnabled()))
+					{
+						//if there is one or more matches, then set the header to false
+						((MusicCapeHelperMusicRowHeader) r).setHeader(false);
+					}
+					else
+					{
+						((MusicCapeHelperMusicRowHeader) r).setHeader(true);
+					}
+				}
+			});
 	}
 
 	public void updateAllMusicPanelRows()
@@ -302,6 +340,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 				musicPanel.removeAll();
 				musicRows = createMusicRows();
 				addMusicRows();
+				checkAndUpdateAllMusicRowHeader();
 				musicPanel.revalidate();
 				musicPanel.repaint();
 			});

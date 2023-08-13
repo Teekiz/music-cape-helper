@@ -4,16 +4,12 @@ import com.google.inject.Provides;
 import com.musiccapehelper.enums.Locked;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.Optional;
-import com.musiccapehelper.enums.OrderBy;
 import com.musiccapehelper.enums.Quest;
 import com.musiccapehelper.enums.Region;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +19,6 @@ import net.runelite.api.GameState;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.callback.ClientThread;
-import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -40,6 +35,7 @@ import net.runelite.client.util.ImageUtil;
 )
 public class MusicCapeHelperPlugin extends Plugin
 {
+
 	@Inject
 	private Client client;
 	@Inject
@@ -203,16 +199,20 @@ public class MusicCapeHelperPlugin extends Plugin
 
 		MusicCapeHelperWorldMapPoint check = mapPoints.stream().filter(m -> m.music == row.getMusic()).findAny().orElse(null);
 
+		//checks if the world map should be updated
 		if (check == null)
 		{
 			mapPoints.add(new MusicCapeHelperWorldMapPoint(row.getMusic(), row.isCompleted()));
+			musicCapeHelperPanel.updateMusicRow(row.getMusic(), true);
 		}
 		else
 		{
 			mapPoints.remove(check);
+			musicCapeHelperPanel.updateMusicRow(row.getMusic(), false);
 		}
+
+		musicCapeHelperPanel.checkAndUpdateAllMusicRowHeader();
 		updateMarkersOnMap();
-		musicCapeHelperPanel.updateMusicRowStatus();
 	}
 
 	public void updateMarkersOnMap()
