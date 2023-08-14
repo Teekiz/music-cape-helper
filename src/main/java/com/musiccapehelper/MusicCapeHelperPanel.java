@@ -13,12 +13,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import lombok.Getter;
+import lombok.Setter;
 import net.runelite.api.ChatMessageType;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.DynamicGridLayout;
@@ -42,6 +45,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 	//music row components
 	private JPanel musicPanel;
 	private JPanel musicHeaderPanel;
+	@Getter
 	private List<MusicCapeHelperPanelMusicRow> musicRows;
 
 	public MusicCapeHelperPanel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
@@ -256,17 +260,17 @@ public class MusicCapeHelperPanel extends PluginPanel
 				{
 					if (musicRows.indexOf(row) == 0)
 					{
-						musicPanel.add(new MusicCapeHelperMusicRowHeader(config, row.getMusic()));
+						musicPanel.add(new MusicCapeHelperMusicRowHeader(config, row.getMusic(), plugin));
 					}
 					else if (config.panelSettingOrderBy().equals(OrderBy.REGION)
 						&& !musicRows.get(musicRows.indexOf(row)-1).getMusic().getRegion().equals(row.getMusic().getRegion()))
 					{
-						musicPanel.add(new MusicCapeHelperMusicRowHeader(config, row.getMusic()));
+						musicPanel.add(new MusicCapeHelperMusicRowHeader(config, row.getMusic(), plugin));
 					}
 					else if ((config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
 					&& !musicRows.get(musicRows.indexOf(row)-1).getMusic().isRequired() == row.getMusic().isRequired())
 					{
-						musicPanel.add(new MusicCapeHelperMusicRowHeader(config, row.getMusic()));
+						musicPanel.add(new MusicCapeHelperMusicRowHeader(config, row.getMusic(), plugin));
 					}
 				}
 				musicPanel.add(row);

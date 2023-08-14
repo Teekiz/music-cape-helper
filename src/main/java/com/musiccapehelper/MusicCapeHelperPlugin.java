@@ -4,6 +4,7 @@ import com.google.inject.Provides;
 import com.musiccapehelper.enums.Locked;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.Optional;
+import com.musiccapehelper.enums.OrderBy;
 import com.musiccapehelper.enums.Quest;
 import com.musiccapehelper.enums.Region;
 import java.awt.image.BufferedImage;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
+import javax.swing.JPanel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -215,6 +217,98 @@ public class MusicCapeHelperPlugin extends Plugin
 		updateMarkersOnMap();
 	}
 
+	public void rowHeaderClicked(MusicCapeHelperMusicRowHeader row)
+	{
+		if (client.getGameState() != GameState.LOGGED_IN || client.getLocalPlayer() == null)
+		{
+			return;
+		}
+
+		//use the row name to determine what is updated in combo with the settings
+		if (config.panelSettingOrderBy().equals(OrderBy.REGION))
+		{
+			if (row.enabled)
+			{
+				musicCapeHelperPanel.getMusicRows().stream()
+					.filter(r -> r.getMusic().getRegion().getName().equals(row.getRowLabel().getText()))
+					.filter(r -> !r.isEnabled())
+					.forEach(r ->
+					{
+						mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), r.isCompleted()));
+						musicCapeHelperPanel.updateMusicRow(r.getMusic(), true);
+					});
+			}
+			else
+			{
+				musicCapeHelperPanel.getMusicRows().stream()
+					.filter(r -> r.getMusic().getRegion().getName().equals(row.getRowLabel().getText()))
+					.filter(r -> r.isEnabled())
+					.forEach(r ->
+					{
+						mapPoints.remove(mapPoints.stream().filter(m -> m.music.equals(r.getMusic())).findFirst().orElse(null));
+						musicCapeHelperPanel.updateMusicRow(r.getMusic(), false);
+					});
+			}
+		}
+		else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
+		{
+			if (row.getRowLabel().getText().equals("Required tracks: "))
+			{
+				if (row.enabled)
+				{
+					musicCapeHelperPanel.getMusicRows().stream()
+						.filter(r -> r.getMusic().isRequired())
+						.filter(r -> !r.isEnabled())
+						.forEach(r ->
+						{
+							mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), r.isCompleted()));
+							musicCapeHelperPanel.updateMusicRow(r.getMusic(), true);
+						});
+				}
+				else
+				{
+					musicCapeHelperPanel.getMusicRows().stream()
+						.filter(r -> r.getMusic().isRequired())
+						.filter(r -> r.isEnabled())
+						.forEach(r ->
+						{
+							mapPoints.remove(mapPoints.stream().filter(m -> m.music.equals(r.getMusic())).findFirst().orElse(null));
+							musicCapeHelperPanel.updateMusicRow(r.getMusic(), false);
+						});
+				}
+			}
+			else if (row.getRowLabel().getText().equals("Optional tracks: "))
+			{
+				if (row.enabled)
+				{
+					musicCapeHelperPanel.getMusicRows().stream()
+						.filter(r -> !r.getMusic().isRequired())
+						.filter(r -> !r.isEnabled())
+						.forEach(r ->
+						{
+							mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), r.isCompleted()));
+							musicCapeHelperPanel.updateMusicRow(r.getMusic(), true);
+						});
+				}
+				else
+				{
+					musicCapeHelperPanel.getMusicRows().stream()
+						.filter(r -> !r.getMusic().isRequired())
+						.filter(r -> r.isEnabled())
+						.forEach(r ->
+						{
+							mapPoints.remove(mapPoints.stream().filter(m -> m.music.equals(r.getMusic())).findFirst().orElse(null));
+							musicCapeHelperPanel.updateMusicRow(r.getMusic(), false);
+						});
+				}
+			}
+		}
+
+		musicCapeHelperPanel.checkAndUpdateAllMusicRowHeader();
+		updateMarkersOnMap();
+	}
+
+	//this both adds and removes the markers, to update the map, add or remove from the mapPoint list
 	public void updateMarkersOnMap()
 	{
 		worldMapPointManager.removeIf(MusicCapeHelperWorldMapPoint.class::isInstance);
