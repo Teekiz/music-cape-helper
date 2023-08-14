@@ -1,5 +1,9 @@
 package com.musiccapehelper;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.inject.Provides;
 import com.musiccapehelper.enums.Locked;
 import com.musiccapehelper.enums.Music;
@@ -9,15 +13,17 @@ import com.musiccapehelper.enums.Quest;
 import com.musiccapehelper.enums.Region;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
-import javax.swing.JPanel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.callback.ClientThread;
@@ -48,6 +54,10 @@ public class MusicCapeHelperPlugin extends Plugin
 	private ClientToolbar clientToolbar;
 	@Inject
 	private WorldMapPointManager worldMapPointManager;
+	@Inject
+	private ConfigManager configManager;
+	@Inject
+	private Gson gson;
 	@Getter @Setter
 	private List<MusicCapeHelperWorldMapPoint> mapPoints;
 	private NavigationButton navigationButton;
@@ -89,13 +99,18 @@ public class MusicCapeHelperPlugin extends Plugin
 
 		clientThread.invokeAtTickEnd(this::updateMusicList);
 
-		mapPoints = new ArrayList<>();
+		mapPoints = loadMapMarkers();
+		mapPoints.forEach(m -> musicCapeHelperPanel.updateMusicRow(m.music, true));
+		musicCapeHelperPanel.checkAndUpdateAllMusicRowHeader();
+		updateMarkersOnMap();
 	}
 
 	@Override
 	protected void shutDown() throws Exception
 	{
+		saveMapMarkers(mapPoints);
 		clientToolbar.removeNavigation(navigationButton);
+		worldMapPointManager.removeIf(MusicCapeHelperWorldMapPoint.class::isInstance);
 	}
 
 	@Subscribe
@@ -113,6 +128,17 @@ public class MusicCapeHelperPlugin extends Plugin
 		}
 
 		clientThread.invokeAtTickEnd(this::updateMusicList);
+	}
+
+	@Subscribe
+	public void onChatMessage(ChatMessage chatMessage)
+	{
+		//todo update
+		if (chatMessage.getType().equals(ChatMessageType.GAMEMESSAGE)
+			&& chatMessage.getMessage().startsWith("You have unlocked a new music track: "))
+		{
+			clientThread.invokeAtTickEnd(this::updateMusicList);
+		}
 	}
 
 	public void updateMusicList()
@@ -314,8 +340,47 @@ public class MusicCapeHelperPlugin extends Plugin
 		worldMapPointManager.removeIf(MusicCapeHelperWorldMapPoint.class::isInstance);
 		for (MusicCapeHelperWorldMapPoint point : mapPoints)
 		{
-			worldMapPointManager.add(new MusicCapeHelperWorldMapPoint(point.music, point.completed));
+			worldMapPointManager.add(point);
 		}
+		saveMapMarkers(mapPoints);
+	}
+
+	public void saveMapMarkers(List<MusicCapeHelperWorldMapPoint> saveMapPoints)
+	{
+		if (!saveMapPoints.isEmpty())
+		{
+			//overwrites the existing data
+			configManager.unsetConfiguration("musicTracksWorldPoints", "map_markers");
+			JsonArray mapData = new JsonArray();
+			saveMapPoints.forEach(m -> {
+				JsonObject jsonObject = new JsonObject();
+				jsonObject.addProperty("music", m.music.getSongName());
+				jsonObject.addProperty("completed", m.completed);
+				mapData.add(jsonObject);
+			});
+			String json = mapData.toString();
+			configManager.setConfiguration("musicTracksWorldPoints", "map_markers", json);
+		}
+	}
+
+	public List<MusicCapeHelperWorldMapPoint> loadMapMarkers()
+	{
+		List<MusicCapeHelperWorldMapPoint> point = new ArrayList<>();
+
+		String json = configManager.getConfiguration("musicTracksWorldPoints", "map_markers");
+		for (JsonElement element : gson.fromJson(json, JsonArray.class))
+		{
+			String song = element.getAsJsonObject().get("music").getAsString();
+			Music music = Arrays.stream(Music.values())
+				.filter(m -> m.getSongName().equals(song))
+				.findAny().orElse(null);
+			boolean completed = element.getAsJsonObject().get("completed").getAsBoolean();
+			if (music != null)
+			{
+				point.add(new MusicCapeHelperWorldMapPoint(music, completed));
+			}
+		}
+		return point;
 	}
 
 	@Provides
