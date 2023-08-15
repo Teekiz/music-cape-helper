@@ -141,6 +141,11 @@ public class MusicCapeHelperPlugin extends Plugin
 		}
 	}
 
+	public HashMap<Music, Boolean> getOriginalMusicList()
+	{
+		return musicList;
+	}
+
 	public void updateMusicList()
 	{
 		if (client.getWidget(239, 6) != null)

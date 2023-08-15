@@ -9,6 +9,8 @@ import com.musiccapehelper.enums.Region;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -69,7 +71,12 @@ public class MusicCapeHelperPanel extends PluginPanel
 		searchBar.setBackground(ColorScheme.DARKER_GRAY_COLOR);
 		searchBar.setHoverBackgroundColor(ColorScheme.DARK_GRAY_HOVER_COLOR);
 		searchBar.setPreferredSize(new Dimension(100, 30));
-		//todo - add listener
+		searchBar.addActionListener(e -> musicSearch(searchBar.getText()));
+		searchBar.addClearListener(() ->
+		{
+			searchBar.setIcon(IconTextField.Icon.SEARCH);
+			plugin.updateMusicList();
+		});
 
 		//Order of the panel Components - Search Bar, Settings tab, Music List
 		// -- Settings Panel --
@@ -210,10 +217,22 @@ public class MusicCapeHelperPanel extends PluginPanel
 		add(musicPanel);
 	}
 
+	//used to create all rows that match the filters
 	public List<MusicCapeHelperPanelMusicRow> createMusicRows()
 	{
 		List<MusicCapeHelperPanelMusicRow> musicListRow = new ArrayList<>();
 		plugin.filterMusicList().forEach((key, value) -> musicListRow.add(new MusicCapeHelperPanelMusicRow(key, value, plugin)));
+		return musicListRow;
+	}
+
+	//used to create the rows based on the search value
+	public List<MusicCapeHelperPanelMusicRow> createMusicRowsFromSearch(String search)
+	{
+		List<MusicCapeHelperPanelMusicRow> musicListRow = new ArrayList<>();
+		plugin.getOriginalMusicList().entrySet()
+			.stream()
+			.filter(s -> s.getKey().getSongName().contains(search))
+			.forEach(e -> musicListRow.add(new MusicCapeHelperPanelMusicRow(e.getKey(), e.getValue(), plugin)));
 		return musicListRow;
 	}
 
@@ -335,6 +354,18 @@ public class MusicCapeHelperPanel extends PluginPanel
 					}
 				}
 			});
+	}
+
+	public void musicSearch(String searchText)
+	{
+		SwingUtilities.invokeLater(() ->
+		{
+			musicPanel.removeAll();
+			musicRows = createMusicRowsFromSearch(searchText);
+			addMusicRows();
+			musicPanel.revalidate();
+			musicPanel.repaint();
+		});
 	}
 
 	public void updateAllMusicPanelRows()
