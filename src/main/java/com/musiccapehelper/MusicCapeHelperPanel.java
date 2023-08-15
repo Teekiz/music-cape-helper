@@ -9,13 +9,10 @@ import com.musiccapehelper.enums.Region;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -23,13 +20,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import lombok.Getter;
-import lombok.Setter;
-import net.runelite.api.ChatMessageType;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.DynamicGridLayout;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.PluginPanel;
 import net.runelite.client.ui.components.IconTextField;
+import org.apache.commons.lang3.StringUtils;
 
 public class MusicCapeHelperPanel extends PluginPanel
 {
@@ -231,7 +227,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 		List<MusicCapeHelperPanelMusicRow> musicListRow = new ArrayList<>();
 		plugin.getOriginalMusicList().entrySet()
 			.stream()
-			.filter(s -> s.getKey().getSongName().contains(search))
+			.filter(s -> StringUtils.containsIgnoreCase(s.getKey().getSongName(), search))
 			.forEach(e -> musicListRow.add(new MusicCapeHelperPanelMusicRow(e.getKey(), e.getValue(), plugin)));
 		return musicListRow;
 	}
@@ -363,6 +359,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 			musicPanel.removeAll();
 			musicRows = createMusicRowsFromSearch(searchText);
 			addMusicRows();
+			checkAndUpdateAllMusicRowHeader();
 			musicPanel.revalidate();
 			musicPanel.repaint();
 		});
