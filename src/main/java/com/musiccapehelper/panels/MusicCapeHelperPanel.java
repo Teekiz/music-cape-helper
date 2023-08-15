@@ -8,6 +8,7 @@ import com.musiccapehelper.enums.Optional;
 import com.musiccapehelper.enums.OrderBy;
 import com.musiccapehelper.enums.Quest;
 import com.musiccapehelper.enums.Region;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -27,6 +28,8 @@ import net.runelite.client.ui.DynamicGridLayout;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.PluginPanel;
 import net.runelite.client.ui.components.IconTextField;
+import net.runelite.client.ui.components.materialtabs.MaterialTab;
+import net.runelite.client.ui.components.materialtabs.MaterialTabGroup;
 import org.apache.commons.lang3.StringUtils;
 
 public class MusicCapeHelperPanel extends PluginPanel
@@ -35,7 +38,9 @@ public class MusicCapeHelperPanel extends PluginPanel
 	private MusicCapeHelperConfig config;
 	private MusicCapeHelperSettingsPanel settingsPanel;
 	private MusicCapeHelperMusicPanel musicPanel;
-
+	private MusicCapeHelperMapPanel mapPanel;
+	private JPanel displayPanel;
+	private MaterialTabGroup musicMapTabGroup;
 	@Getter
 	private List<MusicCapeHelperPanelMusicRow> musicRows;
 
@@ -49,7 +54,20 @@ public class MusicCapeHelperPanel extends PluginPanel
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 
 		add(settingsPanel = new MusicCapeHelperSettingsPanel(plugin, config, this));
-		add(musicPanel = new MusicCapeHelperMusicPanel(plugin, config));
+
+		musicPanel = new MusicCapeHelperMusicPanel(plugin, config);
+		mapPanel = new MusicCapeHelperMapPanel(plugin, config);
+		displayPanel = new JPanel();
+
+		musicMapTabGroup = new MaterialTabGroup(displayPanel);
+		MaterialTab musicTab = new MaterialTab("Music", musicMapTabGroup, musicPanel);
+		MaterialTab mapTab = new MaterialTab("Map", musicMapTabGroup, mapPanel);
+
+		musicMapTabGroup.addTab(musicTab);
+		musicMapTabGroup.select(musicTab);
+		musicMapTabGroup.addTab(mapTab);
+		add(musicMapTabGroup, BorderLayout.NORTH);
+		add(displayPanel, BorderLayout.CENTER);
 	}
 
 	//used to create all rows that match the filters
@@ -208,6 +226,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 	{
 		SwingUtilities.invokeLater(() ->
 			{
+				//todo fix affecting the header being removed.
 				musicPanel.removeAll();
 				musicRows = createMusicRows();
 				addMusicRows();
