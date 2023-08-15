@@ -43,4 +43,10 @@ public class MusicCapeHelperMusicPanel extends JPanel
 
 		add(musicHeaderWrapper);
 	}
+
+	public void removeAllMusicRows()
+	{
+		removeAll();
+		add(musicHeaderWrapper);
+	}
 }

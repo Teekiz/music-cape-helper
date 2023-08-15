@@ -213,7 +213,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 	{
 		SwingUtilities.invokeLater(() ->
 		{
-			musicPanel.removeAll();
+			musicPanel.removeAllMusicRows();
 			musicRows = createMusicRowsFromSearch(searchText);
 			addMusicRows();
 			checkAndUpdateAllMusicRowHeader();
@@ -226,8 +226,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 	{
 		SwingUtilities.invokeLater(() ->
 			{
-				//todo fix affecting the header being removed.
-				musicPanel.removeAll();
+				musicPanel.removeAllMusicRows();
 				musicRows = createMusicRows();
 				addMusicRows();
 				checkAndUpdateAllMusicRowHeader();
