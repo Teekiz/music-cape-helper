@@ -253,6 +253,7 @@ public class MusicCapeHelperPlugin extends Plugin
 
 	public void rowHeaderClicked(MusicCapeHelperMusicRowHeader row)
 	{
+		//todo check to see if it adds all of the matching rows or only the ones that show (probably want it to be the ones that show)
 		if (client.getGameState() != GameState.LOGGED_IN || client.getLocalPlayer() == null)
 		{
 			return;
