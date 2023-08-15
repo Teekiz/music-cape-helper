@@ -1,5 +1,7 @@
-package com.musiccapehelper;
+package com.musiccapehelper.panels;
 
+import com.musiccapehelper.MusicCapeHelperConfig;
+import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.OrderBy;
 import java.awt.GridLayout;

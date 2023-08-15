@@ -1,5 +1,7 @@
-package com.musiccapehelper;
+package com.musiccapehelper.panels;
 
+import com.musiccapehelper.MusicCapeHelperConfig;
+import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.Locked;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.Optional;
@@ -68,11 +70,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 		searchBar.setHoverBackgroundColor(ColorScheme.DARK_GRAY_HOVER_COLOR);
 		searchBar.setPreferredSize(new Dimension(100, 30));
 		searchBar.addActionListener(e -> musicSearch(searchBar.getText()));
-		searchBar.addClearListener(() ->
-		{
-			searchBar.setIcon(IconTextField.Icon.SEARCH);
-			plugin.updateMusicList();
-		});
+		searchBar.addClearListener(() -> plugin.updateMusicList());
 
 		//Order of the panel Components - Search Bar, Settings tab, Music List
 		// -- Settings Panel --

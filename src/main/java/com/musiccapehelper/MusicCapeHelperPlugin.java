@@ -11,6 +11,9 @@ import com.musiccapehelper.enums.Optional;
 import com.musiccapehelper.enums.OrderBy;
 import com.musiccapehelper.enums.Quest;
 import com.musiccapehelper.enums.Region;
+import com.musiccapehelper.panels.MusicCapeHelperMusicRowHeader;
+import com.musiccapehelper.panels.MusicCapeHelperPanel;
+import com.musiccapehelper.panels.MusicCapeHelperPanelMusicRow;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -258,7 +261,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		//use the row name to determine what is updated in combo with the settings
 		if (config.panelSettingOrderBy().equals(OrderBy.REGION))
 		{
-			if (row.enabled)
+			if (row.isEnabled())
 			{
 				musicCapeHelperPanel.getMusicRows().stream()
 					.filter(r -> r.getMusic().getRegion().getName().equals(row.getRowLabel().getText()))
@@ -285,7 +288,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		{
 			if (row.getRowLabel().getText().equals("Required tracks: "))
 			{
-				if (row.enabled)
+				if (row.isEnabled())
 				{
 					musicCapeHelperPanel.getMusicRows().stream()
 						.filter(r -> r.getMusic().isRequired())
@@ -310,7 +313,7 @@ public class MusicCapeHelperPlugin extends Plugin
 			}
 			else if (row.getRowLabel().getText().equals("Optional tracks: "))
 			{
-				if (row.enabled)
+				if (row.isEnabled())
 				{
 					musicCapeHelperPanel.getMusicRows().stream()
 						.filter(r -> !r.getMusic().isRequired())

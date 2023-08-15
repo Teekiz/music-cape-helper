@@ -1,5 +1,6 @@
-package com.musiccapehelper;
+package com.musiccapehelper.panels;
 
+import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.Music;
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -51,7 +52,7 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 		else {songIsRequiredLabel.setText("No");}
 		songIsRequiredLabel.setFont(FontManager.getRunescapeSmallFont());
 		enabledDisabled = new JLabel();
-		enabled = plugin.getMapPoints().stream().anyMatch(m -> m.music.equals(this.getMusic()));
+		enabled = plugin.getMapPoints().stream().anyMatch(m -> m.getMusic().equals(this.getMusic()));
 		updateMusicRow();
 
 		add(songNameLabel);

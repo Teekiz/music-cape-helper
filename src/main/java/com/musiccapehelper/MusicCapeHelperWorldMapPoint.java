@@ -9,12 +9,12 @@ public class MusicCapeHelperWorldMapPoint extends WorldMapPoint
 {
 	@Getter
 	Music music;
+	@Getter
 	boolean completed;
 
 	public MusicCapeHelperWorldMapPoint(Music music, boolean completed)
 	{
 		//ImagePoint code used from "clue scrolls" plugin constructor
-
 		//todo - change based on whether it is completed or not and if it is a quest
 		super(null, null);
 
