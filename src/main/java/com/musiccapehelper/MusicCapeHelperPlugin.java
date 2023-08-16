@@ -90,7 +90,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		musicCapeHelperPanel = new MusicCapeHelperPanel(this, config);
 
 		//TODO change
-		final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "/skill_icons/overall.png");
+		final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "pluginicon.png");
 
 		navigationButton = NavigationButton.builder()
 			.tooltip("Music Cape Helper Panel")

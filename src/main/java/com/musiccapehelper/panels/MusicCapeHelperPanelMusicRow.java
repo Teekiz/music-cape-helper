@@ -3,15 +3,23 @@ package com.musiccapehelper.panels;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.Music;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import lombok.Getter;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
+import net.runelite.client.util.ImageUtil;
 
 public class MusicCapeHelperPanelMusicRow extends JPanel
 {
@@ -27,6 +35,9 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 	private JLabel songRegionLabel;
 	private JLabel songIsRequiredLabel;
 	private JLabel enabledDisabled;
+	//icons
+	final ImageIcon addIcon;
+	final ImageIcon removeIcon;
 
 	public MusicCapeHelperPanelMusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin)
 	{
@@ -35,17 +46,26 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 		this.plugin = plugin;
 		enabled = false;
 
-		setLayout(new GridLayout(0, 4, 5, 5));
+		addIcon = new ImageIcon("addicon.png");
+		removeIcon = new ImageIcon("removeicon.png");
+
+		//setLayout(new GridLayout(0, 4, 5, 5));
+		setLayout(new GridBagLayout());
 		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
+
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(0, 5, 0, 5);
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.fill = GridBagConstraints.NONE;
 
 		if (completed) {labelColour = Color.GREEN;}
 		else {labelColour = Color.RED;}
 
-		songNameLabel = new JLabel(music.getSongName());
+		songNameLabel = new JLabel(music.getSongName(), JLabel.LEFT);
 		songNameLabel.setFont(FontManager.getRunescapeSmallFont());
 		songNameLabel.setForeground(labelColour);
-		songRegionLabel = new JLabel(music.getRegion().getName());
+		songRegionLabel = new JLabel(music.getRegion().getName(), JLabel.LEFT);
 		songRegionLabel.setFont(FontManager.getRunescapeSmallFont());
 		songIsRequiredLabel = new JLabel();
 		if (music.isRequired()){songIsRequiredLabel.setText("Yes");}
@@ -55,10 +75,22 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 		enabled = plugin.getMapPoints().stream().anyMatch(m -> m.getMusic().equals(this.getMusic()));
 		updateMusicRow();
 
-		add(songNameLabel);
-		add(songRegionLabel);
-		add(songIsRequiredLabel);
-		add(enabledDisabled);
+		gbc.weightx = 0.5;
+		gbc.gridwidth = 1;
+		gbc.gridx = 0;
+
+		gbc.gridy = 0;
+		add(songNameLabel, gbc);
+
+		gbc.ipadx = 0;
+		gbc.gridx = 1;
+		add(songRegionLabel, gbc);
+
+		gbc.gridx = 2;
+		add(songIsRequiredLabel, gbc);
+
+		gbc.gridx = 3;
+		add(enabledDisabled, gbc);
 
 		setToolTipText(music.getDescription());
 
@@ -95,7 +127,7 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 
 	public void updateMusicRow()
 	{
-		if (enabled) enabledDisabled.setText("-");
-		else enabledDisabled.setText("+");
+		if (enabled) enabledDisabled.setIcon(removeIcon);
+		else enabledDisabled.setIcon(addIcon);
 	}
 }
