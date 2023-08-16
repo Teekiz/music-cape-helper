@@ -272,7 +272,7 @@ public class MusicCapeHelperPlugin extends Plugin
 			if (row.isEnabled())
 			{
 				musicCapeHelperPanel.getMusicRows().stream()
-					.filter(r -> r.getMusic().getRegion().getName().equals(row.getRowLabel().getText()))
+					.filter(r -> r.getMusic().getRegion().getName().equals(row.getRowTextType()))
 					.filter(r -> !r.isEnabled())
 					.forEach(r ->
 					{
@@ -283,7 +283,7 @@ public class MusicCapeHelperPlugin extends Plugin
 			else
 			{
 				musicCapeHelperPanel.getMusicRows().stream()
-					.filter(r -> r.getMusic().getRegion().getName().equals(row.getRowLabel().getText()))
+					.filter(r -> r.getMusic().getRegion().getName().equals(row.getRowTextType()))
 					.filter(r -> r.isEnabled())
 					.forEach(r ->
 					{
@@ -294,7 +294,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		}
 		else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
 		{
-			if (row.getRowLabel().getText().equals("Required tracks: "))
+			if (row.getRowTextType().equals("Required tracks"))
 			{
 				if (row.isEnabled())
 				{
@@ -319,7 +319,7 @@ public class MusicCapeHelperPlugin extends Plugin
 						});
 				}
 			}
-			else if (row.getRowLabel().getText().equals("Optional tracks: "))
+			else if (row.getRowTextType().equals("Optional tracks"))
 			{
 				if (row.isEnabled())
 				{

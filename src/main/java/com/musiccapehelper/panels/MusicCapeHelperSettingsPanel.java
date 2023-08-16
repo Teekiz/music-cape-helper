@@ -49,6 +49,9 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		settingsWrapper.setBorder(new EmptyBorder(10, 0, 10, 0));
 		settingsWrapper.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+		int comboWidth = 75; //50
+		int comboHeight = 20; //20
+
 		// -- Search Bar --
 		searchBar = new IconTextField();
 		searchBar.setIcon(IconTextField.Icon.SEARCH);
@@ -61,13 +64,13 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		add(searchBar);
 
 		// -- Completed --
-		JLabel completedLabel = new JLabel("Show: ");
+		JLabel completedLabel = new JLabel("Show:");
 		completedLabel.setToolTipText("Filters music tracks based on whether they have been discovered or not.");
 		completedCombo = new JComboBox<>();
 		completedCombo.setToolTipText("Filters music tracks based on whether they have been discovered or not.");
 		completedLabel.setLabelFor(completedCombo);
 		for (Locked locked : Locked.values()) {completedCombo.addItem(locked.getText());}
-		completedCombo.setPreferredSize(new Dimension(80 ,20));
+		completedCombo.setPreferredSize(new Dimension(comboWidth ,comboHeight));
 		if (config.panelSettingLocked() != null) {completedCombo.setSelectedItem(config.panelSettingLocked().getText());}
 		else {completedCombo.setSelectedIndex(0);}
 		completedCombo.addActionListener(e ->
@@ -81,13 +84,13 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		settingsWrapper.add(completedCombo);
 
 		// -- Region --
-		JLabel regionLabel = new JLabel("Region: ");
+		JLabel regionLabel = new JLabel("Region:");
 		regionCombo = new JComboBox<>();
 		regionCombo.setToolTipText("Filters music based on the region they are unlocked in.");
 		regionLabel.setLabelFor(regionCombo);
 		regionLabel.setToolTipText("Filters music based on the region they are unlocked in.");
 		for (Region regionName : Region.values()) {regionCombo.addItem(regionName.getName());}
-		regionCombo.setPreferredSize(new Dimension(80 ,20));
+		regionCombo.setPreferredSize(new Dimension(comboWidth ,comboHeight));
 		if (config.panelSettingRegion() != null) {regionCombo.setSelectedItem(config.panelSettingRegion().getName());}
 		else {regionCombo.setSelectedIndex(0);}
 		regionCombo.addActionListener(e ->
@@ -101,13 +104,13 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		settingsWrapper.add(regionCombo);
 
 		// -- Unlocked During Quest
-		JLabel unlockedDuringQuestLabel = new JLabel("Include Quest Unlocks: ");
+		JLabel unlockedDuringQuestLabel = new JLabel("Quests:");
 		unlockedDuringQuestLabel.setToolTipText("Filters music tracks unlocked during quests.");
 		unlockedDuringQuestCombo = new JComboBox<>();
 		unlockedDuringQuestCombo.setToolTipText("Filters music tracks unlocked during quests.");
 		for (Quest quest : Quest.values()) {unlockedDuringQuestCombo.addItem(quest.getText());}
 		unlockedDuringQuestLabel.setLabelFor(unlockedDuringQuestCombo);
-		unlockedDuringQuestLabel.setPreferredSize(new Dimension(80 ,20));
+		unlockedDuringQuestLabel.setPreferredSize(new Dimension(comboWidth ,comboHeight));
 		if (config.panelSettingQuest() != null) {unlockedDuringQuestCombo.setSelectedItem(config.panelSettingQuest().getText());}
 		unlockedDuringQuestCombo.addActionListener(e ->
 		{
@@ -120,13 +123,13 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		settingsWrapper.add(unlockedDuringQuestCombo);
 
 		// -- Included Optional
-		JLabel includeOptionalLabel = new JLabel("Include Optional Unlocks: ");
+		JLabel includeOptionalLabel = new JLabel("Optional:");
 		includeOptionalLabel.setToolTipText("Filters music tracks that are not required for the basic music cape unlock.");
 		includeOptionalCombo = new JComboBox<>();
 		for (Optional optional : Optional.values()) {includeOptionalCombo.addItem(optional.getText());}
 		includeOptionalCombo.setToolTipText("Filters music tracks that are not required for the basic music cape unlock.");
 		includeOptionalLabel.setLabelFor(includeOptionalCombo);
-		includeOptionalLabel.setPreferredSize(new Dimension(80 ,20));
+		includeOptionalLabel.setPreferredSize(new Dimension(comboWidth ,comboHeight));
 		if (config.panelSettingOptional() != null) {includeOptionalCombo.setSelectedItem(config.panelSettingOptional().getText());}
 		includeOptionalCombo.addActionListener(e ->
 		{
@@ -145,7 +148,7 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		orderCombo.setToolTipText("The order the tracks are shown in.");
 		orderLabel.setLabelFor(orderCombo);
 		for (OrderBy order : OrderBy.values()) {orderCombo.addItem(order.getText());}
-		orderCombo.setPreferredSize(new Dimension(80 ,20));
+		orderCombo.setPreferredSize(new Dimension(comboWidth ,comboHeight));
 		if (config.panelSettingOrderBy() != null) {orderCombo.setSelectedItem(config.panelSettingOrderBy().getText());}
 		else {orderCombo.setSelectedIndex(0);}
 		orderCombo.addActionListener(e ->

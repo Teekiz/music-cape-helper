@@ -135,7 +135,7 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 				//todo - what happens when mouse is clicked
 				//check if client is logged in
 				//right click, left click?
-				setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);
+				setBackground(ColorScheme.DARK_GRAY_COLOR);
 				plugin.rowClicked(MusicCapeHelperPanelMusicRow.this);
 			}
 		});

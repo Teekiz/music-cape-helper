@@ -36,7 +36,10 @@ public class MusicCapeHelperPanel extends PluginPanel
 {
 	private MusicCapeHelperPlugin plugin;
 	private MusicCapeHelperConfig config;
+	private JLabel titleLabel;
+	private JPanel titlePanel;
 	private MusicCapeHelperSettingsPanel settingsPanel;
+
 	private MusicCapeHelperMusicPanel musicPanel;
 	private MusicCapeHelperMapPanel mapPanel;
 	private JPanel displayPanel;
@@ -52,6 +55,13 @@ public class MusicCapeHelperPanel extends PluginPanel
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(new EmptyBorder(10, 10, 10, 10));
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
+
+		//title panel
+		titlePanel = new JPanel();
+		titleLabel = new JLabel("Music Cape Helper");
+		titleLabel.setFont(FontManager.getRunescapeBoldFont());
+		titlePanel.add(titleLabel);
+		add(titlePanel);
 
 		add(settingsPanel = new MusicCapeHelperSettingsPanel(plugin, config, this));
 
@@ -165,7 +175,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 			.filter(r -> r instanceof MusicCapeHelperMusicRowHeader)
 			.forEach(r ->
 			{
-				String label = ((MusicCapeHelperMusicRowHeader) r).getRowLabel().getText();
+				String label = ((MusicCapeHelperMusicRowHeader) r).getRowTextType();
 				//checks to see if there are any matches to the region that of the label that are not enabled
 				if (config.panelSettingOrderBy().equals(OrderBy.REGION))
 				{
@@ -185,7 +195,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 				}
 				else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
 				{
-					if (label.equals("Required tracks: ") && Arrays.stream(musicPanel.getComponents())
+					if (label.equals("Required tracks") && Arrays.stream(musicPanel.getComponents())
 						.filter(s -> s instanceof MusicCapeHelperPanelMusicRow)
 						.filter(s -> ((MusicCapeHelperPanelMusicRow) s).getMusic().isRequired())
 						.anyMatch(s -> !s.isEnabled()))
@@ -193,7 +203,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 						//if there is one or more matches, then set the header to false
 						((MusicCapeHelperMusicRowHeader) r).setHeader(false);
 					}
-					else if (label.equals("Optional tracks: ") && Arrays.stream(musicPanel.getComponents())
+					else if (label.equals("Optional tracks") && Arrays.stream(musicPanel.getComponents())
 						.filter(s -> s instanceof MusicCapeHelperPanelMusicRow)
 						.filter(s -> !((MusicCapeHelperPanelMusicRow) s).getMusic().isRequired())
 						.anyMatch(s -> !s.isEnabled()))
