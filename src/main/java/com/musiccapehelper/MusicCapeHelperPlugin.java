@@ -119,7 +119,14 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Subscribe
 	public void onConfigChanged(ConfigChanged configChanged)
 	{
-		clientThread.invokeAtTickEnd(this::updateMusicList);
+		if (configChanged.getKey().equals("differentiateQuestMarkers") || configChanged.getKey().equals("differentiateCompletedMarkers"))
+		{
+			clientThread.invokeAtTickEnd(this::updateMapMarkerIcons);
+		}
+		else
+		{
+			clientThread.invokeAtTickEnd(this::updateMusicList);
+		}
 	}
 
 	@Subscribe
@@ -238,7 +245,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		//checks if the world map should be updated
 		if (check == null)
 		{
-			mapPoints.add(new MusicCapeHelperWorldMapPoint(row.getMusic(), row.isCompleted()));
+			mapPoints.add(new MusicCapeHelperWorldMapPoint(row.getMusic(), row.isCompleted(), config));
 			musicCapeHelperPanel.updateMusicRow(row.getMusic(), true);
 		}
 		else
@@ -269,7 +276,7 @@ public class MusicCapeHelperPlugin extends Plugin
 					.filter(r -> !r.isEnabled())
 					.forEach(r ->
 					{
-						mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), r.isCompleted()));
+						mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), r.isCompleted(), config));
 						musicCapeHelperPanel.updateMusicRow(r.getMusic(), true);
 					});
 			}
@@ -296,7 +303,7 @@ public class MusicCapeHelperPlugin extends Plugin
 						.filter(r -> !r.isEnabled())
 						.forEach(r ->
 						{
-							mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), r.isCompleted()));
+							mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), r.isCompleted(), config));
 							musicCapeHelperPanel.updateMusicRow(r.getMusic(), true);
 						});
 				}
@@ -321,7 +328,7 @@ public class MusicCapeHelperPlugin extends Plugin
 						.filter(r -> !r.isEnabled())
 						.forEach(r ->
 						{
-							mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), r.isCompleted()));
+							mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), r.isCompleted(), config));
 							musicCapeHelperPanel.updateMusicRow(r.getMusic(), true);
 						});
 				}
@@ -343,14 +350,17 @@ public class MusicCapeHelperPlugin extends Plugin
 		updateMarkersOnMap();
 	}
 
+	public void updateMapMarkerIcons()
+	{
+		mapPoints.forEach(MusicCapeHelperWorldMapPoint::setMapPointImage);
+		updateMarkersOnMap();
+	}
+
 	//this both adds and removes the markers, to update the map, add or remove from the mapPoint list
 	public void updateMarkersOnMap()
 	{
 		worldMapPointManager.removeIf(MusicCapeHelperWorldMapPoint.class::isInstance);
-		for (MusicCapeHelperWorldMapPoint point : mapPoints)
-		{
-			worldMapPointManager.add(point);
-		}
+		mapPoints.forEach(p -> worldMapPointManager.add(p));
 		saveMapMarkers(mapPoints);
 	}
 
@@ -386,7 +396,7 @@ public class MusicCapeHelperPlugin extends Plugin
 			boolean completed = element.getAsJsonObject().get("completed").getAsBoolean();
 			if (music != null)
 			{
-				point.add(new MusicCapeHelperWorldMapPoint(music, completed));
+				point.add(new MusicCapeHelperWorldMapPoint(music, completed, config));
 			}
 		}
 		return point;

@@ -11,8 +11,9 @@ public class MusicCapeHelperWorldMapPoint extends WorldMapPoint
 	Music music;
 	@Getter
 	boolean completed;
+	MusicCapeHelperConfig config;
 
-	public MusicCapeHelperWorldMapPoint(Music music, boolean completed)
+	public MusicCapeHelperWorldMapPoint(Music music, boolean completed, MusicCapeHelperConfig config)
 	{
 		//ImagePoint code used from "clue scrolls" plugin constructor
 		//todo - change based on whether it is completed or not and if it is a quest
@@ -20,6 +21,7 @@ public class MusicCapeHelperWorldMapPoint extends WorldMapPoint
 
 		this.music = music;
 		this.completed = completed;
+		this.config = config;
 
 		this.setWorldPoint(music.getSongUnlockPoint());
 		this.setTooltip(music.getSongName());
@@ -29,13 +31,29 @@ public class MusicCapeHelperWorldMapPoint extends WorldMapPoint
 
 	public void setMapPointImage()
 	{
-		if (music.isQuest())
+		if (config.differentiateQuestMarkers() && getMusic().isQuest())
 		{
-			this.setImage(ImageUtil.loadImageResource(getClass(), "/music_arrow_quest_default.png"));
+			if (config.differentiateCompletedMarkers())
+			{
+				if (isCompleted()) this.setImage(ImageUtil.loadImageResource(getClass(), "/music_arrow_quest_completed.png"));
+				else this.setImage(ImageUtil.loadImageResource(getClass(), "/music_arrow_quest_incomplete.png"));
+			}
+			else
+			{
+				this.setImage(ImageUtil.loadImageResource(getClass(), "/music_arrow_quest_default.png"));
+			}
 		}
 		else
 		{
-			this.setImage(ImageUtil.loadImageResource(getClass(), "/music_arrow_default.png"));
+			if (config.differentiateCompletedMarkers())
+			{
+				if (isCompleted()) this.setImage(ImageUtil.loadImageResource(getClass(), "/music_arrow_completed.png"));
+				else this.setImage(ImageUtil.loadImageResource(getClass(), "/music_arrow_incomplete.png"));
+			}
+			else
+			{
+				this.setImage(ImageUtil.loadImageResource(getClass(), "/music_arrow_default.png"));
+			}
 		}
 
 	}

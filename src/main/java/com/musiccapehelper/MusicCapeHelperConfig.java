@@ -13,22 +13,36 @@ import net.runelite.client.config.ConfigSection;
 @ConfigGroup("MusicCapeHelperConfig")
 public interface MusicCapeHelperConfig extends Config
 {
+	@ConfigItem(
+		keyName = "differentiateQuestMarkers",
+		name = "Differentiate quest unlocks:",
+		description = "Changes the markers shown to show a different icon if unlocked as part of a quest"
+	)
+
+	default boolean differentiateQuestMarkers()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "differentiateCompletedMarkers",
+		name = "Differentiate completed markers: ",
+		description = "Changes the markers shown to show a different icon if the music track has been unlocked"
+	)
+
+	default boolean differentiateCompletedMarkers()
+	{
+		return true;
+	}
 
 	//todo - remove marker if completed? hide panel if all are unlocked, set the arrows to the default colours
 	//Panel settings
-	@ConfigSection(
-		name = "PanelSettings",
-		description = "",
-		position = 100
-	)
-	String panelSection = "PanelSettings";
 
 	@ConfigItem(
 		keyName = "panelSettingLocked",
 		name = "",
 		description = "Used in panel for combo-box locked",
-		hidden = true,
-		section = panelSection
+		hidden = true
 	)
 
 	default Locked panelSettingLocked()
@@ -40,8 +54,7 @@ public interface MusicCapeHelperConfig extends Config
 		keyName = "panelSettingLocked",
 		name = "",
 		description = "Used in panel for combo-box locked",
-		hidden = true,
-		section = panelSection
+		hidden = true
 	)
 	void panelSettingLocked(Locked locked);
 
@@ -49,8 +62,7 @@ public interface MusicCapeHelperConfig extends Config
 		keyName = "panelSettingQuest",
 		name = "",
 		description = "Used in panel for combo-box quest",
-		hidden = true,
-		section = panelSection
+		hidden = true
 	)
 	default Quest panelSettingQuest()
 	{
@@ -61,8 +73,7 @@ public interface MusicCapeHelperConfig extends Config
 		keyName = "panelSettingQuest",
 		name = "",
 		description = "Used in panel for combo-box quest",
-		hidden = true,
-		section = panelSection
+		hidden = true
 	)
 	void panelSettingQuest(Quest quest);
 
@@ -70,8 +81,7 @@ public interface MusicCapeHelperConfig extends Config
 		keyName = "panelSettingRegion",
 		name = "",
 		description = "Used in panel for combo-box region",
-		hidden = true,
-		section = panelSection
+		hidden = true
 	)
 	default Region panelSettingRegion()
 	{
@@ -82,8 +92,7 @@ public interface MusicCapeHelperConfig extends Config
 		keyName = "panelSettingRegion",
 		name = "",
 		description = "Used in panel for combo-box region",
-		hidden = true,
-		section = panelSection
+		hidden = true
 	)
 	void panelSettingRegion(Region region);
 
@@ -91,8 +100,7 @@ public interface MusicCapeHelperConfig extends Config
 		keyName = "panelSettingOptional",
 		name = "",
 		description = "Used in panel for combo-box optional",
-		hidden = true,
-		section = panelSection
+		hidden = true
 	)
 	default Optional panelSettingOptional()
 	{
@@ -103,8 +111,7 @@ public interface MusicCapeHelperConfig extends Config
 		keyName = "panelSettingOptional",
 		name = "",
 		description = "Used in panel for combo-box optional",
-		hidden = true,
-		section = panelSection
+		hidden = true
 	)
 	void panelSettingOptional(Optional optional);
 
@@ -112,8 +119,7 @@ public interface MusicCapeHelperConfig extends Config
 		keyName = "panelSettingOrderBy",
 		name = "",
 		description = "Used in panel for combo-box optional",
-		hidden = true,
-		section = panelSection
+		hidden = true
 	)
 	default OrderBy panelSettingOrderBy()
 	{
@@ -124,8 +130,7 @@ public interface MusicCapeHelperConfig extends Config
 		keyName = "panelSettingOrderBy",
 		name = "",
 		description = "Used in panel for combo-box optional",
-		hidden = true,
-		section = panelSection
+		hidden = true
 	)
 	void panelSettingOrderBy(OrderBy orderBy);
 }
