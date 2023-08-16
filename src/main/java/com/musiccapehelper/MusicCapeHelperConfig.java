@@ -13,6 +13,8 @@ import net.runelite.client.config.ConfigSection;
 @ConfigGroup("MusicCapeHelperConfig")
 public interface MusicCapeHelperConfig extends Config
 {
+
+	//todo - remove marker if completed? hide panel if all are unlocked, set the arrows to the default colours
 	//Panel settings
 	@ConfigSection(
 		name = "PanelSettings",

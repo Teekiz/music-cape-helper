@@ -4,6 +4,7 @@ import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.Music;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -23,6 +24,8 @@ import net.runelite.client.util.ImageUtil;
 
 public class MusicCapeHelperPanelMusicRow extends JPanel
 {
+
+	//todo - extra information?
 	@Getter
 	private Music music;
 	@Getter
@@ -34,10 +37,9 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 	private JLabel songNameLabel;
 	private JLabel songRegionLabel;
 	private JLabel songIsRequiredLabel;
+	private JLabel songIsQuestLabel;
+
 	private JLabel enabledDisabled;
-	//icons
-	final ImageIcon addIcon;
-	final ImageIcon removeIcon;
 
 	public MusicCapeHelperPanelMusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin)
 	{
@@ -46,17 +48,12 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 		this.plugin = plugin;
 		enabled = false;
 
-		addIcon = new ImageIcon("addicon.png");
-		removeIcon = new ImageIcon("removeicon.png");
-
-		//setLayout(new GridLayout(0, 4, 5, 5));
 		setLayout(new GridBagLayout());
 		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(0, 5, 0, 5);
-		gbc.anchor = GridBagConstraints.WEST;
+		gbc.insets = new Insets(0, 5, 2, 5);
 		gbc.fill = GridBagConstraints.NONE;
 
 		if (completed) {labelColour = Color.GREEN;}
@@ -65,32 +62,56 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 		songNameLabel = new JLabel(music.getSongName(), JLabel.LEFT);
 		songNameLabel.setFont(FontManager.getRunescapeSmallFont());
 		songNameLabel.setForeground(labelColour);
+		songNameLabel.setHorizontalAlignment(JLabel.LEFT);
+
 		songRegionLabel = new JLabel(music.getRegion().getName(), JLabel.LEFT);
 		songRegionLabel.setFont(FontManager.getRunescapeSmallFont());
+		songRegionLabel.setPreferredSize(new Dimension(50, 10));
+		songRegionLabel.setHorizontalAlignment(JLabel.LEFT);
+
 		songIsRequiredLabel = new JLabel();
-		if (music.isRequired()){songIsRequiredLabel.setText("Yes");}
-		else {songIsRequiredLabel.setText("No");}
+		if (music.isRequired()){songIsRequiredLabel.setText("Required");}
+		else {songIsRequiredLabel.setText("Optional");}
 		songIsRequiredLabel.setFont(FontManager.getRunescapeSmallFont());
+		songIsRequiredLabel.setHorizontalAlignment(JLabel.LEFT);
+
+		songIsQuestLabel = new JLabel();
+		if (music.isQuest()){songIsQuestLabel.setText("Quest Unlock");}
+		else {songIsQuestLabel.setText("");}
+		songIsQuestLabel.setFont(FontManager.getRunescapeSmallFont());
+		songIsQuestLabel.setPreferredSize(new Dimension(70, 10));
+		songIsQuestLabel.setHorizontalAlignment(JLabel.LEFT);
+
 		enabledDisabled = new JLabel();
 		enabled = plugin.getMapPoints().stream().anyMatch(m -> m.getMusic().equals(this.getMusic()));
 		updateMusicRow();
 
-		gbc.weightx = 0.5;
-		gbc.gridwidth = 1;
+		gbc.gridwidth = 4;
 		gbc.gridx = 0;
-
 		gbc.gridy = 0;
+		gbc.weightx = 1.0;
+		gbc.anchor = GridBagConstraints.WEST;
 		add(songNameLabel, gbc);
 
+		gbc.gridwidth = 1;
+		gbc.gridx = 4;
+		gbc.weightx = 0.5;
+		gbc.anchor = GridBagConstraints.NORTHEAST;
+		add(enabledDisabled, gbc);
+
 		gbc.ipadx = 0;
-		gbc.gridx = 1;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.anchor = GridBagConstraints.SOUTHWEST;
 		add(songRegionLabel, gbc);
 
 		gbc.gridx = 2;
+		gbc.anchor = GridBagConstraints.SOUTHWEST;
 		add(songIsRequiredLabel, gbc);
 
-		gbc.gridx = 3;
-		add(enabledDisabled, gbc);
+		gbc.gridx = 4;
+		gbc.anchor = GridBagConstraints.SOUTHEAST;
+		add(songIsQuestLabel, gbc);
 
 		setToolTipText(music.getDescription());
 
@@ -114,6 +135,7 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 				//todo - what happens when mouse is clicked
 				//check if client is logged in
 				//right click, left click?
+				setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);
 				plugin.rowClicked(MusicCapeHelperPanelMusicRow.this);
 			}
 		});
@@ -127,7 +149,15 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 
 	public void updateMusicRow()
 	{
-		if (enabled) enabledDisabled.setIcon(removeIcon);
-		else enabledDisabled.setIcon(addIcon);
+		if (enabled)
+		{
+			enabledDisabled.setIcon(new ImageIcon(ImageUtil.loadImageResource(getClass(), "/removeicon.png")));
+			enabledDisabled.setToolTipText("Click to unpin icon from map");
+		}
+		else
+		{
+			enabledDisabled.setIcon(new ImageIcon(ImageUtil.loadImageResource(getClass(), "/addicon.png")));
+			enabledDisabled.setToolTipText("Click to pin icon to the map");
+		}
 	}
 }

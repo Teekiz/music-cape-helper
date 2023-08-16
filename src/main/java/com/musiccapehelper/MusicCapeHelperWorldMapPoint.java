@@ -23,7 +23,20 @@ public class MusicCapeHelperWorldMapPoint extends WorldMapPoint
 
 		this.setWorldPoint(music.getSongUnlockPoint());
 		this.setTooltip(music.getSongName());
-		this.setImage(ImageUtil.loadImageResource(getClass(), "/clue_arrow_d.png"));
+		this.setMapPointImage();
 		this.setImagePoint(new Point(getImage().getWidth() / 2, getImage().getHeight()));
+	}
+
+	public void setMapPointImage()
+	{
+		if (music.isQuest())
+		{
+			this.setImage(ImageUtil.loadImageResource(getClass(), "/music_arrow_quest_default.png"));
+		}
+		else
+		{
+			this.setImage(ImageUtil.loadImageResource(getClass(), "/music_arrow_default.png"));
+		}
+
 	}
 }
