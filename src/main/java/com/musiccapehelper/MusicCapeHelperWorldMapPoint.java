@@ -16,7 +16,7 @@ public class MusicCapeHelperWorldMapPoint extends WorldMapPoint
 	public MusicCapeHelperWorldMapPoint(Music music, boolean completed, MusicCapeHelperConfig config)
 	{
 		//ImagePoint code used from "clue scrolls" plugin constructor
-		//todo - change based on whether it is completed or not and if it is a quest
+		//todo - if the player right clicks, pan and zoom to quest start point
 		super(null, null);
 
 		this.music = music;

@@ -2,11 +2,13 @@ package com.musiccapehelper.panels;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
+import com.musiccapehelper.enums.HeaderType;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.OrderBy;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,8 +23,7 @@ public class MusicCapeHelperMusicRowHeader extends JPanel
 	@Getter
 	boolean enabled;
 	@Getter
-	String rowTextType;
-	@Getter
+	HeaderType headerType;
 	JLabel rowLabel;
 	JLabel addRemoveAllIcon;
 	MusicCapeHelperConfig config;
@@ -49,8 +50,7 @@ public class MusicCapeHelperMusicRowHeader extends JPanel
 
 		if (config.panelSettingOrderBy().equals(OrderBy.REGION))
 		{
-			//rowTextType is used to identify the row when updating
-			rowTextType = music.getRegion().getName();
+			headerType = Arrays.stream(HeaderType.values()).filter(m -> m.getRegion().equals(music.getRegion())).findFirst().orElse(HeaderType.ERROR);
 			rowLabel.setText("Region: " + music.getRegion().getName());
 			addRemoveToolTip = "tracks from the region " + music.getRegion().getName();
 		}
@@ -58,13 +58,13 @@ public class MusicCapeHelperMusicRowHeader extends JPanel
 		{
 			if (music.isRequired())
 			{
-				rowTextType = ("Required tracks");
+				headerType = HeaderType.REQUIRED;
 				rowLabel.setText("Required tracks: ");
 				addRemoveToolTip = "all required tracks";
 			}
 			else
 			{
-				rowTextType = ("Optional tracks");
+				headerType = HeaderType.OPTIONAL;
 				rowLabel.setText("Optional tracks: ");
 				addRemoveToolTip = "all optional tracks";
 			}

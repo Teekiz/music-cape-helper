@@ -24,22 +24,11 @@ public class MusicCapeHelperMapPanel extends JPanel
 		setBorder(new EmptyBorder(10, 0, 10, 0));
 
 		musicHeaderWrapper = new JPanel();
-		musicHeaderWrapper.setLayout(new GridLayout(0, 4, 5, 5));
-		JLabel songNameLabelHeader = new JLabel("Name");
-		songNameLabelHeader.setToolTipText("The name of the music track.");
+		musicHeaderWrapper.setBorder(new EmptyBorder(5, 0, 5, 0));
+		JLabel songNameLabelHeader = new JLabel("Map List");
+		songNameLabelHeader.setToolTipText("A list of all markers currently pinned to the map.");
 		songNameLabelHeader.setFont(FontManager.getRunescapeBoldFont());
-		JLabel songRegionLabelHeader = new JLabel("Region");
-		songRegionLabelHeader.setToolTipText("The region the music track is unlocked in or where the associated quest starts.");
-		songRegionLabelHeader.setFont(FontManager.getRunescapeBoldFont());
-		JLabel songIsRequiredLabelHeader = new JLabel("Required?");
-		songIsRequiredLabelHeader.setToolTipText("Seasonal tracks are not required for the untrimmed cape.");
-		songIsRequiredLabelHeader.setFont(FontManager.getRunescapeBoldFont());
-		JLabel blankSpace = new JLabel("");
 		musicHeaderWrapper.add(songNameLabelHeader);
-		musicHeaderWrapper.add(songRegionLabelHeader);
-		musicHeaderWrapper.add(songIsRequiredLabelHeader);
-		musicHeaderWrapper.add(blankSpace);
-
 		add(musicHeaderWrapper);
 	}
 

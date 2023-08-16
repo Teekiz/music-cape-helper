@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.inject.Provides;
+import com.musiccapehelper.enums.HeaderType;
 import com.musiccapehelper.enums.Locked;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.Optional;
@@ -272,7 +273,7 @@ public class MusicCapeHelperPlugin extends Plugin
 			if (row.isEnabled())
 			{
 				musicCapeHelperPanel.getMusicRows().stream()
-					.filter(r -> r.getMusic().getRegion().getName().equals(row.getRowTextType()))
+					.filter(r -> r.getMusic().getRegion().equals(row.getHeaderType().getRegion()))
 					.filter(r -> !r.isEnabled())
 					.forEach(r ->
 					{
@@ -283,7 +284,7 @@ public class MusicCapeHelperPlugin extends Plugin
 			else
 			{
 				musicCapeHelperPanel.getMusicRows().stream()
-					.filter(r -> r.getMusic().getRegion().getName().equals(row.getRowTextType()))
+					.filter(r -> r.getMusic().getRegion().equals(row.getHeaderType().getRegion()))
 					.filter(r -> r.isEnabled())
 					.forEach(r ->
 					{
@@ -294,7 +295,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		}
 		else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
 		{
-			if (row.getRowTextType().equals("Required tracks"))
+			if (row.getHeaderType().equals(HeaderType.REQUIRED))
 			{
 				if (row.isEnabled())
 				{
@@ -319,7 +320,7 @@ public class MusicCapeHelperPlugin extends Plugin
 						});
 				}
 			}
-			else if (row.getRowTextType().equals("Optional tracks"))
+			else if (row.getHeaderType().equals(HeaderType.OPTIONAL))
 			{
 				if (row.isEnabled())
 				{
