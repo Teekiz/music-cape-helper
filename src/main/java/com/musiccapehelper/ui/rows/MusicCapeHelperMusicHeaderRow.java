@@ -27,14 +27,11 @@ public class MusicCapeHelperMusicHeaderRow extends JPanel
 	private boolean enabled;
 	@Getter
 	private HeaderType headerType;
-	private JLabel rowLabel;
-	private JLabel addRemoveAllIcon;
-	private MusicCapeHelperConfig config;
-	private Music music;
-	private MusicCapeHelperPlugin plugin;
+	private final MusicCapeHelperConfig config;
+	private final Music music;
+	private final MusicCapeHelperPlugin plugin;
+	private final JLabel addRemoveAllIcon;
 	private String addRemoveToolTip;
-	private JPopupMenu popupMenu;
-	private JMenuItem popupMenuText;
 
 	public MusicCapeHelperMusicHeaderRow(MusicCapeHelperConfig config, Music music, MusicCapeHelperPlugin plugin)
 	{
@@ -49,7 +46,7 @@ public class MusicCapeHelperMusicHeaderRow extends JPanel
 		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 
-		rowLabel = new JLabel();
+		JLabel rowLabel = new JLabel();
 		addRemoveAllIcon = new JLabel();
 
 		addRemoveAllIcon.setToolTipText("Use this button to remove all map markers");
@@ -137,12 +134,14 @@ public class MusicCapeHelperMusicHeaderRow extends JPanel
 
 	public void popUpMenuActions()
 	{
-		popupMenu = new JPopupMenu();
-		popupMenuText = new JMenuItem();
+		JPopupMenu popupMenu = new JPopupMenu();
+		JMenuItem popupMenuText = new JMenuItem();
 		popupMenu.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		if (enabled) {popupMenuText.setText("Unpin map icons");}
-		else {popupMenuText.setText("Pin map icons");}
+		if (enabled) {
+			popupMenuText.setText("Unpin map icons");}
+		else {
+			popupMenuText.setText("Pin map icons");}
 		popupMenuText.setFont(FontManager.getRunescapeSmallFont());
 		popupMenu.add(popupMenuText);
 

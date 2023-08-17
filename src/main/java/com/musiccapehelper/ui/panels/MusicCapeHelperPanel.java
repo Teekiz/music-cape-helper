@@ -2,16 +2,20 @@ package com.musiccapehelper.ui.panels;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
+import com.musiccapehelper.MusicCapeHelperWorldMapPoint;
 import com.musiccapehelper.enums.HeaderType;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.OrderBy;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMusicHeaderRow;
+import com.musiccapehelper.ui.rows.MusicCapeHelperPanelMapRow;
 import com.musiccapehelper.ui.rows.MusicCapeHelperPanelMusicRow;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -27,18 +31,14 @@ import org.apache.commons.lang3.StringUtils;
 
 public class MusicCapeHelperPanel extends PluginPanel
 {
-	private MusicCapeHelperPlugin plugin;
-	private MusicCapeHelperConfig config;
-	private JLabel titleLabel;
-	private JPanel titlePanel;
-	private MusicCapeHelperSettingsPanel settingsPanel;
-
-	private MusicCapeHelperMusicPanel musicPanel;
-	private MusicCapeHelperMapPanel mapPanel;
-	private JPanel displayPanel;
-	private MaterialTabGroup musicMapTabGroup;
+	private final MusicCapeHelperPlugin plugin;
+	private final MusicCapeHelperConfig config;
+	private final MusicCapeHelperMusicPanel musicPanel;
+	private final MusicCapeHelperMapPanel mapPanel;
 	@Getter
 	private List<MusicCapeHelperPanelMusicRow> musicRows;
+	@Getter
+	private List<MusicCapeHelperPanelMapRow> mapRows;
 
 	public MusicCapeHelperPanel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
@@ -50,19 +50,19 @@ public class MusicCapeHelperPanel extends PluginPanel
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 
 		//title panel
-		titlePanel = new JPanel();
-		titleLabel = new JLabel("Music Cape Helper");
+		JPanel titlePanel = new JPanel();
+		JLabel titleLabel = new JLabel("Music Cape Helper");
 		titleLabel.setFont(FontManager.getRunescapeBoldFont());
 		titlePanel.add(titleLabel);
 		add(titlePanel);
 
-		add(settingsPanel = new MusicCapeHelperSettingsPanel(plugin, config, this));
+		add(new MusicCapeHelperSettingsPanel(plugin, config, this));
 
 		musicPanel = new MusicCapeHelperMusicPanel(plugin, config);
 		mapPanel = new MusicCapeHelperMapPanel(plugin, config);
-		displayPanel = new JPanel();
+		JPanel displayPanel = new JPanel();
 
-		musicMapTabGroup = new MaterialTabGroup(displayPanel);
+		MaterialTabGroup musicMapTabGroup = new MaterialTabGroup(displayPanel);
 		MaterialTab musicTab = new MaterialTab("Music", musicMapTabGroup, musicPanel);
 		MaterialTab mapTab = new MaterialTab("Map", musicMapTabGroup, mapPanel);
 
@@ -92,7 +92,66 @@ public class MusicCapeHelperPanel extends PluginPanel
 		return musicListRow;
 	}
 
+	public List<MusicCapeHelperPanelMapRow> createMapRows()
+	{
+		List<MusicCapeHelperPanelMapRow> mapRowList = new ArrayList<>();
+		plugin.getMapPoints().forEach(point ->
+			{
+				plugin.filterMusicList().forEach((key, value) ->
+				{
+					if (key.equals(point.getMusic()))
+					{
+						mapRowList.add(new MusicCapeHelperPanelMapRow(key, value, plugin, config));
+					}
+				});
+			}
+		);
+
+		return mapRowList;
+	}
+
+	public List<MusicCapeHelperPanelMapRow> createMapRowsFromSearch(String search)
+	{
+		List<MusicCapeHelperPanelMapRow> mapRowList = new ArrayList<>();
+		plugin.getMapPoints()
+			.stream()
+			.filter(s -> StringUtils.containsIgnoreCase(s.getMusic().getSongName(), search))
+			.forEach(e -> mapRowList.add(new MusicCapeHelperPanelMapRow(e.getMusic(), e.isCompleted(), plugin, config)));
+		return mapRowList;
+	}
+
 	public List<MusicCapeHelperPanelMusicRow> sortMusicRows(List<MusicCapeHelperPanelMusicRow> unsortedList)
+	{
+		if (config.panelSettingOrderBy().equals(OrderBy.AZ))
+		{
+			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
+		}
+		else if (config.panelSettingOrderBy().equals(OrderBy.ZA))
+		{
+			unsortedList.sort((s1, s2) -> s2.getMusic().getSongName().compareTo(s1.getMusic().getSongName()));
+		}
+
+		else if (config.panelSettingOrderBy().equals(OrderBy.REGION))
+		{
+			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getRegion().getName()));
+		}
+
+		else if (config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
+		{
+			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
+			unsortedList.sort((s1, s2) -> Boolean.compare(s1.getMusic().isRequired(), s2.getMusic().isRequired()));
+		}
+
+		else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST))
+		{
+			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
+			unsortedList.sort((s1, s2) -> Boolean.compare(s2.getMusic().isRequired(), s1.getMusic().isRequired()));
+		}
+
+		return unsortedList;
+	}
+
+	public List<MusicCapeHelperPanelMapRow> sortMapRows(List<MusicCapeHelperPanelMapRow> unsortedList)
 	{
 		if (config.panelSettingOrderBy().equals(OrderBy.AZ))
 		{
@@ -153,6 +212,17 @@ public class MusicCapeHelperPanel extends PluginPanel
 		}
 	}
 
+	public void addMapRows()
+	{
+		if (mapPanel != null)
+		{
+			for (MusicCapeHelperPanelMapRow row : sortMapRows(mapRows))
+			{
+				mapPanel.add(row);
+			}
+		}
+	}
+
 	public void updateMusicRow(Music music, boolean isOnMap)
 	{
 		//there should not be multiple rows of music
@@ -160,6 +230,23 @@ public class MusicCapeHelperPanel extends PluginPanel
 			.filter(r -> r instanceof MusicCapeHelperPanelMusicRow)
 			.filter(r -> ((MusicCapeHelperPanelMusicRow) r).getMusic().equals(music))
 			.forEach(r -> ((MusicCapeHelperPanelMusicRow) r).setEnabledDisabled(isOnMap));
+
+		Arrays.stream(mapPanel.getComponents())
+			.filter(r -> r instanceof MusicCapeHelperPanelMapRow)
+			.filter(r -> ((MusicCapeHelperPanelMapRow) r).getMusic().equals(music))
+			.forEach(r ->
+			{
+				((MusicCapeHelperPanelMapRow) r).setEnabledDisabled(isOnMap);
+				if (!r.isEnabled())
+				{
+					SwingUtilities.invokeLater(() ->
+					{
+						mapPanel.remove(r);
+						mapPanel.revalidate();
+						mapPanel.repaint();
+					});
+				}
+			});
 	}
 
 	public void checkAndUpdateAllMusicRowHeader()
@@ -217,11 +304,16 @@ public class MusicCapeHelperPanel extends PluginPanel
 		SwingUtilities.invokeLater(() ->
 		{
 			musicPanel.removeAllMusicRows();
+			mapPanel.removeAllMusicRows();
 			musicRows = createMusicRowsFromSearch(searchText);
+			mapRows = createMapRowsFromSearch(searchText);
 			addMusicRows();
+			addMapRows();
 			checkAndUpdateAllMusicRowHeader();
 			musicPanel.revalidate();
 			musicPanel.repaint();
+			mapPanel.revalidate();
+			mapPanel.repaint();
 		});
 	}
 
@@ -230,11 +322,16 @@ public class MusicCapeHelperPanel extends PluginPanel
 		SwingUtilities.invokeLater(() ->
 			{
 				musicPanel.removeAllMusicRows();
+				mapPanel.removeAllMusicRows();
 				musicRows = createMusicRows();
+				mapRows = createMapRows();
 				addMusicRows();
+				addMapRows();
 				checkAndUpdateAllMusicRowHeader();
 				musicPanel.revalidate();
 				musicPanel.repaint();
+				mapPanel.revalidate();
+				mapPanel.repaint();
 			});
 	}
 }

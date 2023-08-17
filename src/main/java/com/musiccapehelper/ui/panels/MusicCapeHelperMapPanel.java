@@ -12,7 +12,7 @@ public class MusicCapeHelperMapPanel extends JPanel
 {
 	final MusicCapeHelperPlugin plugin;
 	final MusicCapeHelperConfig config;
-	final JPanel musicHeaderWrapper;
+	final JPanel mapHeaderWrapper;
 	public MusicCapeHelperMapPanel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
 		this.plugin = plugin;
@@ -22,18 +22,18 @@ public class MusicCapeHelperMapPanel extends JPanel
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(new EmptyBorder(10, 0, 10, 0));
 
-		musicHeaderWrapper = new JPanel();
-		musicHeaderWrapper.setBorder(new EmptyBorder(5, 0, 5, 0));
+		mapHeaderWrapper = new JPanel();
+		mapHeaderWrapper.setBorder(new EmptyBorder(5, 0, 5, 0));
 		JLabel songNameLabelHeader = new JLabel("Map List");
 		songNameLabelHeader.setToolTipText("A list of all markers currently pinned to the map.");
 		songNameLabelHeader.setFont(FontManager.getRunescapeBoldFont());
-		musicHeaderWrapper.add(songNameLabelHeader);
-		add(musicHeaderWrapper);
+		mapHeaderWrapper.add(songNameLabelHeader);
+		add(mapHeaderWrapper);
 	}
 
 	public void removeAllMusicRows()
 	{
 		removeAll();
-		add(musicHeaderWrapper);
+		add(mapHeaderWrapper);
 	}
 }

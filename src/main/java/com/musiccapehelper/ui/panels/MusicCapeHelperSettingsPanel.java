@@ -21,16 +21,15 @@ import net.runelite.client.ui.components.IconTextField;
 
 public class MusicCapeHelperSettingsPanel extends JPanel
 {
-	final MusicCapeHelperPlugin plugin;
-	final MusicCapeHelperConfig config;
-	final MusicCapeHelperPanel panel;
-	final JPanel settingsWrapper;
-	final IconTextField searchBar;
-	final JComboBox<String> completedCombo;
-	final JComboBox<String> regionCombo;
-	final JComboBox<String> unlockedDuringQuestCombo;
-	final JComboBox<String> includeOptionalCombo;
-	final JComboBox<String> orderCombo;
+	private final MusicCapeHelperPlugin plugin;
+	private final MusicCapeHelperConfig config;
+	private final MusicCapeHelperPanel panel;
+	private final IconTextField searchBar;
+	private final JComboBox<String> completedCombo;
+	private final JComboBox<String> regionCombo;
+	private final JComboBox<String> unlockedDuringQuestCombo;
+	private final JComboBox<String> includeOptionalCombo;
+	private final JComboBox<String> orderCombo;
 
 	public MusicCapeHelperSettingsPanel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, MusicCapeHelperPanel panel)
 	{
@@ -44,7 +43,7 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		setBorder(new EmptyBorder(10, 0, 10, 0));
 		setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		settingsWrapper = new JPanel();
+		JPanel settingsWrapper = new JPanel();
 		settingsWrapper.setLayout(new DynamicGridLayout(5, 2, 5, 5));
 		settingsWrapper.setBorder(new EmptyBorder(10, 0, 10, 0));
 		settingsWrapper.setAlignmentX(Component.CENTER_ALIGNMENT);
