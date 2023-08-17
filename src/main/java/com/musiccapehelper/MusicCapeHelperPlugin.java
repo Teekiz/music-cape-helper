@@ -157,6 +157,8 @@ public class MusicCapeHelperPlugin extends Plugin
 		return musicList;
 	}
 
+	public boolean isPlayerLoggedIn() {return client.getGameState().equals(GameState.LOGGED_IN);}
+
 	public void updateMusicList()
 	{
 		if (client.getWidget(239, 6) != null)
@@ -236,11 +238,6 @@ public class MusicCapeHelperPlugin extends Plugin
 
 	public void rowClicked(MusicCapeHelperPanelMusicRow row)
 	{
-		if (client.getGameState() != GameState.LOGGED_IN || client.getLocalPlayer() == null)
-		{
-			return;
-		}
-
 		MusicCapeHelperWorldMapPoint check = mapPoints.stream().filter(m -> m.music == row.getMusic()).findAny().orElse(null);
 
 		//checks if the world map should be updated
@@ -262,11 +259,6 @@ public class MusicCapeHelperPlugin extends Plugin
 	public void rowHeaderClicked(MusicCapeHelperMusicRowHeader row)
 	{
 		//todo check to see if it adds all of the matching rows or only the ones that show (probably want it to be the ones that show)
-		if (client.getGameState() != GameState.LOGGED_IN || client.getLocalPlayer() == null)
-		{
-			return;
-		}
-
 		//use the row name to determine what is updated in combo with the settings
 		if (config.panelSettingOrderBy().equals(OrderBy.REGION))
 		{

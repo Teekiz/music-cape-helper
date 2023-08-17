@@ -39,6 +39,8 @@ public class MusicCapeHelperMusicRowHeader extends JPanel
 		enabled = false;
 		addRemoveToolTip = "";
 
+		//todo - add collapse function
+
 		setLayout(new BorderLayout(5,5));
 		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
@@ -75,7 +77,7 @@ public class MusicCapeHelperMusicRowHeader extends JPanel
 		add(rowLabel, BorderLayout.LINE_START);
 		add(addRemoveAllIcon, BorderLayout.LINE_END);
 
-		addMouseListener(new MouseAdapter()
+		addRemoveAllIcon.addMouseListener(new MouseAdapter()
 		{
 			@Override
 			public void mouseEntered(MouseEvent e)

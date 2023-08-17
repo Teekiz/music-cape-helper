@@ -5,6 +5,7 @@ import com.musiccapehelper.enums.Optional;
 import com.musiccapehelper.enums.OrderBy;
 import com.musiccapehelper.enums.Quest;
 import com.musiccapehelper.enums.Region;
+import java.awt.Color;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -13,10 +14,52 @@ import net.runelite.client.config.ConfigSection;
 @ConfigGroup("MusicCapeHelperConfig")
 public interface MusicCapeHelperConfig extends Config
 {
+	@ConfigSection(
+		name = "Panel Settings",
+		description = "",
+		position = 1
+	)
+	String panelSection = "Panel Settings";
+
+	@ConfigItem(
+		keyName = "panelCompleteTextColour",
+		name="Completed Text Colour",
+		description = "The colour of the text for completed music tracks displayed on the panel",
+		section = "Panel Settings",
+		position = 1
+	)
+	default Color panelCompleteTextColour() {return Color.GREEN;}
+
+	@ConfigItem(
+		keyName = "panelIncompleteTextColour",
+		name="Incomplete Text Colour",
+		description = "The colour of the text for incomplete music tracks displayed on the panel",
+		section = "Panel Settings",
+		position = 2
+	)
+	default Color panelIncompleteTextColour() {return Color.RED;}
+
+	@ConfigItem(
+		keyName = "panelDefaultTextColour",
+		name="Default Text Colour",
+		description = "The colour for the music track text displayed on the panel if the player has not logged in",
+		section = "Panel Settings",
+		position = 3
+	)
+	default Color panelDefaultTextColour() {return Color.GRAY;}
+
+	@ConfigSection(
+		name = "Map Settings",
+		description = "",
+		position = 2
+	)
+	String mapSection = "Map Settings";
+
 	@ConfigItem(
 		keyName = "differentiateQuestMarkers",
 		name = "Differentiate quest unlocks:",
-		description = "Changes the markers shown to show a different icon if unlocked as part of a quest"
+		description = "Changes the markers shown to show a different icon if unlocked as part of a quest",
+		section = "Map Settings"
 	)
 
 	default boolean differentiateQuestMarkers()
@@ -27,7 +70,8 @@ public interface MusicCapeHelperConfig extends Config
 	@ConfigItem(
 		keyName = "differentiateCompletedMarkers",
 		name = "Differentiate completed markers: ",
-		description = "Changes the markers shown to show a different icon if the music track has been unlocked"
+		description = "Changes the markers shown to show a different icon if the music track has been unlocked",
+		section = "Map Settings"
 	)
 
 	default boolean differentiateCompletedMarkers()

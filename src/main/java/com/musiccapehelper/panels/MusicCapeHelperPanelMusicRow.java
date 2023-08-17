@@ -1,5 +1,6 @@
 package com.musiccapehelper.panels;
 
+import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.Music;
 import java.awt.Color;
@@ -32,20 +33,22 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 	private boolean completed;
 	@Getter
 	private boolean enabled;
+
 	private Color labelColour;
 	private MusicCapeHelperPlugin plugin;
+	private MusicCapeHelperConfig config;
 	private JLabel songNameLabel;
 	private JLabel songRegionLabel;
 	private JLabel songIsRequiredLabel;
 	private JLabel songIsQuestLabel;
-
 	private JLabel enabledDisabled;
 
-	public MusicCapeHelperPanelMusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin)
+	public MusicCapeHelperPanelMusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
 		this.music = music;
 		this.completed = completed;
 		this.plugin = plugin;
+		this.config = config;
 		enabled = false;
 
 		setLayout(new GridBagLayout());
@@ -56,8 +59,9 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 		gbc.insets = new Insets(0, 5, 2, 5);
 		gbc.fill = GridBagConstraints.NONE;
 
-		if (completed) {labelColour = Color.GREEN;}
-		else {labelColour = Color.RED;}
+		if (completed && plugin.isPlayerLoggedIn()) {labelColour = config.panelCompleteTextColour();}
+		else if (!completed && plugin.isPlayerLoggedIn()){labelColour = config.panelIncompleteTextColour();}
+		else {labelColour = config.panelDefaultTextColour();}
 
 		songNameLabel = new JLabel(music.getSongName(), JLabel.LEFT);
 		songNameLabel.setFont(FontManager.getRunescapeSmallFont());
@@ -115,7 +119,7 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 
 		setToolTipText(music.getDescription());
 
-		addMouseListener(new MouseAdapter()
+		enabledDisabled.addMouseListener(new MouseAdapter()
 		{
 			@Override
 			public void mouseEntered(MouseEvent e)

@@ -85,7 +85,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 	public List<MusicCapeHelperPanelMusicRow> createMusicRows()
 	{
 		List<MusicCapeHelperPanelMusicRow> musicListRow = new ArrayList<>();
-		plugin.filterMusicList().forEach((key, value) -> musicListRow.add(new MusicCapeHelperPanelMusicRow(key, value, plugin)));
+		plugin.filterMusicList().forEach((key, value) -> musicListRow.add(new MusicCapeHelperPanelMusicRow(key, value, plugin, config)));
 		return musicListRow;
 	}
 
@@ -96,7 +96,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 		plugin.getOriginalMusicList().entrySet()
 			.stream()
 			.filter(s -> StringUtils.containsIgnoreCase(s.getKey().getSongName(), search))
-			.forEach(e -> musicListRow.add(new MusicCapeHelperPanelMusicRow(e.getKey(), e.getValue(), plugin)));
+			.forEach(e -> musicListRow.add(new MusicCapeHelperPanelMusicRow(e.getKey(), e.getValue(), plugin, config)));
 		return musicListRow;
 	}
 
