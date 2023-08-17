@@ -12,9 +12,9 @@ import com.musiccapehelper.enums.Optional;
 import com.musiccapehelper.enums.OrderBy;
 import com.musiccapehelper.enums.Quest;
 import com.musiccapehelper.enums.Region;
-import com.musiccapehelper.panels.MusicCapeHelperMusicRowHeader;
-import com.musiccapehelper.panels.MusicCapeHelperPanel;
-import com.musiccapehelper.panels.MusicCapeHelperPanelMusicRow;
+import com.musiccapehelper.ui.rows.MusicCapeHelperMusicHeaderRow;
+import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
+import com.musiccapehelper.ui.rows.MusicCapeHelperPanelMusicRow;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -256,7 +256,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		updateMarkersOnMap();
 	}
 
-	public void rowHeaderClicked(MusicCapeHelperMusicRowHeader row)
+	public void rowHeaderClicked(MusicCapeHelperMusicHeaderRow row)
 	{
 		//todo check to see if it adds all of the matching rows or only the ones that show (probably want it to be the ones that show)
 		//use the row name to determine what is updated in combo with the settings

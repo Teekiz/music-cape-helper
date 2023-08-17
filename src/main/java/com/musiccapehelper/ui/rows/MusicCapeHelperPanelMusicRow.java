@@ -1,4 +1,4 @@
-package com.musiccapehelper.panels;
+package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;

@@ -1,10 +1,12 @@
-package com.musiccapehelper.panels;
+package com.musiccapehelper.ui.panels;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.HeaderType;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.OrderBy;
+import com.musiccapehelper.ui.rows.MusicCapeHelperMusicHeaderRow;
+import com.musiccapehelper.ui.rows.MusicCapeHelperPanelMusicRow;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -133,17 +135,17 @@ public class MusicCapeHelperPanel extends PluginPanel
 				{
 					if (musicRows.indexOf(row) == 0)
 					{
-						musicPanel.add(new MusicCapeHelperMusicRowHeader(config, row.getMusic(), plugin));
+						musicPanel.add(new MusicCapeHelperMusicHeaderRow(config, row.getMusic(), plugin));
 					}
 					else if (config.panelSettingOrderBy().equals(OrderBy.REGION)
 						&& !musicRows.get(musicRows.indexOf(row)-1).getMusic().getRegion().equals(row.getMusic().getRegion()))
 					{
-						musicPanel.add(new MusicCapeHelperMusicRowHeader(config, row.getMusic(), plugin));
+						musicPanel.add(new MusicCapeHelperMusicHeaderRow(config, row.getMusic(), plugin));
 					}
 					else if ((config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
 					&& !musicRows.get(musicRows.indexOf(row)-1).getMusic().isRequired() == row.getMusic().isRequired())
 					{
-						musicPanel.add(new MusicCapeHelperMusicRowHeader(config, row.getMusic(), plugin));
+						musicPanel.add(new MusicCapeHelperMusicHeaderRow(config, row.getMusic(), plugin));
 					}
 				}
 				musicPanel.add(row);
@@ -163,10 +165,10 @@ public class MusicCapeHelperPanel extends PluginPanel
 	public void checkAndUpdateAllMusicRowHeader()
 	{
 		Arrays.stream(musicPanel.getComponents())
-			.filter(r -> r instanceof MusicCapeHelperMusicRowHeader)
+			.filter(r -> r instanceof MusicCapeHelperMusicHeaderRow)
 			.forEach(r ->
 			{
-				HeaderType headerType = ((MusicCapeHelperMusicRowHeader) r).getHeaderType();
+				HeaderType headerType = ((MusicCapeHelperMusicHeaderRow) r).getHeaderType();
 				//checks to see if there are any matches to the region that of the label that are not enabled
 				if (config.panelSettingOrderBy().equals(OrderBy.REGION))
 				{
@@ -176,12 +178,12 @@ public class MusicCapeHelperPanel extends PluginPanel
 						.anyMatch(s -> !s.isEnabled()))
 					{
 						//if there is one or more matches, then set the header to false (+)
-						((MusicCapeHelperMusicRowHeader) r).setHeader(false);
+						((MusicCapeHelperMusicHeaderRow) r).setHeader(false);
 					}
 					else
 					{
 						//other set it to true (-)
-						((MusicCapeHelperMusicRowHeader) r).setHeader(true);
+						((MusicCapeHelperMusicHeaderRow) r).setHeader(true);
 					}
 				}
 				else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
@@ -192,7 +194,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 						.anyMatch(s -> !s.isEnabled()))
 					{
 						//if there is one or more matches, then set the header to false
-						((MusicCapeHelperMusicRowHeader) r).setHeader(false);
+						((MusicCapeHelperMusicHeaderRow) r).setHeader(false);
 					}
 					else if (headerType.equals(HeaderType.OPTIONAL) && Arrays.stream(musicPanel.getComponents())
 						.filter(s -> s instanceof MusicCapeHelperPanelMusicRow)
@@ -200,11 +202,11 @@ public class MusicCapeHelperPanel extends PluginPanel
 						.anyMatch(s -> !s.isEnabled()))
 					{
 						//if there is one or more matches, then set the header to false
-						((MusicCapeHelperMusicRowHeader) r).setHeader(false);
+						((MusicCapeHelperMusicHeaderRow) r).setHeader(false);
 					}
 					else
 					{
-						((MusicCapeHelperMusicRowHeader) r).setHeader(true);
+						((MusicCapeHelperMusicHeaderRow) r).setHeader(true);
 					}
 				}
 			});
