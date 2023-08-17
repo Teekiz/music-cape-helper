@@ -41,8 +41,7 @@ public class MusicCapeHelperMusicRowHeader extends JPanel
 		this.config = config;
 		this.music = music;
 		this.plugin = plugin;
-		enabled = false;
-		addRemoveToolTip = "";
+		this.enabled = false;
 
 		//todo - add collapse function
 
