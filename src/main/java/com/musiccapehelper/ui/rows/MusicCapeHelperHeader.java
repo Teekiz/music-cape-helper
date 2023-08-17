@@ -21,7 +21,7 @@ import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.util.ImageUtil;
 
-public class MusicCapeHelperMusicHeaderRow extends JPanel
+public class MusicCapeHelperHeader extends JPanel
 {
 	@Getter
 	private boolean enabled;
@@ -33,7 +33,7 @@ public class MusicCapeHelperMusicHeaderRow extends JPanel
 	private final JLabel addRemoveAllIcon;
 	private String addRemoveToolTip;
 
-	public MusicCapeHelperMusicHeaderRow(MusicCapeHelperConfig config, Music music, MusicCapeHelperPlugin plugin)
+	public MusicCapeHelperHeader(MusicCapeHelperConfig config, Music music, MusicCapeHelperPlugin plugin)
 	{
 		this.config = config;
 		this.music = music;
@@ -100,7 +100,7 @@ public class MusicCapeHelperMusicHeaderRow extends JPanel
 				{
 					enabled = !enabled;
 					setBackground(ColorScheme.DARK_GRAY_COLOR);
-					plugin.rowHeaderClicked(MusicCapeHelperMusicHeaderRow.this);
+					plugin.rowHeaderClicked(MusicCapeHelperHeader.this);
 				}
 				//right click
 				else if (e.getButton() == MouseEvent.BUTTON3)
@@ -150,7 +150,7 @@ public class MusicCapeHelperMusicHeaderRow extends JPanel
 		popupMenuText.addActionListener(a ->
 		{
 			enabled = !enabled;
-			plugin.rowHeaderClicked(MusicCapeHelperMusicHeaderRow.this);
+			plugin.rowHeaderClicked(MusicCapeHelperHeader.this);
 		});
 	}
 }
