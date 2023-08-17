@@ -15,8 +15,11 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import lombok.Getter;
 import net.runelite.client.ui.ColorScheme;
@@ -25,15 +28,12 @@ import net.runelite.client.util.ImageUtil;
 
 public class MusicCapeHelperPanelMusicRow extends JPanel
 {
-
-	//todo - extra information?
 	@Getter
 	private Music music;
 	@Getter
 	private boolean completed;
 	@Getter
 	private boolean enabled;
-
 	private Color labelColour;
 	private MusicCapeHelperPlugin plugin;
 	private MusicCapeHelperConfig config;
@@ -42,6 +42,8 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 	private JLabel songIsRequiredLabel;
 	private JLabel songIsQuestLabel;
 	private JLabel enabledDisabled;
+	private JPopupMenu popupMenu;
+	private JMenuItem popupMenuText;
 
 	public MusicCapeHelperPanelMusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
@@ -119,6 +121,7 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 
 		setToolTipText(music.getDescription());
 
+
 		enabledDisabled.addMouseListener(new MouseAdapter()
 		{
 			@Override
@@ -136,11 +139,18 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
-				//todo - what happens when mouse is clicked
-				//check if client is logged in
-				//right click, left click?
-				setBackground(ColorScheme.DARK_GRAY_COLOR);
-				plugin.rowClicked(MusicCapeHelperPanelMusicRow.this);
+				//left click
+				if (e.getButton() == MouseEvent.BUTTON1)
+				{
+					setBackground(ColorScheme.DARK_GRAY_COLOR);
+					plugin.rowClicked(MusicCapeHelperPanelMusicRow.this);
+				}
+				//right click
+				else if (e.getButton() == MouseEvent.BUTTON3)
+				{
+					setBackground(ColorScheme.DARK_GRAY_COLOR);
+					popUpMenuActions();
+				}
 			}
 		});
 	}
@@ -157,11 +167,32 @@ public class MusicCapeHelperPanelMusicRow extends JPanel
 		{
 			enabledDisabled.setIcon(new ImageIcon(ImageUtil.loadImageResource(getClass(), "/removeicon.png")));
 			enabledDisabled.setToolTipText("Click to unpin icon from map");
+
 		}
 		else
 		{
 			enabledDisabled.setIcon(new ImageIcon(ImageUtil.loadImageResource(getClass(), "/addicon.png")));
 			enabledDisabled.setToolTipText("Click to pin icon to the map");
+
 		}
+	}
+
+	public void popUpMenuActions()
+	{
+		popupMenu = new JPopupMenu();
+		popupMenuText = new JMenuItem();
+		popupMenu.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		if (enabled) {popupMenuText.setText("Unpin map icon");}
+		else {popupMenuText.setText("Pin map icon");}
+		popupMenuText.setFont(FontManager.getRunescapeSmallFont());
+		popupMenu.add(popupMenuText);
+
+		setComponentPopupMenu(popupMenu);
+
+		popupMenuText.addActionListener(a ->
+		{
+			plugin.rowClicked(MusicCapeHelperPanelMusicRow.this);
+		});
 	}
 }

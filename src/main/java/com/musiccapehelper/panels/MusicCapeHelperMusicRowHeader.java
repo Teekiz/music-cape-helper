@@ -11,7 +11,10 @@ import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import lombok.Getter;
 import net.runelite.client.ui.ColorScheme;
@@ -21,15 +24,17 @@ import net.runelite.client.util.ImageUtil;
 public class MusicCapeHelperMusicRowHeader extends JPanel
 {
 	@Getter
-	boolean enabled;
+	private boolean enabled;
 	@Getter
-	HeaderType headerType;
-	JLabel rowLabel;
-	JLabel addRemoveAllIcon;
-	MusicCapeHelperConfig config;
-	Music music;
-	MusicCapeHelperPlugin plugin;
-	String addRemoveToolTip;
+	private HeaderType headerType;
+	private JLabel rowLabel;
+	private JLabel addRemoveAllIcon;
+	private MusicCapeHelperConfig config;
+	private Music music;
+	private MusicCapeHelperPlugin plugin;
+	private String addRemoveToolTip;
+	private JPopupMenu popupMenu;
+	private JMenuItem popupMenuText;
 
 	public MusicCapeHelperMusicRowHeader(MusicCapeHelperConfig config, Music music, MusicCapeHelperPlugin plugin)
 	{
@@ -94,12 +99,19 @@ public class MusicCapeHelperMusicRowHeader extends JPanel
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
-				//todo - what happens when mouse is clicked
-				//check if client is logged in
-				//right click, left click?
-				enabled = !enabled;
-				setBackground(ColorScheme.DARK_GRAY_COLOR);
-				plugin.rowHeaderClicked(MusicCapeHelperMusicRowHeader.this);
+				//left click
+				if (e.getButton() == MouseEvent.BUTTON1)
+				{
+					enabled = !enabled;
+					setBackground(ColorScheme.DARK_GRAY_COLOR);
+					plugin.rowHeaderClicked(MusicCapeHelperMusicRowHeader.this);
+				}
+				//right click
+				else if (e.getButton() == MouseEvent.BUTTON3)
+				{
+					setBackground(ColorScheme.DARK_GRAY_COLOR);
+					popUpMenuActions();
+				}
 			}
 		});
 	}
@@ -122,5 +134,25 @@ public class MusicCapeHelperMusicRowHeader extends JPanel
 			addRemoveAllIcon.setIcon(new ImageIcon(ImageUtil.loadImageResource(getClass(), "/addicon.png")));
 			addRemoveAllIcon.setToolTipText("Click to pin all icons " + addRemoveToolTip + " to the map");
 		}
+	}
+
+	public void popUpMenuActions()
+	{
+		popupMenu = new JPopupMenu();
+		popupMenuText = new JMenuItem();
+		popupMenu.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		if (enabled) {popupMenuText.setText("Unpin map icons");}
+		else {popupMenuText.setText("Pin map icons");}
+		popupMenuText.setFont(FontManager.getRunescapeSmallFont());
+		popupMenu.add(popupMenuText);
+
+		setComponentPopupMenu(popupMenu);
+
+		popupMenuText.addActionListener(a ->
+		{
+			enabled = !enabled;
+			plugin.rowHeaderClicked(MusicCapeHelperMusicRowHeader.this);
+		});
 	}
 }
