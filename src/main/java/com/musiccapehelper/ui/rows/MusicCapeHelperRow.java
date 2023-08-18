@@ -31,6 +31,7 @@ public class MusicCapeHelperRow extends JPanel
 	protected boolean enabled;
 
 	protected MusicCapeHelperPlugin plugin;
+
 	protected MusicCapeHelperConfig config;
 
 	//contents
