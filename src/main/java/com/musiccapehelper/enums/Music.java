@@ -15,7 +15,7 @@ public enum Music
 		"Unlocked in Varrock", Collections.emptyList()),
 	EASTER_JIG("Easter Jig", false, new WorldPoint(2965, 3297, 0), false, Region.ASGARNIA,
 		"This track unlocks during an Easter event", Collections.emptyList()),
-	ALLS_FAIRY_IN_LOVE_AND_WAR("All's Fairy in Love & War", false, new WorldPoint(3203, 3168, 0), true, Region.MITHALIN,
+	ALLS_FAIRY_IN_LOVE_AND_WAR("All's Fairy in Love & War", true, new WorldPoint(3203, 3168, 0), true, Region.MITHALIN,
 		"Unlocked at the Fairy Resistance Hideout during the Fairytale II - Cure a Queen  quest", new WorldPoint(3078, 3258, 0)),
 	TEMPEST("Tempest", true, new WorldPoint(3429, 3557, 0), false, Region.MORYTANIA,
 		"This track unlocks while fighting the Grotesque Guardians", new ArrayList<>(List.of(ItemID.BRITTLE_KEY)))

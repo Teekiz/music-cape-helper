@@ -6,7 +6,7 @@ import com.musiccapehelper.enums.HeaderType;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.OrderBy;
 import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
-import com.musiccapehelper.ui.rows.MusicCapeMapRow;
+import com.musiccapehelper.ui.rows.MusicCapeHelperMapRow;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 	@Getter
 	private List<MusicCapeHelperMusicRow> musicRows;
 	@Getter
-	private List<MusicCapeMapRow> mapRows;
+	private List<MusicCapeHelperMapRow> mapRows;
 
 	public MusicCapeHelperPanel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
@@ -89,16 +89,16 @@ public class MusicCapeHelperPanel extends PluginPanel
 		return musicListRow;
 	}
 
-	public List<MusicCapeMapRow> createMapRows()
+	public List<MusicCapeHelperMapRow> createMapRows()
 	{
-		List<MusicCapeMapRow> mapRowList = new ArrayList<>();
+		List<MusicCapeHelperMapRow> mapRowList = new ArrayList<>();
 		plugin.getMapPoints().forEach(point ->
 			{
 				plugin.filterMusicList().forEach((key, value) ->
 				{
 					if (key.equals(point.getMusic()))
 					{
-						mapRowList.add(new MusicCapeMapRow(key, value, plugin, config));
+						mapRowList.add(new MusicCapeHelperMapRow(key, value, plugin, config));
 					}
 				});
 			}
@@ -107,13 +107,13 @@ public class MusicCapeHelperPanel extends PluginPanel
 		return mapRowList;
 	}
 
-	public List<MusicCapeMapRow> createMapRowsFromSearch(String search)
+	public List<MusicCapeHelperMapRow> createMapRowsFromSearch(String search)
 	{
-		List<MusicCapeMapRow> mapRowList = new ArrayList<>();
+		List<MusicCapeHelperMapRow> mapRowList = new ArrayList<>();
 		plugin.getMapPoints()
 			.stream()
 			.filter(s -> StringUtils.containsIgnoreCase(s.getMusic().getSongName(), search))
-			.forEach(e -> mapRowList.add(new MusicCapeMapRow(e.getMusic(), e.isCompleted(), plugin, config)));
+			.forEach(e -> mapRowList.add(new MusicCapeHelperMapRow(e.getMusic(), e.isCompleted(), plugin, config)));
 		return mapRowList;
 	}
 
@@ -148,7 +148,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 		return unsortedList;
 	}
 
-	public List<MusicCapeMapRow> sortMapRows(List<MusicCapeMapRow> unsortedList)
+	public List<MusicCapeHelperMapRow> sortMapRows(List<MusicCapeHelperMapRow> unsortedList)
 	{
 		if (config.panelSettingOrderBy().equals(OrderBy.AZ))
 		{
@@ -213,7 +213,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 	{
 		if (mapPanel != null)
 		{
-			for (MusicCapeMapRow row : sortMapRows(mapRows))
+			for (MusicCapeHelperMapRow row : sortMapRows(mapRows))
 			{
 				mapPanel.add(row);
 			}
@@ -229,11 +229,11 @@ public class MusicCapeHelperPanel extends PluginPanel
 			.forEach(r -> ((MusicCapeHelperMusicRow) r).setEnabledDisabled(isOnMap));
 
 		Arrays.stream(mapPanel.getComponents())
-			.filter(r -> r instanceof MusicCapeMapRow)
-			.filter(r -> ((MusicCapeMapRow) r).getMusic().equals(music))
+			.filter(r -> r instanceof MusicCapeHelperMapRow)
+			.filter(r -> ((MusicCapeHelperMapRow) r).getMusic().equals(music))
 			.forEach(r ->
 			{
-				((MusicCapeMapRow) r).setEnabledDisabled(isOnMap);
+				((MusicCapeHelperMapRow) r).setEnabledDisabled(isOnMap);
 				if (!r.isEnabled())
 				{
 					SwingUtilities.invokeLater(() ->

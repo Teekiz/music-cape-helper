@@ -14,7 +14,7 @@ import com.musiccapehelper.enums.Quest;
 import com.musiccapehelper.enums.Region;
 import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
 import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
-import com.musiccapehelper.ui.rows.MusicCapePanelRow;
+import com.musiccapehelper.ui.rows.MusicCapeHelperRow;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,7 +90,6 @@ public class MusicCapeHelperPlugin extends Plugin
 
 		musicCapeHelperPanel = new MusicCapeHelperPanel(this, config);
 
-		//TODO change
 		final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "/pluginicon.png");
 
 		navigationButton = NavigationButton.builder()
@@ -236,7 +235,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		return filteredList;
 	}
 
-	public void rowClicked(MusicCapePanelRow row)
+	public void rowClicked(MusicCapeHelperRow row)
 	{
 		MusicCapeHelperWorldMapPoint check = mapPoints.stream().filter(m -> m.music == row.getMusic()).findAny().orElse(null);
 

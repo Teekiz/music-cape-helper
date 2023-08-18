@@ -8,7 +8,7 @@ import java.awt.GridBagConstraints;
 import javax.swing.JLabel;
 import net.runelite.client.ui.FontManager;
 
-public class MusicCapeHelperMusicRow extends MusicCapePanelRow
+public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 {
 	public MusicCapeHelperMusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
