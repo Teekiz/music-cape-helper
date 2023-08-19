@@ -5,152 +5,108 @@ import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.HeaderType;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.OrderBy;
-import java.awt.BorderLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
 import java.util.Arrays;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import lombok.Getter;
-import net.runelite.client.ui.ColorScheme;
+import lombok.Setter;
 import net.runelite.client.ui.FontManager;
-import net.runelite.client.util.ImageUtil;
 
-public class MusicCapeHelperHeader extends JPanel
+public class MusicCapeHelperHeader extends MusicCapeHelperRow
 {
 	@Getter
-	private boolean enabled;
-	@Getter
 	private HeaderType headerType;
-	private final MusicCapeHelperConfig config;
-	private final Music music;
-	private final MusicCapeHelperPlugin plugin;
-	private final JLabel addRemoveAllIcon;
-	private String addRemoveToolTip;
+	@Getter @Setter
+	private boolean enabled = false;
+	private String rowIconToolTip = "";
 
-	public MusicCapeHelperHeader(MusicCapeHelperConfig config, Music music, MusicCapeHelperPlugin plugin)
+	public MusicCapeHelperHeader(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
-		this.config = config;
-		this.music = music;
-		this.plugin = plugin;
-		this.enabled = false;
+		//could get the panel from plugin and use that
+		super(music, false, plugin, config);
+	}
 
-		//todo - add collapse function
-
-		setLayout(new BorderLayout(5,5));
-		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
-		setBackground(ColorScheme.DARK_GRAY_COLOR);
-
-		JLabel rowLabel = new JLabel();
-		addRemoveAllIcon = new JLabel();
-
-		addRemoveAllIcon.setToolTipText("Use this button to remove all map markers");
+	@Override
+	public void setRowTitle()
+	{
+		rowTitle.setHorizontalAlignment(JLabel.LEFT);
+		rowTitle.setFont(FontManager.getRunescapeSmallFont());
 
 		if (config.panelSettingOrderBy().equals(OrderBy.REGION))
 		{
 			headerType = Arrays.stream(HeaderType.values()).filter(m -> m.getRegion().equals(music.getRegion())).findFirst().orElse(HeaderType.ERROR);
-			rowLabel.setText("Region: " + music.getRegion().getName());
-			addRemoveToolTip = "tracks from the region " + music.getRegion().getName();
+			rowTitle.setText("Region: " + music.getRegion().getName());
+			rowIconToolTip = "tracks from the region " + music.getRegion().getName();
 		}
 		else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
 		{
 			if (music.isRequired())
 			{
 				headerType = HeaderType.REQUIRED;
-				rowLabel.setText("Required tracks: ");
-				addRemoveToolTip = "all required tracks";
+				rowTitle.setText("Required tracks: ");
+				rowIconToolTip = "required tracks";
 			}
 			else
 			{
 				headerType = HeaderType.OPTIONAL;
-				rowLabel.setText("Optional tracks: ");
-				addRemoveToolTip = "all optional tracks";
+				rowTitle.setText("Optional tracks: ");
+				rowIconToolTip = "optional tracks";
 			}
 		}
-
-		rowLabel.setFont(FontManager.getRunescapeBoldFont());
-		updateHeader();
-		add(rowLabel, BorderLayout.LINE_START);
-		add(addRemoveAllIcon, BorderLayout.LINE_END);
-
-		addRemoveAllIcon.addMouseListener(new MouseAdapter()
-		{
-			@Override
-			public void mouseEntered(MouseEvent e)
-			{
-				setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e)
-			{
-				setBackground(ColorScheme.DARK_GRAY_COLOR);
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e)
-			{
-				//left click
-				if (e.getButton() == MouseEvent.BUTTON1)
-				{
-					enabled = !enabled;
-					setBackground(ColorScheme.DARK_GRAY_COLOR);
-					plugin.rowHeaderClicked(MusicCapeHelperHeader.this);
-				}
-				//right click
-				else if (e.getButton() == MouseEvent.BUTTON3)
-				{
-					setBackground(ColorScheme.DARK_GRAY_COLOR);
-					popUpMenuActions();
-				}
-			}
-		});
 	}
 
-	public void setHeader(Boolean isAllOnMap)
-	{
-		enabled = isAllOnMap;
-		updateHeader();
-	}
-
-	public void updateHeader()
+	@Override
+	public void setRowPinIcon()
 	{
 		if (enabled)
 		{
-			addRemoveAllIcon.setIcon(new ImageIcon(ImageUtil.loadImageResource(getClass(), "/removeicon.png")));
-			addRemoveAllIcon.setToolTipText("Click to unpin all " + addRemoveToolTip + " icons from map");
+			rowPinIcon.setIcon(plugin.getRemoveIcon());
+			rowPinIcon.setToolTipText("Click to unpin all " + rowIconToolTip + " icons from map");
+			this.setToolTipText("Click to unpin all " + rowIconToolTip + " icons from map");
 		}
 		else
 		{
-			addRemoveAllIcon.setIcon(new ImageIcon(ImageUtil.loadImageResource(getClass(), "/addicon.png")));
-			addRemoveAllIcon.setToolTipText("Click to pin all icons " + addRemoveToolTip + " to the map");
+			rowPinIcon.setIcon(plugin.getAddIcon());
+			rowPinIcon.setToolTipText("Click to pin all icons " + rowIconToolTip + " to the map");
+			this.setToolTipText("Click to pin all icons " + rowIconToolTip + " to the map");
 		}
 	}
 
-	public void popUpMenuActions()
+	@Override
+	public void setEnabled()
 	{
-		JPopupMenu popupMenu = new JPopupMenu();
-		JMenuItem popupMenuText = new JMenuItem();
-		popupMenu.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		if (enabled) {
-			popupMenuText.setText("Unpin map icons");}
-		else {
-			popupMenuText.setText("Pin map icons");}
-		popupMenuText.setFont(FontManager.getRunescapeSmallFont());
-		popupMenu.add(popupMenuText);
-
-		setComponentPopupMenu(popupMenu);
-
-		popupMenuText.addActionListener(a ->
+		plugin.loggg("LOIGGGG before " + music.getSongName() + "" + enabled);
+		MusicCapeHelperPanel panel = plugin.getMusicCapeHelperPanel();
+		if (headerType.equals(HeaderType.REQUIRED))
 		{
-			enabled = !enabled;
-			plugin.rowHeaderClicked(MusicCapeHelperHeader.this);
-		});
+			enabled = panel.getMusicRows()
+				.stream()
+				.filter(r -> r.getMusic().isRequired())
+				.allMatch(MusicCapeHelperRow::isEnabled);
+		}
+		else if (headerType.equals(HeaderType.OPTIONAL))
+		{
+			enabled = panel.getMusicRows()
+				.stream()
+				.filter(r -> !r.getMusic().isRequired())
+				.allMatch(MusicCapeHelperRow::isEnabled);
+		}
+		else
+		{
+			enabled = panel.getMusicRows()
+				.stream()
+				.filter(r -> r.getMusic().getRegion().equals(headerType.getRegion()))
+				.allMatch(MusicCapeHelperRow::isEnabled);
+		}
+
+		plugin.loggg("LOIGGGG after " + music.getSongName() + "" + enabled);
+	}
+
+	@Override
+	public void updateRow()
+	{
+		setEnabled();
+		setRowPinIcon();
+		revalidate();
 	}
 }

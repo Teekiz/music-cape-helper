@@ -1,6 +1,7 @@
 package com.musiccapehelper;
 import com.musiccapehelper.enums.Music;
 import lombok.Getter;
+import lombok.Setter;
 import net.runelite.api.Point;
 import net.runelite.client.ui.overlay.worldmap.WorldMapPoint;
 import net.runelite.client.util.ImageUtil;
@@ -27,6 +28,11 @@ public class MusicCapeHelperWorldMapPoint extends WorldMapPoint
 		this.setTooltip(music.getSongName());
 		this.setMapPointImage();
 		this.setImagePoint(new Point(getImage().getWidth() / 2, getImage().getHeight()));
+	}
+
+	public void setCompleted(Boolean completed)
+	{
+		this.completed = completed;
 	}
 
 	public void setMapPointImage()

@@ -3,11 +3,11 @@ package com.musiccapehelper.ui.panels;
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.HeaderType;
-import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.OrderBy;
 import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMapRow;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
+import com.musiccapehelper.ui.rows.MusicCapeHelperRow;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +33,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 	private final MusicCapeHelperMusicPanel musicPanel;
 	private final MusicCapeHelperMapPanel mapPanel;
 	@Getter
-	private List<MusicCapeHelperMusicRow> musicRows;
+	private final List<MusicCapeHelperMusicRow> musicRows = new ArrayList<>();
 	@Getter
 	private List<MusicCapeHelperMapRow> mapRows;
 
@@ -70,85 +70,26 @@ public class MusicCapeHelperPanel extends PluginPanel
 		add(displayPanel, BorderLayout.CENTER);
 	}
 
-	//used to create all rows that match the filters
-	public List<MusicCapeHelperMusicRow> createMusicRows()
+	//used to create all rows that match the filters or if the contents of the search bar
+	public void createMusicRows(String searchText)
 	{
-		List<MusicCapeHelperMusicRow> musicListRow = new ArrayList<>();
-		plugin.filterMusicList().forEach((key, value) -> musicListRow.add(new MusicCapeHelperMusicRow(key, value, plugin, config)));
-		return musicListRow;
-	}
+		musicRows.clear();
+		if (searchText.isEmpty())
+		{
+			plugin.filterMusicList().forEach((key, value) -> musicRows.add(new MusicCapeHelperMusicRow(key, value, plugin, config)));
+		}
+		else
+		{
+			plugin.getOriginalMusicList().entrySet()
+				.stream()
+				.filter(s -> StringUtils.containsIgnoreCase(s.getKey().getSongName(), searchText))
+				.forEach(e -> musicRows.add(new MusicCapeHelperMusicRow(e.getKey(), e.getValue(), plugin, config)));
+		}
 
-	//used to create the rows based on the search value
-	public List<MusicCapeHelperMusicRow> createMusicRowsFromSearch(String search)
-	{
-		List<MusicCapeHelperMusicRow> musicListRow = new ArrayList<>();
-		plugin.getOriginalMusicList().entrySet()
-			.stream()
-			.filter(s -> StringUtils.containsIgnoreCase(s.getKey().getSongName(), search))
-			.forEach(e -> musicListRow.add(new MusicCapeHelperMusicRow(e.getKey(), e.getValue(), plugin, config)));
-		return musicListRow;
-	}
-
-	public List<MusicCapeHelperMapRow> createMapRows()
-	{
-		List<MusicCapeHelperMapRow> mapRowList = new ArrayList<>();
-		plugin.getMapPoints().forEach(point ->
-			{
-				plugin.filterMusicList().forEach((key, value) ->
-				{
-					if (key.equals(point.getMusic()))
-					{
-						mapRowList.add(new MusicCapeHelperMapRow(key, value, plugin, config));
-					}
-				});
-			}
-		);
-
-		return mapRowList;
-	}
-
-	public List<MusicCapeHelperMapRow> createMapRowsFromSearch(String search)
-	{
-		List<MusicCapeHelperMapRow> mapRowList = new ArrayList<>();
-		plugin.getMapPoints()
-			.stream()
-			.filter(s -> StringUtils.containsIgnoreCase(s.getMusic().getSongName(), search))
-			.forEach(e -> mapRowList.add(new MusicCapeHelperMapRow(e.getMusic(), e.isCompleted(), plugin, config)));
-		return mapRowList;
+		addMusicRows();
 	}
 
 	public List<MusicCapeHelperMusicRow> sortMusicRows(List<MusicCapeHelperMusicRow> unsortedList)
-	{
-		if (config.panelSettingOrderBy().equals(OrderBy.AZ))
-		{
-			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
-		}
-		else if (config.panelSettingOrderBy().equals(OrderBy.ZA))
-		{
-			unsortedList.sort((s1, s2) -> s2.getMusic().getSongName().compareTo(s1.getMusic().getSongName()));
-		}
-
-		else if (config.panelSettingOrderBy().equals(OrderBy.REGION))
-		{
-			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getRegion().getName()));
-		}
-
-		else if (config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
-		{
-			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
-			unsortedList.sort((s1, s2) -> Boolean.compare(s1.getMusic().isRequired(), s2.getMusic().isRequired()));
-		}
-
-		else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST))
-		{
-			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
-			unsortedList.sort((s1, s2) -> Boolean.compare(s2.getMusic().isRequired(), s1.getMusic().isRequired()));
-		}
-
-		return unsortedList;
-	}
-
-	public List<MusicCapeHelperMapRow> sortMapRows(List<MusicCapeHelperMapRow> unsortedList)
 	{
 		if (config.panelSettingOrderBy().equals(OrderBy.AZ))
 		{
@@ -191,17 +132,17 @@ public class MusicCapeHelperPanel extends PluginPanel
 				{
 					if (musicRows.indexOf(row) == 0)
 					{
-						musicPanel.add(new MusicCapeHelperHeader(config, row.getMusic(), plugin));
+						musicPanel.add(new MusicCapeHelperHeader(row.getMusic(), plugin, config));
 					}
 					else if (config.panelSettingOrderBy().equals(OrderBy.REGION)
 						&& !musicRows.get(musicRows.indexOf(row)-1).getMusic().getRegion().equals(row.getMusic().getRegion()))
 					{
-						musicPanel.add(new MusicCapeHelperHeader(config, row.getMusic(), plugin));
+						musicPanel.add(new MusicCapeHelperHeader(row.getMusic(), plugin, config));
 					}
 					else if ((config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
 					&& !musicRows.get(musicRows.indexOf(row)-1).getMusic().isRequired() == row.getMusic().isRequired())
 					{
-						musicPanel.add(new MusicCapeHelperHeader(config, row.getMusic(), plugin));
+						musicPanel.add(new MusicCapeHelperHeader(row.getMusic(), plugin, config));
 					}
 				}
 				musicPanel.add(row);
@@ -209,122 +150,46 @@ public class MusicCapeHelperPanel extends PluginPanel
 		}
 	}
 
-	public void addMapRows()
+	public void updateHeader(MusicCapeHelperRow row)
 	{
-		if (mapPanel != null)
+		if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
 		{
-			for (MusicCapeHelperMapRow row : sortMapRows(mapRows))
+			if (row.getMusic().isRequired())
 			{
-				mapPanel.add(row);
+				Arrays.stream(musicPanel.getComponents())
+					.filter(r -> r instanceof MusicCapeHelperHeader)
+					.filter(r -> ((MusicCapeHelperHeader) r).getHeaderType().equals(HeaderType.REQUIRED))
+					.findFirst().ifPresent(r -> ((MusicCapeHelperHeader) r).updateRow());
 			}
+			else
+			{
+				Arrays.stream(musicPanel.getComponents())
+					.filter(r -> r instanceof MusicCapeHelperHeader)
+					.filter(r -> ((MusicCapeHelperHeader) r).getHeaderType().equals(HeaderType.OPTIONAL))
+					.findFirst().ifPresent(r -> ((MusicCapeHelperHeader) r).updateRow());
+			}
+		}
+		else if (config.panelSettingOrderBy().equals(OrderBy.REGION))
+		{
+			Arrays.stream(musicPanel.getComponents())
+				.filter(r -> r instanceof MusicCapeHelperHeader)
+				.filter(r -> ((MusicCapeHelperHeader) r).getHeaderType().getRegion().equals(row.getMusic().getRegion()))
+				.findFirst().ifPresent(r -> ((MusicCapeHelperHeader) r).updateRow());
 		}
 	}
 
-	public void updateMusicRow(Music music, boolean isOnMap)
+	public void updateRow(MusicCapeHelperRow row)
 	{
-		//there should not be multiple rows of music
-		Arrays.stream(musicPanel.getComponents())
-			.filter(r -> r instanceof MusicCapeHelperMusicRow)
-			.filter(r -> ((MusicCapeHelperMusicRow) r).getMusic().equals(music))
-			.forEach(r -> ((MusicCapeHelperMusicRow) r).setEnabledDisabled(isOnMap));
-
-		Arrays.stream(mapPanel.getComponents())
-			.filter(r -> r instanceof MusicCapeHelperMapRow)
-			.filter(r -> ((MusicCapeHelperMapRow) r).getMusic().equals(music))
-			.forEach(r ->
-			{
-				((MusicCapeHelperMapRow) r).setEnabledDisabled(isOnMap);
-				if (!r.isEnabled())
-				{
-					SwingUtilities.invokeLater(() ->
-					{
-						mapPanel.remove(r);
-						mapPanel.revalidate();
-						mapPanel.repaint();
-					});
-				}
-			});
+		row.updateRow();
 	}
 
-	public void checkAndUpdateAllMusicRowHeader()
-	{
-		Arrays.stream(musicPanel.getComponents())
-			.filter(r -> r instanceof MusicCapeHelperHeader)
-			.forEach(r ->
-			{
-				HeaderType headerType = ((MusicCapeHelperHeader) r).getHeaderType();
-				//checks to see if there are any matches to the region that of the label that are not enabled
-				if (config.panelSettingOrderBy().equals(OrderBy.REGION))
-				{
-					if (Arrays.stream(musicPanel.getComponents())
-						.filter(s -> s instanceof MusicCapeHelperMusicRow)
-						.filter(s -> ((MusicCapeHelperMusicRow) s).getMusic().getRegion().equals(headerType.getRegion()))
-						.anyMatch(s -> !s.isEnabled()))
-					{
-						//if there is one or more matches, then set the header to false (+)
-						((MusicCapeHelperHeader) r).setHeader(false);
-					}
-					else
-					{
-						//other set it to true (-)
-						((MusicCapeHelperHeader) r).setHeader(true);
-					}
-				}
-				else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
-				{
-					if (headerType.equals(HeaderType.REQUIRED) && Arrays.stream(musicPanel.getComponents())
-						.filter(s -> s instanceof MusicCapeHelperMusicRow)
-						.filter(s -> ((MusicCapeHelperMusicRow) s).getMusic().isRequired())
-						.anyMatch(s -> !s.isEnabled()))
-					{
-						//if there is one or more matches, then set the header to false
-						((MusicCapeHelperHeader) r).setHeader(false);
-					}
-					else if (headerType.equals(HeaderType.OPTIONAL) && Arrays.stream(musicPanel.getComponents())
-						.filter(s -> s instanceof MusicCapeHelperMusicRow)
-						.filter(s -> !((MusicCapeHelperMusicRow) s).getMusic().isRequired())
-						.anyMatch(s -> !s.isEnabled()))
-					{
-						//if there is one or more matches, then set the header to false
-						((MusicCapeHelperHeader) r).setHeader(false);
-					}
-					else
-					{
-						((MusicCapeHelperHeader) r).setHeader(true);
-					}
-				}
-			});
-	}
-
-	public void musicSearch(String searchText)
-	{
-		SwingUtilities.invokeLater(() ->
-		{
-			musicPanel.removeAllMusicRows();
-			mapPanel.removeAllMusicRows();
-			musicRows = createMusicRowsFromSearch(searchText);
-			mapRows = createMapRowsFromSearch(searchText);
-			addMusicRows();
-			addMapRows();
-			checkAndUpdateAllMusicRowHeader();
-			musicPanel.revalidate();
-			musicPanel.repaint();
-			mapPanel.revalidate();
-			mapPanel.repaint();
-		});
-	}
-
-	public void updateAllMusicPanelRows()
+	public void updateAllPanelRows(String searchText)
 	{
 		SwingUtilities.invokeLater(() ->
 			{
 				musicPanel.removeAllMusicRows();
 				mapPanel.removeAllMusicRows();
-				musicRows = createMusicRows();
-				mapRows = createMapRows();
-				addMusicRows();
-				addMapRows();
-				checkAndUpdateAllMusicRowHeader();
+				this.createMusicRows(searchText);
 				musicPanel.revalidate();
 				musicPanel.repaint();
 				mapPanel.revalidate();
