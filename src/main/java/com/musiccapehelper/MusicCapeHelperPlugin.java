@@ -245,9 +245,6 @@ public class MusicCapeHelperPlugin extends Plugin
 
 	public void rowClicked(MusicCapeHelperRow row)
 	{
-
-		loggg(getMapPoints().size() + " size 1st");
-
 		if (row instanceof MusicCapeHelperMusicRow)
 		{
 			MusicCapeHelperWorldMapPoint check = mapPoints.stream().filter(m -> m.music == row.getMusic()).findAny().orElse(null);
@@ -268,7 +265,6 @@ public class MusicCapeHelperPlugin extends Plugin
 
 		else if (row instanceof MusicCapeHelperHeader)
 		{
-			loggg("Row is " + row.isEnabled());
 			//use the row name to determine what is updated in combo with the settings
 			if (config.panelSettingOrderBy().equals(OrderBy.REGION))
 			{
@@ -285,15 +281,11 @@ public class MusicCapeHelperPlugin extends Plugin
 				}
 				else
 				{
-					loggg("loggg: row is disabled");
-					loggg(getMapPoints().size() + " size");
-
 					musicCapeHelperPanel.getMusicRows().stream()
 						.filter(r -> r.getMusic().getRegion().equals(((MusicCapeHelperHeader) row).getHeaderType().getRegion()))
 						.filter(r -> !r.isEnabled())
 						.forEach(r ->
 						{
-							loggg(r.getMusic().getSongName() + " size");
 							mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), r.isCompleted(), config));
 							musicCapeHelperPanel.updateRow(r);
 						});
@@ -354,9 +346,6 @@ public class MusicCapeHelperPlugin extends Plugin
 			}
 			musicCapeHelperPanel.updateHeader(row);
 		}
-
-		loggg(getMapPoints().size() + " size 2md");
-
 		updateMarkersOnMap();
 	}
 
@@ -418,11 +407,6 @@ public class MusicCapeHelperPlugin extends Plugin
 		}
 		mapPoints = point;
 		updateMarkersOnMap();
-	}
-
-	public void loggg(String s)
-	{
-		log.info(s);
 	}
 
 	@Provides

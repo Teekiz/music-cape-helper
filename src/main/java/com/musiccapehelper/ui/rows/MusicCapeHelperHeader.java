@@ -75,7 +75,6 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 	@Override
 	public void setEnabled()
 	{
-		plugin.loggg("LOIGGGG before " + music.getSongName() + "" + enabled);
 		MusicCapeHelperPanel panel = plugin.getMusicCapeHelperPanel();
 		if (headerType.equals(HeaderType.REQUIRED))
 		{
@@ -98,8 +97,6 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 				.filter(r -> r.getMusic().getRegion().equals(headerType.getRegion()))
 				.allMatch(MusicCapeHelperRow::isEnabled);
 		}
-
-		plugin.loggg("LOIGGGG after " + music.getSongName() + "" + enabled);
 	}
 
 	@Override

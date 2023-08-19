@@ -178,7 +178,6 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 		{
 			if (e.getButton() == MouseEvent.BUTTON1)
 			{
-				plugin.loggg("Row icon " + isEnabled());
 				plugin.rowClicked(this);
 			}
 			else if (e.getButton() == MouseEvent.BUTTON3)
@@ -192,7 +191,6 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 		{
 			if (e.getButton() == MouseEvent.BUTTON1)
 			{
-				plugin.loggg("Row icon " + isEnabled());
 				expand = !expand;
 				plugin.rowClicked(this);
 
