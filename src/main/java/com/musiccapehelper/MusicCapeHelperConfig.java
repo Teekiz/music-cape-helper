@@ -1,10 +1,10 @@
 package com.musiccapehelper;
 
-import com.musiccapehelper.enums.Locked;
-import com.musiccapehelper.enums.Optional;
-import com.musiccapehelper.enums.OrderBy;
-import com.musiccapehelper.enums.Quest;
-import com.musiccapehelper.enums.Region;
+import com.musiccapehelper.enums.settings.SettingsLocked;
+import com.musiccapehelper.enums.settings.SettingsOptional;
+import com.musiccapehelper.enums.settings.SettingsOrderBy;
+import com.musiccapehelper.enums.settings.SettingsQuest;
+import com.musiccapehelper.enums.settings.SettingsRegion;
 import java.awt.Color;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
@@ -89,9 +89,9 @@ public interface MusicCapeHelperConfig extends Config
 		hidden = true
 	)
 
-	default Locked panelSettingLocked()
+	default SettingsLocked panelSettingLocked()
 	{
-		return Locked.ALL;
+		return SettingsLocked.ALL;
 	}
 
 	@ConfigItem(
@@ -100,7 +100,7 @@ public interface MusicCapeHelperConfig extends Config
 		description = "Used in panel for combo-box locked",
 		hidden = true
 	)
-	void panelSettingLocked(Locked locked);
+	void panelSettingLocked(SettingsLocked settingsLocked);
 
 	@ConfigItem(
 		keyName = "panelSettingQuest",
@@ -108,9 +108,9 @@ public interface MusicCapeHelperConfig extends Config
 		description = "Used in panel for combo-box quest",
 		hidden = true
 	)
-	default Quest panelSettingQuest()
+	default SettingsQuest panelSettingQuest()
 	{
-		return Quest.ALL;
+		return SettingsQuest.ALL;
 	}
 
 	@ConfigItem(
@@ -119,7 +119,7 @@ public interface MusicCapeHelperConfig extends Config
 		description = "Used in panel for combo-box quest",
 		hidden = true
 	)
-	void panelSettingQuest(Quest quest);
+	void panelSettingQuest(SettingsQuest settingsQuest);
 
 	@ConfigItem(
 		keyName = "panelSettingRegion",
@@ -127,9 +127,9 @@ public interface MusicCapeHelperConfig extends Config
 		description = "Used in panel for combo-box region",
 		hidden = true
 	)
-	default Region panelSettingRegion()
+	default SettingsRegion panelSettingRegion()
 	{
-		return Region.ALL;
+		return SettingsRegion.ALL;
 	}
 
 	@ConfigItem(
@@ -138,7 +138,7 @@ public interface MusicCapeHelperConfig extends Config
 		description = "Used in panel for combo-box region",
 		hidden = true
 	)
-	void panelSettingRegion(Region region);
+	void panelSettingRegion(SettingsRegion settingsRegion);
 
 	@ConfigItem(
 		keyName = "panelSettingOptional",
@@ -146,9 +146,9 @@ public interface MusicCapeHelperConfig extends Config
 		description = "Used in panel for combo-box optional",
 		hidden = true
 	)
-	default Optional panelSettingOptional()
+	default SettingsOptional panelSettingOptional()
 	{
-		return Optional.ALL;
+		return SettingsOptional.ALL;
 	}
 
 	@ConfigItem(
@@ -157,7 +157,7 @@ public interface MusicCapeHelperConfig extends Config
 		description = "Used in panel for combo-box optional",
 		hidden = true
 	)
-	void panelSettingOptional(Optional optional);
+	void panelSettingOptional(SettingsOptional settingsOptional);
 
 	@ConfigItem(
 		keyName = "panelSettingOrderBy",
@@ -165,9 +165,9 @@ public interface MusicCapeHelperConfig extends Config
 		description = "Used in panel for combo-box optional",
 		hidden = true
 	)
-	default OrderBy panelSettingOrderBy()
+	default SettingsOrderBy panelSettingOrderBy()
 	{
-		return OrderBy.AZ;
+		return SettingsOrderBy.AZ;
 	}
 
 	@ConfigItem(
@@ -176,6 +176,6 @@ public interface MusicCapeHelperConfig extends Config
 		description = "Used in panel for combo-box optional",
 		hidden = true
 	)
-	void panelSettingOrderBy(OrderBy orderBy);
+	void panelSettingOrderBy(SettingsOrderBy settingsOrderBy);
 }
 

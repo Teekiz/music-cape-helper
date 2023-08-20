@@ -6,49 +6,95 @@ import com.musiccapehelper.enums.Music;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import javax.swing.JLabel;
+import lombok.Getter;
+import net.runelite.client.callback.ClientThread;
+import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.FontManager;
 
 public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 {
-	public MusicCapeHelperMusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
+	@Getter
+	protected boolean completed;
+	public MusicCapeHelperMusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin,
+								   MusicCapeHelperConfig config, ItemManager itemManager, ClientThread clientThread)
 	{
-		super(music, completed, plugin, config);
-	}
+		super(music, plugin, config);
+		this.completed = completed;
+		setTextColour();
 
-	@Override
-	public void addRowContents()
-	{
-		JLabel songRegionLabel = new JLabel(music.getRegion().getName(), JLabel.LEFT);
+		JLabel songRegionLabel = new JLabel(music.getSettingsRegion().getName(), JLabel.LEFT);
 		songRegionLabel.setFont(FontManager.getRunescapeSmallFont());
 		songRegionLabel.setPreferredSize(new Dimension(50, 10));
 		songRegionLabel.setHorizontalAlignment(JLabel.LEFT);
-		super.gbc.ipadx = 0;
-		super.gbc.gridx = 0;
-		super.gbc.gridy = 1;
-		super.gbc.anchor = GridBagConstraints.SOUTHWEST;
-		add(songRegionLabel, super.gbc);
+		gbc.ipadx = 0;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.anchor = GridBagConstraints.SOUTHWEST;
+		add(songRegionLabel, gbc);
 
 		JLabel songIsRequiredLabel = new JLabel();
-		if (music.isRequired()){
-			songIsRequiredLabel.setText("Required");}
-		else {
-			songIsRequiredLabel.setText("Optional");}
+		if (music.isRequired())
+		{
+			songIsRequiredLabel.setText("Required");
+		}
+		else
+		{
+			songIsRequiredLabel.setText("Optional");
+		}
 		songIsRequiredLabel.setFont(FontManager.getRunescapeSmallFont());
 		songIsRequiredLabel.setHorizontalAlignment(JLabel.LEFT);
-		super.gbc.gridx = 2;
-		super.gbc.anchor = GridBagConstraints.SOUTHWEST;
-		add(songIsRequiredLabel, super.gbc);
+		gbc.gridx = 2;
+		gbc.anchor = GridBagConstraints.SOUTHWEST;
+		add(songIsRequiredLabel, gbc);
 
 		JLabel songIsQuestLabel = new JLabel();
-		if (music.isQuest()){
-			songIsQuestLabel.setText("Quest Unlock");}
-		else {
-			songIsQuestLabel.setText("");}
+		if (music.isQuest())
+		{
+			songIsQuestLabel.setText("Quest Unlock");
+		}
+		else
+		{
+			songIsQuestLabel.setText("");
+		}
 		songIsQuestLabel.setFont(FontManager.getRunescapeSmallFont());
 		songIsQuestLabel.setPreferredSize(new Dimension(70, 10));
 		songIsQuestLabel.setHorizontalAlignment(JLabel.LEFT);
-		super.gbc.gridx = 4;
-		super.gbc.anchor = GridBagConstraints.SOUTHEAST;
-		add(songIsQuestLabel, super.gbc);
+		gbc.gridx = 4;
+		gbc.anchor = GridBagConstraints.SOUTHEAST;
+		add(songIsQuestLabel, gbc);
+
+		if (!music.isQuest())
+		{
+			gbc.gridx = 0;
+			gbc.gridy = 2;
+			gbc.gridwidth = 4;
+			gbc.anchor = GridBagConstraints.SOUTHWEST;
+			add(new MusicCapeHelperMusicNonQuestRow(music, itemManager, clientThread), gbc);
+		}
+	}
+
+	public void setTextColour()
+	{
+		if (completed && plugin.isPlayerLoggedIn())
+		{
+			rowTitle.setForeground(config.panelCompleteTextColour());
+		}
+		else if (!completed && plugin.isPlayerLoggedIn())
+		{
+			rowTitle.setForeground(config.panelIncompleteTextColour());
+		}
+		else
+		{
+			rowTitle.setForeground(config.panelDefaultTextColour());
+		}
+	}
+
+	@Override
+	public void updateRow()
+	{
+		setEnabled();
+		setTextColour();
+		setRowPinIcon();
+		revalidate();
 	}
 }

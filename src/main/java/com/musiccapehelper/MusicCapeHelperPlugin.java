@@ -6,12 +6,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.inject.Provides;
 import com.musiccapehelper.enums.HeaderType;
-import com.musiccapehelper.enums.Locked;
+import com.musiccapehelper.enums.settings.SettingsLocked;
 import com.musiccapehelper.enums.Music;
-import com.musiccapehelper.enums.Optional;
-import com.musiccapehelper.enums.OrderBy;
-import com.musiccapehelper.enums.Quest;
-import com.musiccapehelper.enums.Region;
+import com.musiccapehelper.enums.settings.SettingsOptional;
+import com.musiccapehelper.enums.settings.SettingsOrderBy;
+import com.musiccapehelper.enums.settings.SettingsQuest;
+import com.musiccapehelper.enums.settings.SettingsRegion;
 import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
 import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
@@ -20,7 +20,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import javax.inject.Inject;
 import javax.swing.ImageIcon;
@@ -37,6 +36,7 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
@@ -50,19 +50,20 @@ import net.runelite.client.util.ImageUtil;
 )
 public class MusicCapeHelperPlugin extends Plugin
 {
-
 	@Inject
 	private Client client;
 	@Inject
 	private MusicCapeHelperConfig config;
-	@Inject
-	private ClientThread clientThread;
 	@Inject
 	private ClientToolbar clientToolbar;
 	@Inject
 	private WorldMapPointManager worldMapPointManager;
 	@Inject
 	private ConfigManager configManager;
+	@Inject
+	private ItemManager itemManager;
+	@Inject @Getter
+	private ClientThread clientThread;
 	@Inject
 	private Gson gson;
 	@Getter @Setter
@@ -101,7 +102,7 @@ public class MusicCapeHelperPlugin extends Plugin
 
 		loadMapMarkers();
 
-		musicCapeHelperPanel = new MusicCapeHelperPanel(this, config);
+		musicCapeHelperPanel = new MusicCapeHelperPanel(this, config, itemManager, clientThread);
 		navigationButton = NavigationButton.builder()
 			.tooltip("Music Cape Helper Panel")
 			.icon(icon)
@@ -197,9 +198,9 @@ public class MusicCapeHelperPlugin extends Plugin
 		HashMap<Music, Boolean> filteredList = new HashMap<>(musicList);
 
 		//check one - does the music match the selected settings for quest discovered status
-		if (!config.panelSettingLocked().equals(Locked.ALL))
+		if (!config.panelSettingLocked().equals(SettingsLocked.ALL))
 		{
-			if (config.panelSettingLocked().equals(Locked.LOCKED))
+			if (config.panelSettingLocked().equals(SettingsLocked.LOCKED))
 			{
 				filteredList.entrySet().removeIf(b -> b.getValue());
 			}
@@ -210,15 +211,15 @@ public class MusicCapeHelperPlugin extends Plugin
 		}
 
 		//check two - does the music match the selected settings for the selected region
-		if (!config.panelSettingRegion().equals(Region.ALL))
+		if (!config.panelSettingRegion().equals(SettingsRegion.ALL))
 		{
-			filteredList.entrySet().removeIf(r -> !r.getKey().getRegion().equals(config.panelSettingRegion()));
+			filteredList.entrySet().removeIf(r -> !r.getKey().getSettingsRegion().equals(config.panelSettingRegion()));
 		}
 
 		//check three - does the music match the selected settings for the selected quest option
-		if (!config.panelSettingQuest().equals(Quest.ALL))
+		if (!config.panelSettingQuest().equals(SettingsQuest.ALL))
 		{
-			if (config.panelSettingQuest().equals(Quest.NOT_QUEST_UNLOCK))
+			if (config.panelSettingQuest().equals(SettingsQuest.NOT_QUEST_UNLOCK))
 			{
 				filteredList.entrySet().removeIf(q -> q.getKey().isQuest());
 			}
@@ -229,9 +230,9 @@ public class MusicCapeHelperPlugin extends Plugin
 		}
 
 		//check four - does the music match the selected settings for the selected optional option
-		if (!config.panelSettingOptional().equals(Optional.ALL))
+		if (!config.panelSettingOptional().equals(SettingsOptional.ALL))
 		{
-			if (config.panelSettingOptional().equals(Optional.OPTIONAL_ONLY))
+			if (config.panelSettingOptional().equals(SettingsOptional.OPTIONAL_ONLY))
 			{
 				filteredList.entrySet().removeIf(q -> q.getKey().isRequired());
 			}
@@ -252,7 +253,7 @@ public class MusicCapeHelperPlugin extends Plugin
 			//checks if the world map should be updated
 			if (check == null)
 			{
-				mapPoints.add(new MusicCapeHelperWorldMapPoint(row.getMusic(), row.isCompleted(), config));
+				mapPoints.add(new MusicCapeHelperWorldMapPoint(row.getMusic(), ((MusicCapeHelperMusicRow) row).isCompleted(), config));
 			}
 			else
 			{
@@ -266,12 +267,12 @@ public class MusicCapeHelperPlugin extends Plugin
 		else if (row instanceof MusicCapeHelperHeader)
 		{
 			//use the row name to determine what is updated in combo with the settings
-			if (config.panelSettingOrderBy().equals(OrderBy.REGION))
+			if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION))
 			{
 				if (row.isEnabled())
 				{
 					musicCapeHelperPanel.getMusicRows().stream()
-						.filter(r -> r.getMusic().getRegion().equals(((MusicCapeHelperHeader) row).getHeaderType().getRegion()))
+						.filter(r -> r.getMusic().getSettingsRegion().equals(((MusicCapeHelperHeader) row).getHeaderType().getSettingsRegion()))
 						.filter(r -> r.isEnabled())
 						.forEach(r ->
 						{
@@ -282,7 +283,7 @@ public class MusicCapeHelperPlugin extends Plugin
 				else
 				{
 					musicCapeHelperPanel.getMusicRows().stream()
-						.filter(r -> r.getMusic().getRegion().equals(((MusicCapeHelperHeader) row).getHeaderType().getRegion()))
+						.filter(r -> r.getMusic().getSettingsRegion().equals(((MusicCapeHelperHeader) row).getHeaderType().getSettingsRegion()))
 						.filter(r -> !r.isEnabled())
 						.forEach(r ->
 						{
@@ -291,7 +292,7 @@ public class MusicCapeHelperPlugin extends Plugin
 						});
 				}
 			}
-			else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
+			else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 			{
 				if (((MusicCapeHelperHeader) row).getHeaderType().equals(HeaderType.REQUIRED))
 				{
@@ -407,6 +408,12 @@ public class MusicCapeHelperPlugin extends Plugin
 		}
 		mapPoints = point;
 		updateMarkersOnMap();
+	}
+
+	//todo delete
+	public void loginfo(String s)
+	{
+		log.info(s);
 	}
 
 	@Provides

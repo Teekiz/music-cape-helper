@@ -27,8 +27,7 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 {
 	@Getter
 	protected Music music;
-	@Getter
-	protected boolean completed;
+
 	@Getter @Setter
 	protected boolean enabled;
 	@Getter
@@ -39,7 +38,6 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 	protected MusicCapeHelperConfig config;
 
 	//content
-	protected Color labelColour = null;
 	protected JLabel rowTitle = new JLabel();
 	protected JLabel rowPinIcon = new JLabel();
 	protected GridBagConstraints gbc = new GridBagConstraints();
@@ -49,10 +47,9 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 	protected JMenuItem popupMenuText = new JMenuItem();
 
 
-	public MusicCapeHelperRow(Music music, boolean completed, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
+	public MusicCapeHelperRow(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
 		this.music = music;
-		this.completed = completed;
 		this.plugin = plugin;
 		this.config = config;
 		expand = false;
@@ -62,7 +59,6 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 		setToolTipText(music.getDescription());
 
-		setTextColour();
 		setRowTitle();
 		setEnabled();
 		setRowPinIcon();
@@ -92,24 +88,6 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 		addMouseListener(this);
 		rowPinIcon.addMouseListener(this);
 		popupMenuText.addActionListener(this);
-
-		addRowContents();
-	}
-
-	public void setTextColour()
-	{
-		if (completed && plugin.isPlayerLoggedIn())
-		{
-			labelColour = config.panelCompleteTextColour();
-		}
-		else if (!completed && plugin.isPlayerLoggedIn())
-		{
-			labelColour = config.panelIncompleteTextColour();
-		}
-		else
-		{
-			labelColour = config.panelDefaultTextColour();
-		}
 	}
 
 	public void setRowTitle()
@@ -117,7 +95,6 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 		rowTitle.setText(music.getSongName());
 		rowTitle.setHorizontalAlignment(JLabel.LEFT);
 		rowTitle.setFont(FontManager.getRunescapeSmallFont());
-		rowTitle.setForeground(labelColour);
 	}
 
 	public void setRowPinIcon()
@@ -162,13 +139,9 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 	public void updateRow()
 	{
 		setEnabled();
-		setTextColour();
 		setRowPinIcon();
 		revalidate();
 	}
-
-	//adds extra content
-	public void addRowContents() {}
 
 	@Override
 	public void mouseClicked(MouseEvent e)

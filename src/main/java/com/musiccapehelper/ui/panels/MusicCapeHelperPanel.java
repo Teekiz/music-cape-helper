@@ -3,9 +3,8 @@ package com.musiccapehelper.ui.panels;
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.HeaderType;
-import com.musiccapehelper.enums.OrderBy;
+import com.musiccapehelper.enums.settings.SettingsOrderBy;
 import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
-import com.musiccapehelper.ui.rows.MusicCapeHelperMapRow;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
 import com.musiccapehelper.ui.rows.MusicCapeHelperRow;
 import java.awt.BorderLayout;
@@ -19,6 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import lombok.Getter;
+import net.runelite.client.callback.ClientThread;
+import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.PluginPanel;
@@ -32,15 +33,17 @@ public class MusicCapeHelperPanel extends PluginPanel
 	private final MusicCapeHelperConfig config;
 	private final MusicCapeHelperMusicPanel musicPanel;
 	private final MusicCapeHelperMapPanel mapPanel;
+	private ItemManager itemManager;
+	private ClientThread clientThread;
 	@Getter
 	private final List<MusicCapeHelperMusicRow> musicRows = new ArrayList<>();
-	@Getter
-	private List<MusicCapeHelperMapRow> mapRows;
 
-	public MusicCapeHelperPanel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
+	public MusicCapeHelperPanel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, ItemManager itemManager, ClientThread clientThread)
 	{
 		this.plugin = plugin;
 		this.config = config;
+		this.itemManager = itemManager;
+		this.clientThread = clientThread;
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -76,14 +79,14 @@ public class MusicCapeHelperPanel extends PluginPanel
 		musicRows.clear();
 		if (searchText.isEmpty())
 		{
-			plugin.filterMusicList().forEach((key, value) -> musicRows.add(new MusicCapeHelperMusicRow(key, value, plugin, config)));
+			plugin.filterMusicList().forEach((key, value) -> musicRows.add(new MusicCapeHelperMusicRow(key, value, plugin, config, itemManager, clientThread)));
 		}
 		else
 		{
 			plugin.getOriginalMusicList().entrySet()
 				.stream()
 				.filter(s -> StringUtils.containsIgnoreCase(s.getKey().getSongName(), searchText))
-				.forEach(e -> musicRows.add(new MusicCapeHelperMusicRow(e.getKey(), e.getValue(), plugin, config)));
+				.forEach(e -> musicRows.add(new MusicCapeHelperMusicRow(e.getKey(), e.getValue(), plugin, config, itemManager, clientThread)));
 		}
 
 		addMusicRows();
@@ -91,27 +94,27 @@ public class MusicCapeHelperPanel extends PluginPanel
 
 	public List<MusicCapeHelperMusicRow> sortMusicRows(List<MusicCapeHelperMusicRow> unsortedList)
 	{
-		if (config.panelSettingOrderBy().equals(OrderBy.AZ))
+		if (config.panelSettingOrderBy().equals(SettingsOrderBy.AZ))
 		{
 			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
 		}
-		else if (config.panelSettingOrderBy().equals(OrderBy.ZA))
+		else if (config.panelSettingOrderBy().equals(SettingsOrderBy.ZA))
 		{
 			unsortedList.sort((s1, s2) -> s2.getMusic().getSongName().compareTo(s1.getMusic().getSongName()));
 		}
 
-		else if (config.panelSettingOrderBy().equals(OrderBy.REGION))
+		else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION))
 		{
-			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getRegion().getName()));
+			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getSettingsRegion().getName()));
 		}
 
-		else if (config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
+		else if (config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 		{
 			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
 			unsortedList.sort((s1, s2) -> Boolean.compare(s1.getMusic().isRequired(), s2.getMusic().isRequired()));
 		}
 
-		else if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST))
+		else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST))
 		{
 			unsortedList.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
 			unsortedList.sort((s1, s2) -> Boolean.compare(s2.getMusic().isRequired(), s1.getMusic().isRequired()));
@@ -127,19 +130,19 @@ public class MusicCapeHelperPanel extends PluginPanel
 			for (MusicCapeHelperMusicRow row : sortMusicRows(musicRows))
 			{
 				//this checks the order by and then added a header for each section
-				if (config.panelSettingOrderBy().equals(OrderBy.REGION) || config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST)
-					|| config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
+				if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION) || config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST)
+					|| config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 				{
 					if (musicRows.indexOf(row) == 0)
 					{
 						musicPanel.add(new MusicCapeHelperHeader(row.getMusic(), plugin, config));
 					}
-					else if (config.panelSettingOrderBy().equals(OrderBy.REGION)
-						&& !musicRows.get(musicRows.indexOf(row)-1).getMusic().getRegion().equals(row.getMusic().getRegion()))
+					else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION)
+						&& !musicRows.get(musicRows.indexOf(row)-1).getMusic().getSettingsRegion().equals(row.getMusic().getSettingsRegion()))
 					{
 						musicPanel.add(new MusicCapeHelperHeader(row.getMusic(), plugin, config));
 					}
-					else if ((config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
+					else if ((config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 					&& !musicRows.get(musicRows.indexOf(row)-1).getMusic().isRequired() == row.getMusic().isRequired())
 					{
 						musicPanel.add(new MusicCapeHelperHeader(row.getMusic(), plugin, config));
@@ -152,7 +155,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 
 	public void updateHeader(MusicCapeHelperRow row)
 	{
-		if (config.panelSettingOrderBy().equals(OrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(OrderBy.OPTIONAL_FIRST))
+		if (config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 		{
 			if (row.getMusic().isRequired())
 			{
@@ -169,11 +172,11 @@ public class MusicCapeHelperPanel extends PluginPanel
 					.findFirst().ifPresent(r -> ((MusicCapeHelperHeader) r).updateRow());
 			}
 		}
-		else if (config.panelSettingOrderBy().equals(OrderBy.REGION))
+		else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION))
 		{
 			Arrays.stream(musicPanel.getComponents())
 				.filter(r -> r instanceof MusicCapeHelperHeader)
-				.filter(r -> ((MusicCapeHelperHeader) r).getHeaderType().getRegion().equals(row.getMusic().getRegion()))
+				.filter(r -> ((MusicCapeHelperHeader) r).getHeaderType().getSettingsRegion().equals(row.getMusic().getSettingsRegion()))
 				.findFirst().ifPresent(r -> ((MusicCapeHelperHeader) r).updateRow());
 		}
 	}

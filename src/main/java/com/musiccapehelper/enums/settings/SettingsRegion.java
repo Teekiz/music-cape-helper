@@ -1,8 +1,8 @@
-package com.musiccapehelper.enums;
+package com.musiccapehelper.enums.settings;
 
 import lombok.Getter;
 
-public enum Region
+public enum SettingsRegion
 {
 	ALL("All"), ASGARNIA("Asgarnia"), FREMENNIK_PROVINCE("Fremennik"),
 	GREAT_KOUREND("Kourend"), KANDARIN("Kandarin"), KARAMJA("Karamja"),
@@ -12,7 +12,7 @@ public enum Region
 
 	@Getter
 	private String name;
-	Region(String name)
+	SettingsRegion(String name)
 	{
 		this.name = name;
 	}

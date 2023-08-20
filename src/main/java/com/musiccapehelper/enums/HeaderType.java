@@ -1,22 +1,23 @@
 package com.musiccapehelper.enums;
 
+import com.musiccapehelper.enums.settings.SettingsRegion;
 import lombok.Getter;
 
 public enum HeaderType
 {
-	ASGARNIA(Region.ASGARNIA), FREMENNIK_PROVINCE(Region.FREMENNIK_PROVINCE),
-	GREAT_KOUREND(Region.GREAT_KOUREND), KANDARIN(Region.KANDARIN), KARAMJA(Region.KARAMJA),
-	KEBOS_LOWLANDS(Region.KEBOS_LOWLANDS), KHARIDIAN_DESERT(Region.KHARIDIAN_DESERT), MITHALIN(Region.MITHALIN),
-	MORYTANIA(Region.MORYTANIA), TIRANNWN(Region.MITHALIN), WILDERNESS(Region.WILDERNESS),
-	OTHER(Region.OTHER), REQUIRED, OPTIONAL, ERROR;
+	ASGARNIA(SettingsRegion.ASGARNIA), FREMENNIK_PROVINCE(SettingsRegion.FREMENNIK_PROVINCE),
+	GREAT_KOUREND(SettingsRegion.GREAT_KOUREND), KANDARIN(SettingsRegion.KANDARIN), KARAMJA(SettingsRegion.KARAMJA),
+	KEBOS_LOWLANDS(SettingsRegion.KEBOS_LOWLANDS), KHARIDIAN_DESERT(SettingsRegion.KHARIDIAN_DESERT), MITHALIN(SettingsRegion.MITHALIN),
+	MORYTANIA(SettingsRegion.MORYTANIA), TIRANNWN(SettingsRegion.MITHALIN), WILDERNESS(SettingsRegion.WILDERNESS),
+	OTHER(SettingsRegion.OTHER), REQUIRED, OPTIONAL, ERROR;
 
 	@Getter
-	private Region region;
+	private SettingsRegion settingsRegion;
 
 	//Enum can refer to either region or required/optional
 	HeaderType() {}
-	HeaderType(Region region)
+	HeaderType(SettingsRegion settingsRegion)
 	{
-		this.region = region;
+		this.settingsRegion = settingsRegion;
 	}
 }

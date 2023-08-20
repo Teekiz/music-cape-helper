@@ -2,11 +2,11 @@ package com.musiccapehelper.ui.panels;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
-import com.musiccapehelper.enums.Locked;
-import com.musiccapehelper.enums.Optional;
-import com.musiccapehelper.enums.OrderBy;
-import com.musiccapehelper.enums.Quest;
-import com.musiccapehelper.enums.Region;
+import com.musiccapehelper.enums.settings.SettingsLocked;
+import com.musiccapehelper.enums.settings.SettingsOptional;
+import com.musiccapehelper.enums.settings.SettingsOrderBy;
+import com.musiccapehelper.enums.settings.SettingsQuest;
+import com.musiccapehelper.enums.settings.SettingsRegion;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.Arrays;
@@ -68,16 +68,16 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		completedCombo = new JComboBox<>();
 		completedCombo.setToolTipText("Filters music tracks based on whether they have been discovered or not.");
 		completedLabel.setLabelFor(completedCombo);
-		for (Locked locked : Locked.values()) {completedCombo.addItem(locked.getText());}
+		for (SettingsLocked settingsLocked : SettingsLocked.values()) {completedCombo.addItem(settingsLocked.getText());}
 		completedCombo.setPreferredSize(new Dimension(comboWidth ,comboHeight));
 		if (config.panelSettingLocked() != null) {completedCombo.setSelectedItem(config.panelSettingLocked().getText());}
 		else {completedCombo.setSelectedIndex(0);}
 		completedCombo.addActionListener(e ->
 		{
 			config.panelSettingLocked(
-				Arrays.stream(Locked.values())
+				Arrays.stream(SettingsLocked.values())
 					.filter(n -> n.getText().equals(completedCombo.getSelectedItem()))
-					.findFirst().orElse(Locked.ALL));
+					.findFirst().orElse(SettingsLocked.ALL));
 		});
 		settingsWrapper.add(completedLabel);
 		settingsWrapper.add(completedCombo);
@@ -88,16 +88,16 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		regionCombo.setToolTipText("Filters music based on the region they are unlocked in.");
 		regionLabel.setLabelFor(regionCombo);
 		regionLabel.setToolTipText("Filters music based on the region they are unlocked in.");
-		for (Region regionName : Region.values()) {regionCombo.addItem(regionName.getName());}
+		for (SettingsRegion settingsRegionName : SettingsRegion.values()) {regionCombo.addItem(settingsRegionName.getName());}
 		regionCombo.setPreferredSize(new Dimension(comboWidth ,comboHeight));
 		if (config.panelSettingRegion() != null) {regionCombo.setSelectedItem(config.panelSettingRegion().getName());}
 		else {regionCombo.setSelectedIndex(0);}
 		regionCombo.addActionListener(e ->
 		{
 			config.panelSettingRegion(
-				Arrays.stream(Region.values())
+				Arrays.stream(SettingsRegion.values())
 					.filter(n -> n.getName().equals(regionCombo.getSelectedItem()))
-					.findFirst().orElse(Region.ALL));
+					.findFirst().orElse(SettingsRegion.ALL));
 		});
 		settingsWrapper.add(regionLabel);
 		settingsWrapper.add(regionCombo);
@@ -107,16 +107,16 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		unlockedDuringQuestLabel.setToolTipText("Filters music tracks unlocked during quests.");
 		unlockedDuringQuestCombo = new JComboBox<>();
 		unlockedDuringQuestCombo.setToolTipText("Filters music tracks unlocked during quests.");
-		for (Quest quest : Quest.values()) {unlockedDuringQuestCombo.addItem(quest.getText());}
+		for (SettingsQuest settingsQuest : SettingsQuest.values()) {unlockedDuringQuestCombo.addItem(settingsQuest.getText());}
 		unlockedDuringQuestLabel.setLabelFor(unlockedDuringQuestCombo);
 		unlockedDuringQuestLabel.setPreferredSize(new Dimension(comboWidth ,comboHeight));
 		if (config.panelSettingQuest() != null) {unlockedDuringQuestCombo.setSelectedItem(config.panelSettingQuest().getText());}
 		unlockedDuringQuestCombo.addActionListener(e ->
 		{
 			config.panelSettingQuest(
-				Arrays.stream(Quest.values())
+				Arrays.stream(SettingsQuest.values())
 					.filter(n -> n.getText().equals(unlockedDuringQuestCombo.getSelectedItem()))
-					.findFirst().orElse(Quest.ALL));
+					.findFirst().orElse(SettingsQuest.ALL));
 		});
 		settingsWrapper.add(unlockedDuringQuestLabel);
 		settingsWrapper.add(unlockedDuringQuestCombo);
@@ -125,7 +125,7 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		JLabel includeOptionalLabel = new JLabel("Optional:");
 		includeOptionalLabel.setToolTipText("Filters music tracks that are not required for the basic music cape unlock.");
 		includeOptionalCombo = new JComboBox<>();
-		for (Optional optional : Optional.values()) {includeOptionalCombo.addItem(optional.getText());}
+		for (SettingsOptional settingsOptional : SettingsOptional.values()) {includeOptionalCombo.addItem(settingsOptional.getText());}
 		includeOptionalCombo.setToolTipText("Filters music tracks that are not required for the basic music cape unlock.");
 		includeOptionalLabel.setLabelFor(includeOptionalCombo);
 		includeOptionalLabel.setPreferredSize(new Dimension(comboWidth ,comboHeight));
@@ -133,9 +133,9 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		includeOptionalCombo.addActionListener(e ->
 		{
 			config.panelSettingOptional(
-				Arrays.stream(Optional.values())
+				Arrays.stream(SettingsOptional.values())
 					.filter(n -> n.getText().equals(includeOptionalCombo.getSelectedItem()))
-					.findFirst().orElse(Optional.ALL));
+					.findFirst().orElse(SettingsOptional.ALL));
 		});
 		settingsWrapper.add(includeOptionalLabel);
 		settingsWrapper.add(includeOptionalCombo);
@@ -146,16 +146,16 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		orderCombo = new JComboBox<>();
 		orderCombo.setToolTipText("The order the tracks are shown in.");
 		orderLabel.setLabelFor(orderCombo);
-		for (OrderBy order : OrderBy.values()) {orderCombo.addItem(order.getText());}
+		for (SettingsOrderBy order : SettingsOrderBy.values()) {orderCombo.addItem(order.getText());}
 		orderCombo.setPreferredSize(new Dimension(comboWidth ,comboHeight));
 		if (config.panelSettingOrderBy() != null) {orderCombo.setSelectedItem(config.panelSettingOrderBy().getText());}
 		else {orderCombo.setSelectedIndex(0);}
 		orderCombo.addActionListener(e ->
 		{
 			config.panelSettingOrderBy(
-				Arrays.stream(OrderBy.values())
+				Arrays.stream(SettingsOrderBy.values())
 					.filter(n -> n.getText().equals(orderCombo.getSelectedItem()))
-					.findFirst().orElse(OrderBy.AZ));
+					.findFirst().orElse(SettingsOrderBy.AZ));
 		});
 		settingsWrapper.add(orderLabel);
 		settingsWrapper.add(orderCombo);
