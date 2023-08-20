@@ -68,7 +68,9 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 			gbc.gridx = 0;
 			gbc.gridy = 2;
 			gbc.gridwidth = 4;
-			gbc.anchor = GridBagConstraints.SOUTHWEST;
+			//gbc.weightx = 1.0;
+			//gbc.weighty = 1.0;
+			gbc.anchor = GridBagConstraints.SOUTH;
 			add(new MusicCapeHelperMusicNonQuestRow(music, itemManager, clientThread), gbc);
 		}
 	}
