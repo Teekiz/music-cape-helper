@@ -24,7 +24,7 @@ public enum Music
 		new ArrayList<>(List.of(new SkillRequirement(Skill.THIEVING, 40), new SkillRequirement(Skill.FARMING, 49), new SkillRequirement(Skill.HERBLORE, 57))), Quest.FAIRYTALE_II__CURE_A_QUEEN),
 	TEMPEST("Tempest", true, new WorldPoint(3429, 3557, 0), false, SettingsRegion.MORYTANIA,
 		"This track unlocks while fighting the Grotesque Guardians",
-		new ArrayList<>(List.of(new SkillRequirement(Skill.SLAYER, 75))), new ArrayList<>(List.of(ItemID.BRITTLE_KEY, ItemID.RUNE_BATTLEAXE, ItemID.DRAGONSTONE, ItemID.CABBAGE, ItemID.DRAGON_PLATEBODY)))
+		new ArrayList<>(List.of(new SkillRequirement(Skill.SLAYER, 75))), new ArrayList<>(List.of(ItemID.BRITTLE_KEY, ItemID.RUNE_BATTLEAXE, ItemID.DRAGONSTONE, ItemID.CABBAGE)))
 	;
 
 	@Getter

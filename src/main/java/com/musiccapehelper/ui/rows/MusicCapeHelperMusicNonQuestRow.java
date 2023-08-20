@@ -32,19 +32,19 @@ public class MusicCapeHelperMusicNonQuestRow extends JPanel
 		{
 			setBackground(ColorScheme.DARK_GRAY_COLOR);
 			setLayout(new BorderLayout());
-			setBorder(new EmptyBorder(0, 0, 0, 0));
+			setBorder(new EmptyBorder(5, 0, 0, 0));
 
 			JLabel itemsPanelLabel = new JLabel();
 			itemsPanelLabel.setText("Items Required: ");
 			itemsPanelLabel.setHorizontalAlignment(JLabel.LEFT);
-			itemsPanelLabel.setFont(FontManager.getRunescapeFont());
+			itemsPanelLabel.setFont(FontManager.getRunescapeSmallFont());
 			add(itemsPanelLabel, BorderLayout.PAGE_START);
 
 			JPanel itemsPanel = new JPanel();
 			itemsPanel.setLayout(new DynamicGridLayout(0,5, 5, 5));
 			itemsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 			itemsPanel.setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
-			itemsPanel.setBackground(ColorScheme.LIGHT_GRAY_COLOR);
+			itemsPanel.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
 
 			music.getItems().forEach(i ->
 			{
@@ -58,7 +58,7 @@ public class MusicCapeHelperMusicNonQuestRow extends JPanel
 						JPanel itemWrapperPanel = new JPanel();
 						itemWrapperPanel.setBorder(new EmptyBorder(2,2,2,2));
 						itemWrapperPanel.setLayout(new BoxLayout(itemWrapperPanel, BoxLayout.PAGE_AXIS));
-						itemWrapperPanel.setBackground(ColorScheme.GRAND_EXCHANGE_LIMIT);
+						itemWrapperPanel.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
 						itemWrapperPanel.setPreferredSize(new Dimension(40, 40));
 
 						JLabel itemLabel = new JLabel();
