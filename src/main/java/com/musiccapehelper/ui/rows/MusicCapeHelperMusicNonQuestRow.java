@@ -2,9 +2,15 @@ package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.enums.Music;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -22,6 +28,7 @@ public class MusicCapeHelperMusicNonQuestRow extends JPanel
 	private final Music music;
 	private final ItemManager itemManager;
 	private final ClientThread clientThread;
+
 	public MusicCapeHelperMusicNonQuestRow(Music music, ItemManager itemManager, ClientThread clientThread)
 	{
 		this.music = music;
@@ -30,9 +37,10 @@ public class MusicCapeHelperMusicNonQuestRow extends JPanel
 
 		if (!music.getItems().isEmpty())
 		{
-			setBackground(ColorScheme.DARK_GRAY_COLOR);
+
 			setLayout(new BorderLayout());
 			setBorder(new EmptyBorder(5, 0, 0, 0));
+			setBackground(ColorScheme.DARK_GRAY_COLOR);
 
 			JLabel itemsPanelLabel = new JLabel();
 			itemsPanelLabel.setText("Items Required: ");
@@ -41,7 +49,7 @@ public class MusicCapeHelperMusicNonQuestRow extends JPanel
 			add(itemsPanelLabel, BorderLayout.PAGE_START);
 
 			JPanel itemsPanel = new JPanel();
-			itemsPanel.setLayout(new DynamicGridLayout(0,5, 5, 5));
+			itemsPanel.setLayout(new GridLayout(0, 5, 5, 5));
 			itemsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 			itemsPanel.setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
 			itemsPanel.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
@@ -56,14 +64,30 @@ public class MusicCapeHelperMusicNonQuestRow extends JPanel
 					SwingUtilities.invokeLater(() ->
 					{
 						JPanel itemWrapperPanel = new JPanel();
-						itemWrapperPanel.setBorder(new EmptyBorder(2,2,2,2));
+						itemWrapperPanel.setBorder(new EmptyBorder(2, 2, 2, 2));
 						itemWrapperPanel.setLayout(new BoxLayout(itemWrapperPanel, BoxLayout.PAGE_AXIS));
 						itemWrapperPanel.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
-						itemWrapperPanel.setPreferredSize(new Dimension(40, 40));
 
 						JLabel itemLabel = new JLabel();
 						itemImage.addTo(itemLabel);
 						itemLabel.setToolTipText(labelToolTextName);
+						itemLabel.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
+						itemLabel.setOpaque(true);
+						itemLabel.addMouseListener(new MouseAdapter()
+						{
+							@Override
+							public void mouseEntered(MouseEvent e)
+							{
+								//darker colour of MEDIUM_GRAY_COLOR
+								itemLabel.setBackground(new Color(55, 55, 55));
+							}
+
+							@Override
+							public void mouseExited(MouseEvent e)
+							{
+								itemLabel.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
+							}
+						});
 
 						itemWrapperPanel.add(itemLabel);
 						itemsPanel.add(itemWrapperPanel);

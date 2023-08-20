@@ -128,6 +128,10 @@ public class MusicCapeHelperPlugin extends Plugin
 		{
 			clientThread.invokeAtTickEnd(this::updateMarkersOnMap);
 		}
+		else if (configChanged.getKey().equals("map_markers"))
+		{
+			//if the map markers are saved, do nothing
+		}
 		else
 		{
 			clientThread.invokeAtTickEnd(this::updateMusicList);
@@ -369,6 +373,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	{
 		worldMapPointManager.removeIf(MusicCapeHelperWorldMapPoint.class::isInstance);
 		mapPoints.forEach(p -> worldMapPointManager.add(p));
+		saveMapMarkers(mapPoints);
 	}
 
 	public void saveMapMarkers(List<MusicCapeHelperWorldMapPoint> saveMapPoints)
