@@ -10,6 +10,7 @@ import java.util.Arrays;
 import javax.swing.JLabel;
 import lombok.Getter;
 import lombok.Setter;
+import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
 public class MusicCapeHelperHeader extends MusicCapeHelperRow
@@ -30,7 +31,7 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 	public void setRowTitle()
 	{
 		rowTitle.setHorizontalAlignment(JLabel.LEFT);
-		rowTitle.setFont(FontManager.getRunescapeSmallFont());
+		rowTitle.setFont(FontManager.getRunescapeBoldFont());
 
 		if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION))
 		{

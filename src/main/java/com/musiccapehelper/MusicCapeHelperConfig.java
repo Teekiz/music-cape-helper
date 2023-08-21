@@ -46,7 +46,7 @@ public interface MusicCapeHelperConfig extends Config
 		section = "Panel Settings",
 		position = 3
 	)
-	default Color panelDefaultTextColour() {return Color.GRAY;}
+	default Color panelDefaultTextColour() {return Color.WHITE;}
 
 	@ConfigSection(
 		name = "Map Settings",
