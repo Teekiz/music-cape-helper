@@ -181,25 +181,25 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
-		//setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);
+		setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e)
 	{
-		//setBackground(ColorScheme.DARK_GRAY_COLOR);
+		setBackground(ColorScheme.DARK_GRAY_COLOR);
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e)
 	{
-		//setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);
+		setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e)
 	{
-		//setBackground(ColorScheme.DARK_GRAY_COLOR);
+		setBackground(ColorScheme.DARK_GRAY_COLOR);
 	}
 
 	@Override
