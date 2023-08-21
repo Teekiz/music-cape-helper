@@ -1,15 +1,44 @@
 package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.enums.Music;
+import java.awt.BorderLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import net.runelite.client.ui.ColorScheme;
+import net.runelite.client.ui.FontManager;
+import net.runelite.client.util.ImageUtil;
 
 public class MusicCapeHelperMusicQuestRow extends JPanel
 {
-	private Music music;
+	private final Music music;
 
 	public MusicCapeHelperMusicQuestRow(Music music)
 	{
 		this.music = music;
+
+		setLayout(new BorderLayout());
+		setBorder(new EmptyBorder(5, 0, 0, 0));
+		setBackground(ColorScheme.DARK_GRAY_COLOR);
+
+		if (music.isQuest())
+		{
+			String questLabelText = "Unlocked during: ";
+			JLabel questLabel = new JLabel(questLabelText);
+			questLabel.setFont(FontManager.getRunescapeSmallFont());
+
+			String questNameLabelText = music.getQuest().getName();
+			JLabel questNameLabel = new JLabel(questNameLabelText);
+			questNameLabel.setFont(FontManager.getRunescapeSmallFont());
+
+			//JLabel questIconLabel= new JLabel();
+			//questIconLabel.setIcon(new ImageIcon(ImageUtil.loadImageResource(getClass(), "/quest_point_icon.png")));
+
+			add(questLabel, BorderLayout.PAGE_START);
+			add(questNameLabel, BorderLayout.LINE_START);
+			//add(questIconLabel, BorderLayout.LINE_END);
+		}
 
 	}
 }

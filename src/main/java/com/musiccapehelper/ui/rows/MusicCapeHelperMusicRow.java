@@ -22,9 +22,8 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		this.completed = completed;
 		setTextColour();
 
-		JLabel songRegionLabel = new JLabel(music.getSettingsRegion().getName(), JLabel.LEFT);
+		JLabel songRegionLabel = new JLabel("Region: " + music.getSettingsRegion().getName(), JLabel.LEFT);
 		songRegionLabel.setFont(FontManager.getRunescapeSmallFont());
-		songRegionLabel.setPreferredSize(new Dimension(50, 10));
 		songRegionLabel.setHorizontalAlignment(JLabel.LEFT);
 		gbc.ipadx = 0;
 		gbc.gridx = 0;
@@ -50,28 +49,38 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		JLabel songIsQuestLabel = new JLabel();
 		if (music.isQuest())
 		{
-			songIsQuestLabel.setText("Quest Unlock");
+			songIsQuestLabel.setText("Quest Unlock: Yes");
 		}
 		else
 		{
-			songIsQuestLabel.setText("");
+			songIsQuestLabel.setText("Quest Unlock: No");
 		}
 		songIsQuestLabel.setFont(FontManager.getRunescapeSmallFont());
-		songIsQuestLabel.setPreferredSize(new Dimension(70, 10));
 		songIsQuestLabel.setHorizontalAlignment(JLabel.LEFT);
-		gbc.gridx = 4;
-		gbc.anchor = GridBagConstraints.SOUTHEAST;
+		gbc.gridy = 2;
+		gbc.gridx = 0;
+		gbc.weightx = 1.0;
+		gbc.anchor = GridBagConstraints.SOUTHWEST;
 		add(songIsQuestLabel, gbc);
 
-		if (!music.isQuest())
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.weightx = 1.0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.anchor = GridBagConstraints.SOUTH;
+
+		if (!music.isRequired())
 		{
-			gbc.gridx = 0;
-			gbc.gridy = 2;
-			gbc.gridwidth = GridBagConstraints.REMAINDER;
-			gbc.weightx = 1.0;
-			gbc.fill = GridBagConstraints.HORIZONTAL;
-			gbc.anchor = GridBagConstraints.SOUTH;
+			add(new MusicCapeHelperMusicEventRow(music), gbc);
+		}
+		else if (!music.isQuest())
+		{
 			add(new MusicCapeHelperMusicItemRow(music, itemManager, clientThread), gbc);
+		}
+		else
+		{
+			add(new MusicCapeHelperMusicQuestRow(music), gbc);
 		}
 	}
 

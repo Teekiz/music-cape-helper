@@ -94,7 +94,6 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 	{
 		rowTitle.setText(music.getSongName());
 		rowTitle.setHorizontalAlignment(JLabel.LEFT);
-		rowTitle.setFont(FontManager.getRunescapeSmallFont());
 		rowTitle.setFont(FontManager.getRunescapeFont());
 	}
 

@@ -23,6 +23,7 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 	private final Music music;
 	private final ItemManager itemManager;
 	private final ClientThread clientThread;
+	private final Color backgroundColour = new Color(85,85,85);
 
 	public MusicCapeHelperMusicItemRow(Music music, ItemManager itemManager, ClientThread clientThread)
 	{
@@ -32,7 +33,6 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 
 		if (!music.getItems().isEmpty())
 		{
-
 			setLayout(new BorderLayout());
 			setBorder(new EmptyBorder(5, 0, 0, 0));
 			setBackground(ColorScheme.DARK_GRAY_COLOR);
@@ -47,7 +47,7 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 			itemsPanel.setLayout(new GridLayout(0, 5, 5, 5));
 			itemsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 			itemsPanel.setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
-			itemsPanel.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
+			itemsPanel.setBackground(new Color(85,85,85));
 
 			music.getItems().forEach(i ->
 			{
@@ -61,12 +61,12 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 						JPanel itemWrapperPanel = new JPanel();
 						itemWrapperPanel.setBorder(new EmptyBorder(2, 2, 2, 2));
 						itemWrapperPanel.setLayout(new BoxLayout(itemWrapperPanel, BoxLayout.PAGE_AXIS));
-						itemWrapperPanel.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
+						itemWrapperPanel.setBackground(backgroundColour);
 
 						JLabel itemLabel = new JLabel();
 						itemImage.addTo(itemLabel);
 						itemLabel.setToolTipText(labelToolTextName);
-						itemLabel.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
+						itemLabel.setBackground(backgroundColour);
 						itemLabel.setOpaque(true);
 						itemLabel.addMouseListener(new MouseAdapter()
 						{
@@ -74,13 +74,13 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 							public void mouseEntered(MouseEvent e)
 							{
 								//darker colour of MEDIUM_GRAY_COLOR
-								itemLabel.setBackground(new Color(55, 55, 55));
+								itemLabel.setBackground(new Color(70, 70, 70));
 							}
 
 							@Override
 							public void mouseExited(MouseEvent e)
 							{
-								itemLabel.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
+								itemLabel.setBackground(backgroundColour);
 							}
 						});
 
