@@ -105,5 +105,6 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 		setEnabled();
 		setRowPinIcon();
 		revalidate();
+		repaint();
 	}
 }

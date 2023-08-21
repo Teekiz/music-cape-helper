@@ -35,7 +35,7 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 		{
 			setLayout(new BorderLayout());
 			setBorder(new EmptyBorder(5, 0, 5, 0));
-			//setBackground(ColorScheme.DARK_GRAY_COLOR);
+			setOpaque(false);
 
 			JLabel itemsPanelLabel = new JLabel();
 			itemsPanelLabel.setText("Items Required: ");
@@ -47,7 +47,7 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 			itemsPanel.setLayout(new GridLayout(0, 5, 5, 5));
 			itemsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 			itemsPanel.setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
-			//itemsPanel.setBackground(new Color(85,85,85));
+			itemsPanel.setBackground(backgroundColour);
 
 			music.getItems().forEach(i ->
 			{
@@ -61,12 +61,12 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 						JPanel itemWrapperPanel = new JPanel();
 						itemWrapperPanel.setBorder(new EmptyBorder(2, 2, 2, 2));
 						itemWrapperPanel.setLayout(new BoxLayout(itemWrapperPanel, BoxLayout.PAGE_AXIS));
-						//itemWrapperPanel.setBackground(backgroundColour);
+						itemWrapperPanel.setBackground(backgroundColour);
 
 						JLabel itemLabel = new JLabel();
 						itemImage.addTo(itemLabel);
 						itemLabel.setToolTipText(labelToolTextName);
-						//itemLabel.setBackground(backgroundColour);
+						itemLabel.setBackground(backgroundColour);
 						itemLabel.setOpaque(true);
 						itemLabel.addMouseListener(new MouseAdapter()
 						{
@@ -74,13 +74,13 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 							public void mouseEntered(MouseEvent e)
 							{
 								//darker colour of MEDIUM_GRAY_COLOR
-								//itemLabel.setBackground(new Color(70, 70, 70));
+								itemLabel.setBackground(new Color(70, 70, 70));
 							}
 
 							@Override
 							public void mouseExited(MouseEvent e)
 							{
-								//itemLabel.setBackground(backgroundColour);
+								itemLabel.setBackground(backgroundColour);
 							}
 						});
 

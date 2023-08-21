@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -22,6 +23,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
+import net.runelite.client.util.ImageUtil;
 
 public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseListener
 {
@@ -56,7 +58,7 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 
 		setLayout(new GridBagLayout());
 		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
-		//setBackground(ColorScheme.DARK_GRAY_COLOR);
+		setBackground(ColorScheme.DARK_GRAY_COLOR);
 		setToolTipText(music.getSongName());
 
 		setRowTitle();
@@ -141,6 +143,7 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 		setEnabled();
 		setRowPinIcon();
 		revalidate();
+		repaint();
 	}
 
 	@Override

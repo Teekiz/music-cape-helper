@@ -3,7 +3,6 @@ package com.musiccapehelper.ui.rows;
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.Music;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
@@ -93,18 +92,22 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		gbc.weightx = 1.0;
 		gbc.anchor = GridBagConstraints.SOUTH;
 
-		if (!music.isRequired())
+		//events
+		if (!music.isQuest() && !music.isRequired())
 		{
 			add(new MusicCapeHelperMusicEventRow(music), gbc);
 		}
-		else if (!music.isQuest())
-		{
-			add(new MusicCapeHelperMusicItemRow(music, itemManager, clientThread), gbc);
-		}
-		else
+		//quests
+		else if (music.isQuest() && music.isRequired())
 		{
 			add(new MusicCapeHelperMusicQuestRow(music), gbc);
 		}
+		//normal
+		else if (!music.isQuest() && music.isRequired() && !music.getItems().isEmpty())
+		{
+			add(new MusicCapeHelperMusicItemRow(music, itemManager, clientThread), gbc);
+		}
+
 	}
 
 	public void setTextColour()
@@ -130,5 +133,6 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		setTextColour();
 		setRowPinIcon();
 		revalidate();
+		repaint();
 	}
 }

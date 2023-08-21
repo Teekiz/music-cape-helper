@@ -20,7 +20,7 @@ public class MusicCapeHelperMusicQuestRow extends JPanel
 
 		setLayout(new BorderLayout());
 		setBorder(new EmptyBorder(5, 0, 5, 0));
-		//setBackground(ColorScheme.DARK_GRAY_COLOR);
+		setOpaque(false);
 
 		if (music.isQuest())
 		{
