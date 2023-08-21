@@ -6,6 +6,7 @@ import com.musiccapehelper.enums.Music;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 import lombok.Getter;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.game.ItemManager;
@@ -63,11 +64,33 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		gbc.anchor = GridBagConstraints.SOUTHWEST;
 		add(songIsQuestLabel, gbc);
 
-		gbc.gridx = 0;
+		JLabel descriptionTextAreaLabel = new JLabel();
+		descriptionTextAreaLabel.setText("Description:");
+		descriptionTextAreaLabel.setFont(FontManager.getRunescapeSmallFont());
+		descriptionTextAreaLabel.setHorizontalAlignment(JLabel.LEFT);
 		gbc.gridy = 3;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbc.weightx = 1.0;
+		gbc.anchor = GridBagConstraints.SOUTHWEST;
+		add(descriptionTextAreaLabel, gbc);
+
+		JTextArea descriptionTextArea = new JTextArea();
+		descriptionTextArea.setEnabled(false);
+		descriptionTextArea.setLineWrap(true);
+		descriptionTextArea.setWrapStyleWord(true);
+		descriptionTextArea.setEditable(false);
+		descriptionTextArea.setFont(FontManager.getRunescapeSmallFont());
+		descriptionTextArea.append(music.getDescription());
+
+		gbc.gridy = 4;
+		gbc.weightx = 1.0;
+		gbc.anchor = GridBagConstraints.SOUTHWEST;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
+		add(descriptionTextArea, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 5;
+		gbc.weightx = 1.0;
 		gbc.anchor = GridBagConstraints.SOUTH;
 
 		if (!music.isRequired())

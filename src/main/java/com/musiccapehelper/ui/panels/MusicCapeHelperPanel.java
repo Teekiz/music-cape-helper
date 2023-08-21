@@ -47,7 +47,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(new EmptyBorder(10, 10, 10, 10));
-		setBackground(ColorScheme.DARK_GRAY_COLOR);
+		//setBackground(ColorScheme.DARK_GRAY_COLOR);
 
 		//title panel
 		JPanel titlePanel = new JPanel();

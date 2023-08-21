@@ -56,8 +56,8 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 
 		setLayout(new GridBagLayout());
 		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
-		setBackground(ColorScheme.DARK_GRAY_COLOR);
-		setToolTipText(music.getDescription());
+		//setBackground(ColorScheme.DARK_GRAY_COLOR);
+		setToolTipText(music.getSongName());
 
 		setRowTitle();
 		setEnabled();
@@ -65,7 +65,7 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 		setPopup();
 
 		//row title (song name)
-		gbc.insets = new Insets(0, 5, 2, 5);
+		gbc.insets = new Insets(4, 5, 0, 5);
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.gridwidth = 4;
 		gbc.gridx = 0;
@@ -178,25 +178,25 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
-		setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);
+		//setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e)
 	{
-		setBackground(ColorScheme.DARK_GRAY_COLOR);
+		//setBackground(ColorScheme.DARK_GRAY_COLOR);
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e)
 	{
-		setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);
+		//setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e)
 	{
-		setBackground(ColorScheme.DARK_GRAY_COLOR);
+		//setBackground(ColorScheme.DARK_GRAY_COLOR);
 	}
 
 	@Override

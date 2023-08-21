@@ -19,8 +19,8 @@ public class MusicCapeHelperMusicQuestRow extends JPanel
 		this.music = music;
 
 		setLayout(new BorderLayout());
-		setBorder(new EmptyBorder(5, 0, 0, 0));
-		setBackground(ColorScheme.DARK_GRAY_COLOR);
+		setBorder(new EmptyBorder(5, 0, 5, 0));
+		//setBackground(ColorScheme.DARK_GRAY_COLOR);
 
 		if (music.isQuest())
 		{
@@ -32,12 +32,8 @@ public class MusicCapeHelperMusicQuestRow extends JPanel
 			JLabel questNameLabel = new JLabel(questNameLabelText);
 			questNameLabel.setFont(FontManager.getRunescapeSmallFont());
 
-			//JLabel questIconLabel= new JLabel();
-			//questIconLabel.setIcon(new ImageIcon(ImageUtil.loadImageResource(getClass(), "/quest_point_icon.png")));
-
 			add(questLabel, BorderLayout.PAGE_START);
 			add(questNameLabel, BorderLayout.LINE_START);
-			//add(questIconLabel, BorderLayout.LINE_END);
 		}
 
 	}

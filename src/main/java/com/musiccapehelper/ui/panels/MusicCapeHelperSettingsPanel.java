@@ -54,8 +54,8 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		// -- Search Bar --
 		searchBar = new IconTextField();
 		searchBar.setIcon(IconTextField.Icon.SEARCH);
-		searchBar.setBackground(ColorScheme.DARKER_GRAY_COLOR);
-		searchBar.setHoverBackgroundColor(ColorScheme.DARK_GRAY_HOVER_COLOR);
+		//searchBar.setBackground(ColorScheme.DARKER_GRAY_COLOR);
+		//searchBar.setHoverBackgroundColor(ColorScheme.DARK_GRAY_HOVER_COLOR);
 		searchBar.setPreferredSize(new Dimension(100, 30));
 		searchBar.addActionListener(e -> panel.updateAllPanelRows(searchBar.getText()));
 		searchBar.addClearListener(plugin::updateMusicList);
