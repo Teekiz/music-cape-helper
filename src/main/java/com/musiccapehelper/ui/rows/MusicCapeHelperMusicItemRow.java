@@ -51,11 +51,6 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 
 			music.getItems().forEach(i ->
 			{
-				clientThread.invokeLater(() ->
-				{
-					String labelToolTextName = itemManager.getItemComposition(i).getMembersName();
-					AsyncBufferedImage itemImage = itemManager.getImage(i);
-
 					SwingUtilities.invokeLater(() ->
 					{
 						JPanel itemWrapperPanel = new JPanel();
@@ -64,8 +59,6 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 						itemWrapperPanel.setBackground(backgroundColour);
 
 						JLabel itemLabel = new JLabel();
-						itemImage.addTo(itemLabel);
-						itemLabel.setToolTipText(labelToolTextName);
 						itemLabel.setBackground(backgroundColour);
 						itemLabel.setOpaque(true);
 						itemLabel.addMouseListener(new MouseAdapter()
@@ -84,10 +77,18 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 							}
 						});
 
+						clientThread.invokeLater(() ->
+						{
+							String labelToolTextName = itemManager.getItemComposition(i).getMembersName();
+							AsyncBufferedImage itemImage = itemManager.getImage(i);
+
+							itemImage.addTo(itemLabel);
+							itemLabel.setToolTipText(labelToolTextName);
+						});
+
 						itemWrapperPanel.add(itemLabel);
 						itemsPanel.add(itemWrapperPanel);
 					});
-				});
 			});
 
 			add(itemsPanel, BorderLayout.CENTER);
