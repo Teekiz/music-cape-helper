@@ -79,6 +79,10 @@ public class MusicCapeHelperPlugin extends Plugin
 	private final ImageIcon addIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/addicon.png"));
 	@Getter
 	private final ImageIcon removeIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/removeicon.png"));
+	@Getter
+	private final ImageIcon upIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/up_icon.png"));
+	@Getter
+	private final ImageIcon downIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/down_icon.png"));
 
 
 	//button at bottom of panel to add list

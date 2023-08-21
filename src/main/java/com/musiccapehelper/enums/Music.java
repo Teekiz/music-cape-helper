@@ -8,7 +8,6 @@ import lombok.Getter;
 import net.runelite.api.ItemID;
 import net.runelite.api.Quest;
 import net.runelite.api.coords.WorldPoint;
-import org.w3c.dom.events.Event;
 
 public enum Music
 {

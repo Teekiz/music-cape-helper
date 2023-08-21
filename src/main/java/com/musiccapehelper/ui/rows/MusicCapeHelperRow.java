@@ -2,9 +2,7 @@ package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
-import com.musiccapehelper.enums.HeaderType;
 import com.musiccapehelper.enums.Music;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -12,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -23,7 +20,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
-import net.runelite.client.util.ImageUtil;
 
 public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseListener
 {
@@ -32,7 +28,7 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 
 	@Getter @Setter
 	protected boolean enabled;
-	@Getter
+	@Getter @Setter
 	protected boolean expand;
 
 	protected MusicCapeHelperPlugin plugin;
@@ -54,7 +50,7 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 		this.music = music;
 		this.plugin = plugin;
 		this.config = config;
-		expand = false;
+		this.expand = false;
 
 		setLayout(new GridBagLayout());
 		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
@@ -97,6 +93,16 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 		rowTitle.setText(music.getSongName());
 		rowTitle.setHorizontalAlignment(JLabel.LEFT);
 		rowTitle.setFont(FontManager.getRunescapeFont());
+		if (expand)
+		{
+			rowTitle.setIcon(plugin.getUpIcon());
+		}
+		else
+		{
+			rowTitle.setIcon(plugin.getDownIcon());
+		}
+		rowTitle.setHorizontalTextPosition(JLabel.LEFT);
+		rowTitle.setVerticalTextPosition(JLabel.CENTER);
 	}
 
 	public void setRowPinIcon()
