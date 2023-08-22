@@ -132,7 +132,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		{
 			clientThread.invokeAtTickEnd(this::updateMarkersOnMap);
 		}
-		else if (configChanged.getKey().equals("map_markers"))
+		else if (configChanged.getKey().equals("worldMapMarkers"))
 		{
 			//if the map markers are saved, do nothing
 		}
@@ -385,7 +385,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		if (!saveMapPoints.isEmpty())
 		{
 			//overwrites the existing data
-			configManager.unsetConfiguration("musicTracksWorldPoints", "map_markers");
+			configManager.unsetConfiguration("musicTracksWorldPoints", "worldMapMarkers");
 			JsonArray mapData = new JsonArray();
 			saveMapPoints.forEach(m -> {
 				JsonObject jsonObject = new JsonObject();
@@ -394,15 +394,16 @@ public class MusicCapeHelperPlugin extends Plugin
 				mapData.add(jsonObject);
 			});
 			String json = mapData.toString();
-			configManager.setConfiguration("musicTracksWorldPoints", "map_markers", json);
+			configManager.setConfiguration("musicTracksWorldPoints", "worldMapMarkers", json);
 		}
 	}
 
 	public void loadMapMarkers()
 	{
+		//todo - check to see if it returns null
 		List<MusicCapeHelperWorldMapPoint> point = new ArrayList<>();
 
-		String json = configManager.getConfiguration("musicTracksWorldPoints", "map_markers");
+		String json = configManager.getConfiguration("musicTracksWorldPoints", "worldMapMarkers");
 		for (JsonElement element : gson.fromJson(json, JsonArray.class))
 		{
 			String song = element.getAsJsonObject().get("music").getAsString();
