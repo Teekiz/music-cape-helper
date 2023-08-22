@@ -130,15 +130,22 @@ public class MusicCapeHelperPlugin extends Plugin
 	{
 		if (configChanged.getKey().equals("differentiateQuestMarkers") || configChanged.getKey().equals("differentiateCompletedMarkers"))
 		{
-			clientThread.invokeAtTickEnd(this::updateMarkersOnMap);
+			clientThread.invokeAtTickEnd(this::updateMapPoints);
 		}
 		else if (configChanged.getKey().equals("worldMapMarkers"))
 		{
 			//if the map markers are saved, do nothing
 		}
-		else
+		else if (configChanged.getKey().equals("panelSettingLocked") || configChanged.getKey().equals("panelSettingQuest") ||
+			configChanged.getKey().equals("panelSettingRegion") || configChanged.getKey().equals("panelSettingOptional") ||
+			configChanged.getKey().equals("panelSettingOrderBy"))
 		{
 			clientThread.invokeAtTickEnd(this::updateMusicList);
+		}
+		else if (configChanged.getKey().equals("panelDefaultTextColour") || configChanged.getKey().equals("panelCompleteTextColour") ||
+			configChanged.getKey().equals("panelIncompleteTextColour"))
+		{
+			musicCapeHelperPanel.updateAllRows();
 		}
 	}
 
@@ -197,7 +204,7 @@ public class MusicCapeHelperPlugin extends Plugin
 				}
 			}
 		}
-		musicCapeHelperPanel.updateAllPanelRows("");
+		musicCapeHelperPanel.createAndRefreshRows("");
 		this.updateMapPoints();
 	}
 
@@ -360,6 +367,7 @@ public class MusicCapeHelperPlugin extends Plugin
 
 	public void updateMapPoints()
 	{
+		//checks to see if the map point has been completed or not
 		mapPoints.forEach(p -> {
 			musicList.entrySet().forEach(m -> {
 				if (m.getKey().equals(p.getMusic()))
