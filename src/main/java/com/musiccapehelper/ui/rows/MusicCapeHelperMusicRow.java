@@ -4,7 +4,10 @@ import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.Music;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import lombok.Getter;
 import net.runelite.client.callback.ClientThread;
@@ -22,14 +25,30 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		this.completed = completed;
 		setTextColour();
 
+		//this is for the inherited GridBagConstraints
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.weightx = 1.0;
+		gbc.anchor = GridBagConstraints.SOUTHWEST;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+
+		JPanel informationPanel = new JPanel();
+		informationPanel.setOpaque(false);
+		informationPanel.setLayout(new GridBagLayout());
+
+		//this is new GridBagConstraints for this panel only
+		GridBagConstraints gbcMusicRow = new GridBagConstraints();
+		gbcMusicRow.insets = new Insets(4, 5, 0, 5);
+
 		JLabel songRegionLabel = new JLabel("Region: " + music.getSettingsRegion().getName(), JLabel.LEFT);
 		songRegionLabel.setFont(FontManager.getRunescapeSmallFont());
 		songRegionLabel.setHorizontalAlignment(JLabel.LEFT);
-		gbc.ipadx = 0;
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.anchor = GridBagConstraints.SOUTHWEST;
-		add(songRegionLabel, gbc);
+		gbcMusicRow.ipadx = 0;
+		gbcMusicRow.gridx = 0;
+		gbcMusicRow.gridy = 0;
+		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
+		informationPanel.add(songRegionLabel, gbcMusicRow);
 
 		JLabel songIsRequiredLabel = new JLabel();
 		if (music.isRequired())
@@ -42,9 +61,9 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		}
 		songIsRequiredLabel.setFont(FontManager.getRunescapeSmallFont());
 		songIsRequiredLabel.setHorizontalAlignment(JLabel.LEFT);
-		gbc.gridx = 2;
-		gbc.anchor = GridBagConstraints.SOUTHWEST;
-		add(songIsRequiredLabel, gbc);
+		gbcMusicRow.gridx = 2;
+		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
+		informationPanel.add(songIsRequiredLabel, gbcMusicRow);
 
 		JLabel songIsQuestLabel = new JLabel();
 		if (music.isQuest())
@@ -57,57 +76,59 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		}
 		songIsQuestLabel.setFont(FontManager.getRunescapeSmallFont());
 		songIsQuestLabel.setHorizontalAlignment(JLabel.LEFT);
-		gbc.gridy = 2;
-		gbc.gridx = 0;
-		gbc.weightx = 1.0;
-		gbc.anchor = GridBagConstraints.SOUTHWEST;
-		add(songIsQuestLabel, gbc);
+		gbcMusicRow.gridy = 1;
+		gbcMusicRow.gridx = 0;
+		gbcMusicRow.weightx = 1.0;
+		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
+		informationPanel.add(songIsQuestLabel, gbcMusicRow);
 
 		JLabel descriptionTextAreaLabel = new JLabel();
 		descriptionTextAreaLabel.setText("Description:");
 		descriptionTextAreaLabel.setFont(FontManager.getRunescapeSmallFont());
 		descriptionTextAreaLabel.setHorizontalAlignment(JLabel.LEFT);
-		gbc.gridy = 3;
-		gbc.weightx = 1.0;
-		gbc.anchor = GridBagConstraints.SOUTHWEST;
-		add(descriptionTextAreaLabel, gbc);
+		gbcMusicRow.gridy = 2;
+		gbcMusicRow.weightx = 1.0;
+		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
+		informationPanel.add(descriptionTextAreaLabel, gbcMusicRow);
 
 		JTextArea descriptionTextArea = new JTextArea();
 		descriptionTextArea.setEnabled(false);
 		descriptionTextArea.setLineWrap(true);
 		descriptionTextArea.setWrapStyleWord(true);
 		descriptionTextArea.setEditable(false);
+		descriptionTextArea.setOpaque(false);
 		descriptionTextArea.setFont(FontManager.getRunescapeSmallFont());
 		descriptionTextArea.append(music.getDescription());
 
-		gbc.gridy = 4;
-		gbc.weightx = 1.0;
-		gbc.anchor = GridBagConstraints.SOUTHWEST;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		add(descriptionTextArea, gbc);
+		gbcMusicRow.gridy = 3;
+		gbcMusicRow.weightx = 1.0;
+		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
+		gbcMusicRow.gridwidth = GridBagConstraints.REMAINDER;
+		gbcMusicRow.fill = GridBagConstraints.HORIZONTAL;
+		informationPanel.add(descriptionTextArea, gbcMusicRow);
 
-		gbc.gridx = 0;
-		gbc.gridy = 5;
-		gbc.weightx = 1.0;
-		gbc.anchor = GridBagConstraints.SOUTH;
+		gbcMusicRow.gridx = 0;
+		gbcMusicRow.gridy = 4;
+		gbcMusicRow.weightx = 1.0;
+		gbcMusicRow.anchor = GridBagConstraints.SOUTH;
 
 		//events
 		if (!music.isQuest() && !music.isRequired())
 		{
-			add(new MusicCapeHelperMusicEventRow(music), gbc);
+			informationPanel.add(new MusicCapeHelperMusicEventRow(music), gbcMusicRow);
 		}
 		//quests
 		else if (music.isQuest() && music.isRequired())
 		{
-			add(new MusicCapeHelperMusicQuestRow(music), gbc);
+			informationPanel.add(new MusicCapeHelperMusicQuestRow(music), gbcMusicRow);
 		}
 		//normal
 		else if (!music.isQuest() && music.isRequired() && !music.getItems().isEmpty())
 		{
-			add(new MusicCapeHelperMusicItemRow(music, itemManager, clientThread), gbc);
+			informationPanel.add(new MusicCapeHelperMusicItemRow(music, itemManager, clientThread), gbcMusicRow);
 		}
 
+		add(informationPanel, gbc);
 	}
 
 	public void setTextColour()

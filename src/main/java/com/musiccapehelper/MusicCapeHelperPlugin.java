@@ -72,6 +72,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Getter
 	private MusicCapeHelperPanel musicCapeHelperPanel;
 	private HashMap<Music, Boolean> musicList  = new HashMap<>();;
+	private MusicCapeHelperAccess musicCapeHelperAccess;
 
 	//icons
 	private final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "/pluginicon.png");
@@ -99,12 +100,15 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
+		musicCapeHelperAccess = new MusicCapeHelperAccess(config, configManager, gson);
+
 		for (Music music : Music.values())
 		{
 			musicList.put(music, false);
 		}
 
-		loadMapMarkers();
+		mapPoints = musicCapeHelperAccess.loadMapMarkers();
+		updateMapPoints();
 
 		musicCapeHelperPanel = new MusicCapeHelperPanel(this, config, itemManager, clientThread);
 		navigationButton = NavigationButton.builder()
@@ -120,7 +124,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Override
 	protected void shutDown() throws Exception
 	{
-		saveMapMarkers(mapPoints);
+		musicCapeHelperAccess.saveMapMarkers(mapPoints);
 		clientToolbar.removeNavigation(navigationButton);
 		worldMapPointManager.removeIf(MusicCapeHelperWorldMapPoint.class::isInstance);
 	}
@@ -385,47 +389,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	{
 		worldMapPointManager.removeIf(MusicCapeHelperWorldMapPoint.class::isInstance);
 		mapPoints.forEach(p -> worldMapPointManager.add(p));
-		saveMapMarkers(mapPoints);
-	}
-
-	public void saveMapMarkers(List<MusicCapeHelperWorldMapPoint> saveMapPoints)
-	{
-		if (!saveMapPoints.isEmpty())
-		{
-			//overwrites the existing data
-			configManager.unsetConfiguration("musicTracksWorldPoints", "worldMapMarkers");
-			JsonArray mapData = new JsonArray();
-			saveMapPoints.forEach(m -> {
-				JsonObject jsonObject = new JsonObject();
-				jsonObject.addProperty("music", m.music.getSongName());
-				jsonObject.addProperty("completed", m.completed);
-				mapData.add(jsonObject);
-			});
-			String json = mapData.toString();
-			configManager.setConfiguration("musicTracksWorldPoints", "worldMapMarkers", json);
-		}
-	}
-
-	public void loadMapMarkers()
-	{
-		//todo - check to see if it returns null
-		List<MusicCapeHelperWorldMapPoint> point = new ArrayList<>();
-
-		String json = configManager.getConfiguration("musicTracksWorldPoints", "worldMapMarkers");
-		for (JsonElement element : gson.fromJson(json, JsonArray.class))
-		{
-			String song = element.getAsJsonObject().get("music").getAsString();
-			Music music = Arrays.stream(Music.values())
-				.filter(m -> m.getSongName().equals(song))
-				.findAny().orElse(null);
-			boolean completed = element.getAsJsonObject().get("completed").getAsBoolean();
-			if (music != null)
-			{
-				point.add(new MusicCapeHelperWorldMapPoint(music, completed, config));
-			}
-		}
-		mapPoints = point;
-		updateMarkersOnMap();
+		musicCapeHelperAccess.saveMapMarkers(mapPoints);
 	}
 
 	//todo delete

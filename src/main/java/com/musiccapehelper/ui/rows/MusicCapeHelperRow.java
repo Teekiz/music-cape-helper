@@ -101,7 +101,7 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 		{
 			rowTitle.setIcon(plugin.getDownIcon());
 		}
-		rowTitle.setHorizontalTextPosition(JLabel.LEFT);
+		rowTitle.setHorizontalTextPosition(JLabel.RIGHT);
 		rowTitle.setVerticalTextPosition(JLabel.CENTER);
 	}
 
