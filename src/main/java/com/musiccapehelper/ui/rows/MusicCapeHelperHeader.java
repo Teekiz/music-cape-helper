@@ -10,7 +10,6 @@ import java.util.Arrays;
 import javax.swing.JLabel;
 import lombok.Getter;
 import lombok.Setter;
-import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
 public class MusicCapeHelperHeader extends MusicCapeHelperRow
@@ -80,21 +79,21 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 		MusicCapeHelperPanel panel = plugin.getMusicCapeHelperPanel();
 		if (headerType.equals(HeaderType.REQUIRED))
 		{
-			enabled = panel.getMusicRows()
+			enabled = panel.getPanelRows()
 				.stream()
 				.filter(r -> r.getMusic().isRequired())
 				.allMatch(MusicCapeHelperRow::isEnabled);
 		}
 		else if (headerType.equals(HeaderType.OPTIONAL))
 		{
-			enabled = panel.getMusicRows()
+			enabled = panel.getPanelRows()
 				.stream()
 				.filter(r -> !r.getMusic().isRequired())
 				.allMatch(MusicCapeHelperRow::isEnabled);
 		}
 		else
 		{
-			enabled = panel.getMusicRows()
+			enabled = panel.getPanelRows()
 				.stream()
 				.filter(r -> r.getMusic().getSettingsRegion().equals(headerType.getSettingsRegion()))
 				.allMatch(MusicCapeHelperRow::isEnabled);

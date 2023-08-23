@@ -293,7 +293,7 @@ public class MusicCapeHelperPlugin extends Plugin
 			{
 				if (row.isEnabled())
 				{
-					musicCapeHelperPanel.getMusicRows().stream()
+					musicCapeHelperPanel.getPanelRows().stream()
 						.filter(r -> r.getMusic().getSettingsRegion().equals(((MusicCapeHelperHeader) row).getHeaderType().getSettingsRegion()))
 						.filter(r -> r.isEnabled())
 						.forEach(r ->
@@ -304,12 +304,13 @@ public class MusicCapeHelperPlugin extends Plugin
 				}
 				else
 				{
-					musicCapeHelperPanel.getMusicRows().stream()
+					musicCapeHelperPanel.getPanelRows().stream()
+						.filter(r -> r instanceof MusicCapeHelperMusicRow)
 						.filter(r -> r.getMusic().getSettingsRegion().equals(((MusicCapeHelperHeader) row).getHeaderType().getSettingsRegion()))
 						.filter(r -> !r.isEnabled())
 						.forEach(r ->
 						{
-							mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), r.isCompleted(), config));
+							mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), ((MusicCapeHelperMusicRow) r).isCompleted(), config));
 							musicCapeHelperPanel.updateRow(r);
 						});
 				}
@@ -320,7 +321,7 @@ public class MusicCapeHelperPlugin extends Plugin
 				{
 					if (row.isEnabled())
 					{
-						musicCapeHelperPanel.getMusicRows().stream()
+						musicCapeHelperPanel.getPanelRows().stream()
 							.filter(r -> r.getMusic().isRequired())
 							.filter(r -> r.isEnabled())
 							.forEach(r ->
@@ -331,12 +332,13 @@ public class MusicCapeHelperPlugin extends Plugin
 					}
 					else
 					{
-						musicCapeHelperPanel.getMusicRows().stream()
+						musicCapeHelperPanel.getPanelRows().stream()
+							.filter(r -> r instanceof MusicCapeHelperMusicRow)
 							.filter(r -> r.getMusic().isRequired())
 							.filter(r -> !r.isEnabled())
 							.forEach(r ->
 							{
-								mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), r.isCompleted(), config));
+								mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), ((MusicCapeHelperMusicRow) r).isCompleted(), config));
 								musicCapeHelperPanel.updateRow(r);
 							});
 					}
@@ -345,7 +347,7 @@ public class MusicCapeHelperPlugin extends Plugin
 				{
 					if (row.isEnabled())
 					{
-						musicCapeHelperPanel.getMusicRows().stream()
+						musicCapeHelperPanel.getPanelRows().stream()
 							.filter(r -> !r.getMusic().isRequired())
 							.filter(r -> r.isEnabled())
 							.forEach(r ->
@@ -356,12 +358,13 @@ public class MusicCapeHelperPlugin extends Plugin
 					}
 					else
 					{
-						musicCapeHelperPanel.getMusicRows().stream()
+						musicCapeHelperPanel.getPanelRows().stream()
+							.filter(r -> r instanceof MusicCapeHelperMusicRow)
 							.filter(r -> !r.getMusic().isRequired())
 							.filter(r -> !r.isEnabled())
 							.forEach(r ->
 							{
-								mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), r.isCompleted(), config));
+								mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), ((MusicCapeHelperMusicRow) r).isCompleted(), config));
 								musicCapeHelperPanel.updateRow(r);
 							});
 					}

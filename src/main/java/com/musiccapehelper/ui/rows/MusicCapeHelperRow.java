@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import javax.inject.Inject;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -23,7 +22,7 @@ import lombok.Setter;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
-public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseListener
+public abstract class MusicCapeHelperRow extends JPanel implements ActionListener, MouseListener, Cloneable
 {
 	@Getter
 	protected Music music;
@@ -47,6 +46,9 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 
 	ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
 
+
+	//todo change popup depending on screen area
+	// todo consider removing inheritance
 
 	public MusicCapeHelperRow(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
@@ -225,5 +227,11 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 			plugin.rowPinClicked(this);
 			popupMenu.setVisible(false);
 		}
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException
+	{
+		return super.clone();
 	}
 }
