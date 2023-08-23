@@ -372,7 +372,6 @@ public class MusicCapeHelperPlugin extends Plugin
 			}
 			musicCapeHelperPanel.updateHeader(row);
 		}
-		musicCapeHelperPanel.updateMapPanel();
 		updateMarkersOnMap();
 	}
 
