@@ -22,7 +22,7 @@ import lombok.Setter;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
-public abstract class MusicCapeHelperRow extends JPanel implements ActionListener, MouseListener, Cloneable
+public abstract class MusicCapeHelperRow extends JPanel implements ActionListener, MouseListener
 {
 	@Getter
 	protected Music music;
@@ -227,11 +227,5 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 			plugin.rowPinClicked(this);
 			popupMenu.setVisible(false);
 		}
-	}
-
-	@Override
-	public Object clone() throws CloneNotSupportedException
-	{
-		return super.clone();
 	}
 }
