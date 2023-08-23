@@ -76,6 +76,7 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 	@Override
 	public void setEnabled()
 	{
+		//look at potentially injecting
 		MusicCapeHelperPanel panel = plugin.getMusicCapeHelperPanel();
 		if (headerType.equals(HeaderType.REQUIRED))
 		{

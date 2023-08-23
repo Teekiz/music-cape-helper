@@ -18,6 +18,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 {
 	@Getter
 	protected boolean completed;
+	private final JPanel informationPanel = new JPanel();
 	public MusicCapeHelperMusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin,
 								   MusicCapeHelperConfig config, ItemManager itemManager, ClientThread clientThread)
 	{
@@ -33,7 +34,6 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 
-		JPanel informationPanel = new JPanel();
 		informationPanel.setOpaque(false);
 		informationPanel.setLayout(new GridBagLayout());
 
@@ -129,6 +129,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		}
 
 		add(informationPanel, gbc);
+		setExpanded();
 	}
 
 	public void setTextColour()
@@ -147,10 +148,17 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		}
 	}
 
+	public void setExpanded()
+	{
+		expanded = plugin.getExpandedRows().stream().anyMatch(e -> e.equals(music));
+		informationPanel.setVisible(expanded);
+	}
+
 	@Override
 	public void updateRow()
 	{
 		setEnabled();
+		setExpanded();
 		setTextColour();
 		setRowPinIcon();
 		revalidate();

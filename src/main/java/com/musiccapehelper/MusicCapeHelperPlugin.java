@@ -1,9 +1,6 @@
 package com.musiccapehelper;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.inject.Provides;
 import com.musiccapehelper.enums.HeaderType;
 import com.musiccapehelper.enums.settings.SettingsLocked;
@@ -17,14 +14,11 @@ import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
 import com.musiccapehelper.ui.rows.MusicCapeHelperRow;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
 import javax.swing.ImageIcon;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
@@ -62,17 +56,21 @@ public class MusicCapeHelperPlugin extends Plugin
 	private ConfigManager configManager;
 	@Inject
 	private ItemManager itemManager;
-	@Inject @Getter
+	@Inject
+	@Getter
 	private ClientThread clientThread;
 	@Inject
 	private Gson gson;
-	@Getter @Setter
-	private List<MusicCapeHelperWorldMapPoint> mapPoints = new ArrayList<>();
 	private NavigationButton navigationButton;
 	@Getter
 	private MusicCapeHelperPanel musicCapeHelperPanel;
-	private HashMap<Music, Boolean> musicList  = new HashMap<>();;
 	private MusicCapeHelperAccess musicCapeHelperAccess;
+	@Getter
+	private List<MusicCapeHelperWorldMapPoint> mapPoints;
+	@Getter
+	private List<Music> expandedRows;
+	private HashMap<Music, Boolean> musicList;
+
 
 	//icons
 	private final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "/pluginicon.png");
@@ -100,15 +98,19 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-		musicCapeHelperAccess = new MusicCapeHelperAccess(config, configManager, gson);
+		musicCapeHelperAccess = new MusicCapeHelperAccess(config, configManager, gson, this);
+
+		musicList = new HashMap<>();
 
 		for (Music music : Music.values())
 		{
 			musicList.put(music, false);
 		}
 
+		expandedRows = musicCapeHelperAccess.loadExpandedRows();
 		mapPoints = musicCapeHelperAccess.loadMapMarkers();
 		updateMapPoints();
+
 
 		musicCapeHelperPanel = new MusicCapeHelperPanel(this, config, itemManager, clientThread);
 		navigationButton = NavigationButton.builder()
@@ -125,6 +127,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		musicCapeHelperAccess.saveMapMarkers(mapPoints);
+		musicCapeHelperAccess.saveExpandedRows(expandedRows);
 		clientToolbar.removeNavigation(navigationButton);
 		worldMapPointManager.removeIf(MusicCapeHelperWorldMapPoint.class::isInstance);
 	}
@@ -263,7 +266,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		return filteredList;
 	}
 
-	public void rowClicked(MusicCapeHelperRow row)
+	public void rowPinClicked(MusicCapeHelperRow row)
 	{
 		if (row instanceof MusicCapeHelperMusicRow)
 		{
@@ -367,6 +370,27 @@ public class MusicCapeHelperPlugin extends Plugin
 			musicCapeHelperPanel.updateHeader(row);
 		}
 		updateMarkersOnMap();
+	}
+
+	public void rowExpandClicked(MusicCapeHelperRow row)
+	{
+		if (row instanceof MusicCapeHelperMusicRow)
+		{
+			boolean found = getExpandedRows().stream().anyMatch(e -> e.equals(row.getMusic()));
+			loginfo(found + "bool");
+			//checks if the world map should be updated
+			if (!found)
+			{
+				expandedRows.add(row.getMusic());
+			}
+			else
+			{
+				expandedRows.remove(row.getMusic());
+			}
+
+			musicCapeHelperPanel.updateRow(row);
+			musicCapeHelperAccess.saveExpandedRows(expandedRows);
+		}
 	}
 
 	public void updateMapPoints()

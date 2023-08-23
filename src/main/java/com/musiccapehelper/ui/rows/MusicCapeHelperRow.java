@@ -10,10 +10,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.inject.Inject;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import lombok.Getter;
@@ -25,11 +27,10 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 {
 	@Getter
 	protected Music music;
-
 	@Getter @Setter
 	protected boolean enabled;
 	@Getter @Setter
-	protected boolean expand;
+	protected boolean expanded;
 
 	protected MusicCapeHelperPlugin plugin;
 
@@ -44,18 +45,23 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 	protected JPopupMenu popupMenu = new JPopupMenu();
 	protected JMenuItem popupMenuText = new JMenuItem();
 
+	ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
+
 
 	public MusicCapeHelperRow(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
 		this.music = music;
 		this.plugin = plugin;
 		this.config = config;
-		this.expand = false;
+		this.expanded = false;
 
 		setLayout(new GridBagLayout());
 		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 		setToolTipText(music.getSongName());
+		toolTipManager.setDismissDelay(2000);
+		toolTipManager.setInitialDelay(1000);
+		toolTipManager.setReshowDelay(1000);
 
 		setRowTitle();
 		setEnabled();
@@ -93,7 +99,7 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 		rowTitle.setText(music.getSongName());
 		rowTitle.setHorizontalAlignment(JLabel.LEFT);
 		rowTitle.setFont(FontManager.getRunescapeFont());
-		if (expand)
+		if (expanded)
 		{
 			rowTitle.setIcon(plugin.getUpIcon());
 		}
@@ -160,7 +166,7 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 		{
 			if (e.getButton() == MouseEvent.BUTTON1)
 			{
-				plugin.rowClicked(this);
+				plugin.rowPinClicked(this);
 			}
 			else if (e.getButton() == MouseEvent.BUTTON3)
 			{
@@ -171,11 +177,14 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 		//clicking the background
 		else if (e.getComponent().equals(this))
 		{
-			if (e.getButton() == MouseEvent.BUTTON1)
+			if (e.getButton() == MouseEvent.BUTTON1 && this instanceof MusicCapeHelperMusicRow)
 			{
-				expand = !expand;
-				plugin.rowClicked(this);
+				plugin.rowExpandClicked(this);
 
+			}
+			else if (e.getButton() == MouseEvent.BUTTON1 && this instanceof MusicCapeHelperHeader)
+			{
+				plugin.rowPinClicked(this);
 			}
 			else if (e.getButton() == MouseEvent.BUTTON3)
 			{
@@ -213,7 +222,7 @@ public class MusicCapeHelperRow extends JPanel implements ActionListener, MouseL
 	{
 		if (e.getSource().equals(popupMenuText))
 		{
-			plugin.rowClicked(this);
+			plugin.rowPinClicked(this);
 			popupMenu.setVisible(false);
 		}
 	}

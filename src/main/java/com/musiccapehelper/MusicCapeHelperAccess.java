@@ -17,24 +17,24 @@ public class MusicCapeHelperAccess
 	private final ConfigManager configManager;
 	private final Gson gson;
 
+	private final MusicCapeHelperPlugin plugin;
+
 	/*
 		This class is used to access the config file for more complex saved items (MapPoint data and Row Expanded Data).
 	 */
 
-	public MusicCapeHelperAccess(MusicCapeHelperConfig config, ConfigManager configManager, Gson gson)
+	public MusicCapeHelperAccess(MusicCapeHelperConfig config, ConfigManager configManager, Gson gson, MusicCapeHelperPlugin plugin)
 	{
 		this.config = config;
 		this.configManager = configManager;
 		this.gson = gson;
-
+		this.plugin = plugin;
 	}
 
 	public void saveMapMarkers(List<MusicCapeHelperWorldMapPoint> saveMapPoints)
 	{
-		if (!saveMapPoints.isEmpty())
-		{
 			//overwrites the existing data
-			configManager.unsetConfiguration("musicTracksWorldPoints", "worldMapMarkers");
+			configManager.unsetConfiguration("musicTrackInfoConfig", "worldMapMarkers");
 			JsonArray mapData = new JsonArray();
 			saveMapPoints.forEach(m -> {
 				JsonObject jsonObject = new JsonObject();
@@ -43,30 +43,63 @@ public class MusicCapeHelperAccess
 				mapData.add(jsonObject);
 			});
 			String json = mapData.toString();
-			configManager.setConfiguration("musicTracksWorldPoints", "worldMapMarkers", json);
-		}
+			configManager.setConfiguration("musicTrackInfoConfig", "worldMapMarkers", json);
+	}
+
+	public void saveExpandedRows(List<Music> expandedRows)
+	{
+			//overwrites the existing data
+			configManager.unsetConfiguration("musicTrackInfoConfig", "expandedRows");
+			JsonArray expandedData = new JsonArray();
+			expandedRows.forEach(m -> {
+				JsonObject jsonObject = new JsonObject();
+				jsonObject.addProperty("music", m.getSongName());
+				expandedData.add(jsonObject);
+			});
+			String json = expandedData.toString();
+			configManager.setConfiguration("musicTrackInfoConfig", "expandedRows", json);
 	}
 
 	public List<MusicCapeHelperWorldMapPoint> loadMapMarkers()
 	{
 		List<MusicCapeHelperWorldMapPoint> point = new ArrayList<>();
 
-		String json = configManager.getConfiguration("musicTracksWorldPoints", "worldMapMarkers");
-		for (JsonElement element : gson.fromJson(json, JsonArray.class))
+		String json = configManager.getConfiguration("musicTrackInfoConfig", "worldMapMarkers");
+		if (json != null)
 		{
-			String song = element.getAsJsonObject().get("music").getAsString();
-			Music music = Arrays.stream(Music.values())
-				.filter(m -> m.getSongName().equals(song))
-				.findAny().orElse(null);
-
-			boolean completed = element.getAsJsonObject().get("completed").getAsBoolean();
-
-			if (music != null)
+			for (JsonElement element : gson.fromJson(json, JsonArray.class))
 			{
-				point.add(new MusicCapeHelperWorldMapPoint(music, completed, config));
+				String song = element.getAsJsonObject().get("music").getAsString();
+				Music music = Arrays.stream(Music.values())
+					.filter(m -> m.getSongName().equals(song))
+					.findAny().orElse(null);
+
+				boolean completed = element.getAsJsonObject().get("completed").getAsBoolean();
+
+				if (music != null)
+				{
+					point.add(new MusicCapeHelperWorldMapPoint(music, completed, config));
+				}
 			}
 		}
-
 		return point;
+	}
+
+	public List<Music> loadExpandedRows()
+	{
+		List<Music> rows = new ArrayList<>();
+
+		String json = configManager.getConfiguration("musicTrackInfoConfig", "expandedRows");
+		if (json != null)
+		{
+			for (JsonElement element : gson.fromJson(json, JsonArray.class))
+			{
+				String song = element.getAsJsonObject().get("music").getAsString();
+				Arrays.stream(Music.values())
+					.filter(m -> m.getSongName().equals(song))
+					.findAny().ifPresent(rows::add);
+			}
+		}
+		return rows;
 	}
 }
