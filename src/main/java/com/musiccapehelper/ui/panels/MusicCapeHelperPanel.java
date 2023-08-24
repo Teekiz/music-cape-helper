@@ -8,6 +8,11 @@ import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
 import com.musiccapehelper.ui.rows.MusicCapeHelperRow;
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -34,14 +39,17 @@ public class MusicCapeHelperPanel extends PluginPanel
 {
 	private final MusicCapeHelperPlugin plugin;
 	private final MusicCapeHelperConfig config;
-	private final MusicCapeHelperMusicPanel musicPanel;
-	private final MusicCapeHelperMapPanel mapPanel;
+	//private final MusicCapeHelperMusicPanel musicPanel;
+	//private final MusicCapeHelperMapPanel mapPanel;
+	private final MusicCapeHelperRowPanel rowPanel;
 	private ItemManager itemManager;
 	private ClientThread clientThread;
 	//todo - consider making it polymorhpic and then added everything to music rows.
 	//then when it needs to be updated, call the list instead of components
 	@Getter
 	private final List<MusicCapeHelperRow> panelRows = new ArrayList<>();
+	private final JPanel displayPanel = new JPanel();
+	private final MaterialTabGroup musicMapTabGroup = new MaterialTabGroup(displayPanel);
 
 	public MusicCapeHelperPanel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, ItemManager itemManager, ClientThread clientThread)
 	{
@@ -49,6 +57,18 @@ public class MusicCapeHelperPanel extends PluginPanel
 		this.config = config;
 		this.itemManager = itemManager;
 		this.clientThread = clientThread;
+
+		//setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new GridBagLayout());
+		setBorder(new EmptyBorder(10, 10, 10, 10));
+
+		GridBagConstraints gridBagConstraints = new GridBagConstraints();
+		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+		gridBagConstraints.anchor = GridBagConstraints.NORTH;
+		gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		gridBagConstraints.weightx = 0.5;
+		gridBagConstraints.gridx = 0;
+		gridBagConstraints.gridy = 0;
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -62,28 +82,47 @@ public class MusicCapeHelperPanel extends PluginPanel
 
 		add(new MusicCapeHelperSettingsPanel(plugin, config, this));
 
-		musicPanel = new MusicCapeHelperMusicPanel(plugin, config);
-		mapPanel = new MusicCapeHelperMapPanel(plugin, config);
-		JPanel displayPanel = new JPanel();
-
-		MaterialTabGroup musicMapTabGroup = new MaterialTabGroup(displayPanel);
-		MaterialTab musicTab = new MaterialTab("Music", musicMapTabGroup, musicPanel);
-		MaterialTab mapTab = new MaterialTab("Map", musicMapTabGroup, mapPanel);
+		rowPanel = new MusicCapeHelperRowPanel(plugin, config, false);
+		MaterialTab musicTab = new MaterialTab("Music", musicMapTabGroup, rowPanel);
+		MaterialTab mapTab = new MaterialTab("Map", musicMapTabGroup, rowPanel);
 
 		musicMapTabGroup.addTab(musicTab);
-		musicMapTabGroup.select(musicTab);
 		musicMapTabGroup.addTab(mapTab);
+		musicMapTabGroup.select(musicTab);
 		add(musicMapTabGroup, BorderLayout.NORTH);
 		add(displayPanel, BorderLayout.CENTER);
+
+		musicTab.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				//todo - consider using invoke later to fix the not loading bug
+				rowPanel.tabSwitched(false);
+			}
+		});
+
+		mapTab.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				//todo - consider using invoke later
+				rowPanel.tabSwitched(true);
+			}
+		});
 	}
 
 	//used to create all rows that match the filters or if the contents of the search bar
 	public void createMusicRows(String searchText)
 	{
 		panelRows.clear();
+		//creates a list from the music enums, sorts the music by the filter and then adds headers to it.
 		if (searchText.isEmpty())
 		{
 			plugin.filterMusicList().forEach((key, value) -> panelRows.add(new MusicCapeHelperMusicRow(key, value, plugin, config, itemManager, clientThread)));
+			sortMusicRows();
+			addRowHeaders();
 		}
 		else
 		{
@@ -91,13 +130,11 @@ public class MusicCapeHelperPanel extends PluginPanel
 				.stream()
 				.filter(s -> StringUtils.containsIgnoreCase(s.getKey().getSongName(), searchText))
 				.forEach(e -> panelRows.add(new MusicCapeHelperMusicRow(e.getKey(), e.getValue(), plugin, config, itemManager, clientThread)));
+			sortMusicRows();
 		}
 
-		//sorts the music by the filter and then adds headers to it.
-		sortMusicRows();
-		addRowHeaders();
+		rowPanel.addMusicRows(panelRows);
 
-		panelRows.forEach(musicPanel::add);
 	}
 
 	public void sortMusicRows()
@@ -187,30 +224,24 @@ public class MusicCapeHelperPanel extends PluginPanel
 				.filter(r -> ((MusicCapeHelperHeader) r).getHeaderType().getSettingsRegion().equals(row.getMusic().getSettingsRegion()))
 				.findFirst().ifPresent(MusicCapeHelperRow::updateRow);
 		}
+		rowPanel.refreshList();
 	}
 
 	public void updateRow(MusicCapeHelperRow row)
 	{
 		row.updateRow();
+		rowPanel.refreshList();
 	}
 
 	public void updateAllRows()
 	{
 		panelRows.forEach(MusicCapeHelperRow::updateRow);
+		rowPanel.refreshList();
 	}
 
 	//this method is used to completely update the panel, with new rows being added where required.
 	public void createAndRefreshRows(String searchText)
 	{
-		SwingUtilities.invokeLater(() ->
-			{
-				musicPanel.removeAllMusicRows();
-				mapPanel.removeAllMusicRows();
-				this.createMusicRows(searchText);
-				musicPanel.revalidate();
-				musicPanel.repaint();
-				mapPanel.revalidate();
-				mapPanel.repaint();
-			});
+		SwingUtilities.invokeLater(() -> this.createMusicRows(searchText));
 	}
 }
