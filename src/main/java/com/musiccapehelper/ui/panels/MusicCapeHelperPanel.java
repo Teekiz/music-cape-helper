@@ -39,8 +39,6 @@ public class MusicCapeHelperPanel extends PluginPanel
 {
 	private final MusicCapeHelperPlugin plugin;
 	private final MusicCapeHelperConfig config;
-	//private final MusicCapeHelperMusicPanel musicPanel;
-	//private final MusicCapeHelperMapPanel mapPanel;
 	private final MusicCapeHelperRowPanel rowPanel;
 	private ItemManager itemManager;
 	private ClientThread clientThread;

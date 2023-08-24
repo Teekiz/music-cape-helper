@@ -44,10 +44,11 @@ public class MusicCapeHelperRowPanel extends JPanel
 		add(songNameLabelHeader, BorderLayout.PAGE_START);
 
 		musicScrollPane = new JScrollPane();
-		musicScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		musicScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		musicScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		musicScrollPaneContentPanel = new JPanel();
 		musicScrollPaneContentPanel.setLayout(new GridBagLayout());
+		musicScrollPaneContentPanel.setBackground(new Color(85,85,85));
 		musicScrollPane.setViewportView(musicScrollPaneContentPanel);
 		musicScrollPane.setPreferredSize(new Dimension(0, 700));
 		add(musicScrollPane, BorderLayout.CENTER);
