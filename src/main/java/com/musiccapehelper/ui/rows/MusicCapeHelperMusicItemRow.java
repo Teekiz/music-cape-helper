@@ -44,7 +44,7 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 			add(itemsPanelLabel, BorderLayout.PAGE_START);
 
 			JPanel itemsPanel = new JPanel();
-			itemsPanel.setLayout(new GridLayout(0, 5, 5, 5));
+			itemsPanel.setLayout(new GridLayout(0, 4, 5, 5));
 			itemsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 			itemsPanel.setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
 			itemsPanel.setBackground(backgroundColour);
