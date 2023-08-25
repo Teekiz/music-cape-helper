@@ -8,18 +8,14 @@ import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
 import com.musiccapehelper.ui.rows.MusicCapeHelperRow;
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -94,7 +90,6 @@ public class MusicCapeHelperPanel extends PluginPanel
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
-				//todo - consider using invoke later to fix the not loading bug
 				rowPanel.tabSwitched(false);
 			}
 		});
@@ -104,7 +99,6 @@ public class MusicCapeHelperPanel extends PluginPanel
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
-				//todo - consider using invoke later
 				rowPanel.tabSwitched(true);
 			}
 		});
