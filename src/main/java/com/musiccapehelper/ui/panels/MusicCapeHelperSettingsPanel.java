@@ -9,6 +9,9 @@ import com.musiccapehelper.enums.settings.SettingsQuest;
 import com.musiccapehelper.enums.settings.SettingsRegion;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Arrays;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
@@ -51,13 +54,21 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 		int comboWidth = 75; //50
 		int comboHeight = 20; //20
 
+		//todo - add tab completer
 		// -- Search Bar --
 		searchBar = new IconTextField();
 		searchBar.setIcon(IconTextField.Icon.SEARCH);
 		searchBar.setBackground(ColorScheme.DARKER_GRAY_COLOR);
 		searchBar.setHoverBackgroundColor(ColorScheme.DARK_GRAY_HOVER_COLOR);
 		searchBar.setPreferredSize(new Dimension(100, 30));
-		searchBar.addActionListener(e -> panel.createAndRefreshRows(searchBar.getText()));
+		searchBar.addKeyListener(new KeyAdapter()
+		{
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+				panel.createAndRefreshRows(searchBar.getText());
+			}
+		});
 		searchBar.addClearListener(plugin::updateMusicList);
 		searchBar.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(searchBar);
