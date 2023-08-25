@@ -77,10 +77,12 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 	{
 		//look at potentially injecting
 		MusicCapeHelperPanel panel = plugin.getMusicCapeHelperPanel();
+		plugin.loginfo("set enabled on row " + enabled);
 		if (headerType.equals(HeaderType.REQUIRED))
 		{
 			enabled = panel.getPanelRows()
 				.stream()
+				.filter(r -> r instanceof MusicCapeHelperMusicRow)
 				.filter(r -> r.getMusic().isRequired())
 				.allMatch(MusicCapeHelperRow::isEnabled);
 		}
@@ -88,6 +90,7 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 		{
 			enabled = panel.getPanelRows()
 				.stream()
+				.filter(r -> r instanceof MusicCapeHelperMusicRow)
 				.filter(r -> !r.getMusic().isRequired())
 				.allMatch(MusicCapeHelperRow::isEnabled);
 		}
@@ -95,6 +98,7 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 		{
 			enabled = panel.getPanelRows()
 				.stream()
+				.filter(r -> r instanceof MusicCapeHelperMusicRow)
 				.filter(r -> r.getMusic().getSettingsRegion().equals(headerType.getSettingsRegion()))
 				.allMatch(MusicCapeHelperRow::isEnabled);
 		}

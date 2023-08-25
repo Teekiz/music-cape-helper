@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
 public class MusicCapeHelperRowPanel extends JPanel
@@ -48,7 +50,6 @@ public class MusicCapeHelperRowPanel extends JPanel
 		musicScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		musicScrollPaneContentPanel = new JPanel();
 		musicScrollPaneContentPanel.setLayout(new GridBagLayout());
-		musicScrollPaneContentPanel.setBackground(new Color(85,85,85));
 		musicScrollPane.setViewportView(musicScrollPaneContentPanel);
 		musicScrollPane.setPreferredSize(new Dimension(0, 700));
 		add(musicScrollPane, BorderLayout.CENTER);
@@ -79,8 +80,9 @@ public class MusicCapeHelperRowPanel extends JPanel
 		gridBagConstraints.weighty = 1.0;
 		gridBagConstraints.gridheight = GridBagConstraints.REMAINDER;
 		gridBagConstraints.fill = GridBagConstraints.BOTH;
+		emptySpacePanel.setBackground(new Color(70, 70, 70));
+		emptySpacePanel.setOpaque(true);
 		musicScrollPaneContentPanel.add(emptySpacePanel, gridBagConstraints);
-
 		tabSwitched(isOnMapPanel);
 	}
 

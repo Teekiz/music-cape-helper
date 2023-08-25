@@ -80,6 +80,8 @@ public class MusicCapeHelperPanel extends PluginPanel
 
 		add(new MusicCapeHelperSettingsPanel(plugin, config, this));
 
+		//todo - consider observer pattern
+
 		rowPanel = new MusicCapeHelperRowPanel(plugin, config, false);
 		MaterialTab musicTab = new MaterialTab("Music", musicMapTabGroup, rowPanel);
 		MaterialTab mapTab = new MaterialTab("Map", musicMapTabGroup, rowPanel);
@@ -198,6 +200,8 @@ public class MusicCapeHelperPanel extends PluginPanel
 
 	public void updateHeader(MusicCapeHelperRow row)
 	{
+		plugin.loginfo("trhkhth Update header called " + row);
+
 		if (config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 		{
 			if (row.getMusic().isRequired())
@@ -217,6 +221,8 @@ public class MusicCapeHelperPanel extends PluginPanel
 		}
 		else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION))
 		{
+			plugin.loginfo("AAAAAAA region called " + row);
+
 			panelRows.stream()
 				.filter(r -> r instanceof MusicCapeHelperHeader)
 				.filter(r -> ((MusicCapeHelperHeader) r).getHeaderType().getSettingsRegion().equals(row.getMusic().getSettingsRegion()))
