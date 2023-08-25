@@ -24,10 +24,12 @@ public class MusicCapeHelperWorldMapPoint extends WorldMapPoint
 		this.completed = completed;
 		this.config = config;
 
+		this.setName(music.getSongName());
 		this.setWorldPoint(music.getSongUnlockPoint());
 		this.setTooltip(music.getSongName());
 		this.setMapPointImage();
 		this.setImagePoint(new Point(getImage().getWidth() / 2, getImage().getHeight()));
+		this.setJumpOnClick(true);
 	}
 
 	public void setCompleted(Boolean completed)
