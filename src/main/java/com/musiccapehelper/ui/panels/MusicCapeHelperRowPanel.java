@@ -112,7 +112,6 @@ public class MusicCapeHelperRowPanel extends JPanel
 		refreshList();
 	}
 
-	//todo - fix
 	public void refreshList()
 	{
 		musicScrollPaneContentPanel.revalidate();

@@ -46,10 +46,7 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 
 	ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
 
-
 	//todo change popup depending on screen area
-	// todo consider removing inheritance
-
 	public MusicCapeHelperRow(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
 		this.music = music;

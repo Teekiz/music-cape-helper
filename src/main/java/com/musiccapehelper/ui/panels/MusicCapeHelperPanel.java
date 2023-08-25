@@ -42,7 +42,6 @@ public class MusicCapeHelperPanel extends PluginPanel
 	private final MusicCapeHelperRowPanel rowPanel;
 	private ItemManager itemManager;
 	private ClientThread clientThread;
-	//todo - consider making it polymorhpic and then added everything to music rows.
 	//then when it needs to be updated, call the list instead of components
 	@Getter
 	private final List<MusicCapeHelperRow> panelRows = new ArrayList<>();
@@ -79,8 +78,6 @@ public class MusicCapeHelperPanel extends PluginPanel
 		add(titlePanel);
 
 		add(new MusicCapeHelperSettingsPanel(plugin, config, this));
-
-		//todo - consider observer pattern
 
 		rowPanel = new MusicCapeHelperRowPanel(plugin, config, false);
 		MaterialTab musicTab = new MaterialTab("Music", musicMapTabGroup, rowPanel);
