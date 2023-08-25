@@ -160,6 +160,12 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
+		setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e)
+	{
 		//upin/pin icon
 		if (e.getComponent().equals(rowPinIcon))
 		{
@@ -190,12 +196,6 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 				popupMenu.setVisible(true);
 			}
 		}
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e)
-	{
-		setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);
 	}
 
 	@Override

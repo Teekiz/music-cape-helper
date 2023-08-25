@@ -88,7 +88,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 		musicTab.addMouseListener(new MouseAdapter()
 		{
 			@Override
-			public void mouseClicked(MouseEvent e)
+			public void mousePressed(MouseEvent e)
 			{
 				rowPanel.tabSwitched(false);
 			}
@@ -97,7 +97,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 		mapTab.addMouseListener(new MouseAdapter()
 		{
 			@Override
-			public void mouseClicked(MouseEvent e)
+			public void mousePressed(MouseEvent e)
 			{
 				rowPanel.tabSwitched(true);
 			}
