@@ -124,6 +124,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		descriptionTextArea.setOpaque(false);
 		descriptionTextArea.setFont(new Font(FontManager.getRunescapeSmallFont().getName(),
 		FontManager.getRunescapeSmallFont().getStyle(), 16));
+		descriptionTextArea.setFocusable(false);
 		descriptionTextArea.setForeground(Color.LIGHT_GRAY);
 		descriptionTextArea.append(music.getDescription());
 
