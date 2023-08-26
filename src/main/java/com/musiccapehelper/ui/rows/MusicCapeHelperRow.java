@@ -42,11 +42,11 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 
 	//popup
 	protected JPopupMenu popupMenu = new JPopupMenu();
-	protected JMenuItem popupMenuText = new JMenuItem();
+	protected JMenuItem popupMenuIconText = new JMenuItem();
+	protected JMenuItem popupMenuBackgroundText = new JMenuItem();
 
 	ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
 
-	//todo change popup depending on screen area
 	public MusicCapeHelperRow(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
 		this.music = music;
@@ -86,11 +86,12 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 
 		for (MouseListener mouseListener : this.getMouseListeners()) { this.removeMouseListener(mouseListener); }
 		for (MouseListener mouseListener : rowPinIcon.getMouseListeners()) { rowPinIcon.removeMouseListener(mouseListener); }
-		for (ActionListener actionListener : popupMenuText.getActionListeners()) { popupMenuText.removeActionListener(actionListener); }
+		for (ActionListener actionListener : popupMenuIconText.getActionListeners()) { popupMenuIconText.removeActionListener(actionListener); }
 
 		addMouseListener(this);
 		rowPinIcon.addMouseListener(this);
-		popupMenuText.addActionListener(this);
+		popupMenuIconText.addActionListener(this);
+		popupMenuBackgroundText.addActionListener(this);
 	}
 
 	public void setRowTitle()
@@ -137,15 +138,28 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 		popupMenu.setBorder(new EmptyBorder(5, 5, 5, 5));
 		if (enabled)
 		{
-			popupMenuText.setText("Unpin map icon");
+			popupMenuIconText.setText("Unpin map icon");
 		}
 		else
 		{
-			popupMenuText.setText("Pin map icon");
+			popupMenuIconText.setText("Pin map icon");
 		}
+		popupMenuIconText.setFont(FontManager.getRunescapeSmallFont());
+		popupMenu.add(popupMenuIconText);
 
-		popupMenuText.setFont(FontManager.getRunescapeSmallFont());
-		popupMenu.add(popupMenuText);
+		if (this instanceof MusicCapeHelperMusicRow)
+		{
+			if (expanded)
+			{
+				popupMenuBackgroundText.setText("Hide music details");
+			}
+			else
+			{
+				popupMenuBackgroundText.setText("Show music details");
+			}
+			popupMenuBackgroundText.setFont(FontManager.getRunescapeSmallFont());
+			popupMenu.add(popupMenuBackgroundText);
+		}
 		setComponentPopupMenu(popupMenu);
 	}
 
@@ -219,9 +233,15 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if (e.getSource().equals(popupMenuText))
+		if (e.getSource().equals(popupMenuIconText))
 		{
 			plugin.rowPinClicked(this);
+			popupMenu.setVisible(false);
+		}
+
+		if (e.getSource().equals(popupMenuBackgroundText))
+		{
+			plugin.rowExpandClicked(this);
 			popupMenu.setVisible(false);
 		}
 	}
