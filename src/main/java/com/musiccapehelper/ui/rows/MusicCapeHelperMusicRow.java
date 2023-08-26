@@ -156,6 +156,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 
 		add(informationPanel, gbc);
 		setExpanded();
+		setRowTitle();
 	}
 
 	public void setHintArrowLabel()
@@ -202,6 +203,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		setEnabled();
 		setExpanded();
 		setTextColour();
+		setRowTitle();
 		setRowPinIcon();
 		setHintArrowLabel();
 		revalidate();
