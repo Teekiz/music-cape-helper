@@ -25,6 +25,8 @@ public class MusicCapeHelperRowPanel extends JPanel
 	private final JPanel musicScrollPaneContentPanel;
 	private JLabel songNameLabelHeader;
 
+	//todo add an empty panel to the map and music panels if empty
+
 	public MusicCapeHelperRowPanel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, boolean isOnMapPanel)
 	{
 		this.plugin = plugin;
