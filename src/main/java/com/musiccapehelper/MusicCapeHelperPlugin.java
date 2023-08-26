@@ -23,9 +23,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.Widget;
+import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -57,7 +59,6 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Inject
 	private ItemManager itemManager;
 	@Inject
-	@Getter
 	private ClientThread clientThread;
 	@Inject
 	private Gson gson;
@@ -70,8 +71,8 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Getter
 	private List<Music> expandedRows;
 	private HashMap<Music, Boolean> musicList;
-
-
+	@Getter
+	private Music hintArrowMusic;
 	//icons
 	private final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "/pluginicon.png");
 	@Getter
@@ -82,6 +83,10 @@ public class MusicCapeHelperPlugin extends Plugin
 	private final ImageIcon upIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/up_icon.png"));
 	@Getter
 	private final ImageIcon downIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/down_icon.png"));
+	@Getter
+	private final ImageIcon hintArrowShow = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/arrow_show.png"));
+	@Getter
+	private final ImageIcon hintArrowHide = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/arrow_hide.png"));
 
 
 	//button at bottom of panel to add list
@@ -106,7 +111,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		{
 			musicList.put(music, false);
 		}
-
+		hintArrowMusic = null;
 		expandedRows = musicCapeHelperAccess.loadExpandedRows();
 		mapPoints = musicCapeHelperAccess.loadMapMarkers();
 		updateMapPoints();
@@ -159,6 +164,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded widgetLoaded)
 	{
+		//todo - update this to use WidgetInfo.MUSIC_TRACK_LIST
 		if (widgetLoaded.getGroupId() != 239)
 		{
 			return;
@@ -174,6 +180,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		if (chatMessage.getType().equals(ChatMessageType.GAMEMESSAGE)
 			&& chatMessage.getMessage().startsWith("You have unlocked a new music track: "))
 		{
+			//todo - remove hint arrow of that type
 			clientThread.invokeAtTickEnd(this::updateMusicList);
 		}
 	}
@@ -417,6 +424,23 @@ public class MusicCapeHelperPlugin extends Plugin
 		worldMapPointManager.removeIf(MusicCapeHelperWorldMapPoint.class::isInstance);
 		mapPoints.forEach(p -> worldMapPointManager.add(p));
 		musicCapeHelperAccess.saveMapMarkers(mapPoints);
+	}
+
+	//clears the hint arrow and either sets it to null or updates the arrow to the new music unlock point
+	public void setHintArrow(MusicCapeHelperRow row)
+	{
+		client.clearHintArrow();
+		//unsets the music
+		if (hintArrowMusic != null && hintArrowMusic.equals(row.getMusic()))
+		{
+			hintArrowMusic = null;
+		}
+		else
+		{
+			hintArrowMusic = row.getMusic();
+			client.setHintArrow(row.getMusic().getSongUnlockPoint());
+		}
+		musicCapeHelperPanel.updateAllRows();
 	}
 
 	//todo delete

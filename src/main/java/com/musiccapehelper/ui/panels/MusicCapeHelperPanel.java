@@ -3,6 +3,7 @@ package com.musiccapehelper.ui.panels;
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.HeaderType;
+import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
 import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
@@ -220,6 +221,14 @@ public class MusicCapeHelperPanel extends PluginPanel
 				.findFirst().ifPresent(MusicCapeHelperRow::updateRow);
 		}
 		rowPanel.refreshList();
+	}
+
+	public MusicCapeHelperRow getRowByMusic(Music music)
+	{
+		 return panelRows.stream()
+			.filter(r -> r instanceof MusicCapeHelperMusicRow)
+			.filter(r -> r.getMusic().equals(music))
+			 .findFirst().orElse(null);
 	}
 
 	public void updateRow(MusicCapeHelperRow row)

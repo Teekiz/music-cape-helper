@@ -6,6 +6,8 @@ import com.musiccapehelper.enums.Music;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -19,6 +21,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 	@Getter
 	protected boolean completed;
 	private final JPanel informationPanel = new JPanel();
+	private final JLabel hintArrowLabel;
 	public MusicCapeHelperMusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin,
 								   MusicCapeHelperConfig config, ItemManager itemManager, ClientThread clientThread)
 	{
@@ -50,20 +53,21 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
 		informationPanel.add(songRegionLabel, gbcMusicRow);
 
-		JLabel songIsRequiredLabel = new JLabel();
-		if (music.isRequired())
-		{
-			songIsRequiredLabel.setText("Required");
-		}
-		else
-		{
-			songIsRequiredLabel.setText("Optional");
-		}
-		songIsRequiredLabel.setFont(FontManager.getRunescapeSmallFont());
-		songIsRequiredLabel.setHorizontalAlignment(JLabel.LEFT);
+		hintArrowLabel = new JLabel();
+		hintArrowLabel.setFont(FontManager.getRunescapeSmallFont());
+		hintArrowLabel.setHorizontalAlignment(JLabel.LEFT);
 		gbcMusicRow.gridx = 2;
-		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
-		informationPanel.add(songIsRequiredLabel, gbcMusicRow);
+		setHintArrowLabel();
+		informationPanel.add(hintArrowLabel, gbcMusicRow);
+
+		hintArrowLabel.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+				plugin.setHintArrow(MusicCapeHelperMusicRow.this);
+			}
+		});
 
 		JLabel songIsQuestLabel = new JLabel();
 		if (music.isQuest())
@@ -79,14 +83,29 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		gbcMusicRow.gridy = 1;
 		gbcMusicRow.gridx = 0;
 		gbcMusicRow.weightx = 1.0;
-		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
 		informationPanel.add(songIsQuestLabel, gbcMusicRow);
+
+		JLabel songIsRequiredLabel = new JLabel();
+		if (music.isRequired())
+		{
+			songIsRequiredLabel.setText("Required");
+		}
+		else
+		{
+			songIsRequiredLabel.setText("Optional");
+		}
+		songIsRequiredLabel.setFont(FontManager.getRunescapeSmallFont());
+		songIsRequiredLabel.setHorizontalAlignment(JLabel.LEFT);
+		gbcMusicRow.gridx = 2;
+		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
+		informationPanel.add(songIsRequiredLabel, gbcMusicRow);
 
 		JLabel descriptionTextAreaLabel = new JLabel();
 		descriptionTextAreaLabel.setText("Description:");
 		descriptionTextAreaLabel.setFont(FontManager.getRunescapeSmallFont());
 		descriptionTextAreaLabel.setHorizontalAlignment(JLabel.LEFT);
 		gbcMusicRow.gridy = 2;
+		gbcMusicRow.gridx = 0;
 		gbcMusicRow.weightx = 1.0;
 		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
 		informationPanel.add(descriptionTextAreaLabel, gbcMusicRow);
@@ -132,6 +151,23 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		setExpanded();
 	}
 
+	public void setHintArrowLabel()
+	{
+		hintArrowLabel.setText("Hint Arrow: ");
+		if (plugin.getHintArrowMusic() == null || !plugin.getHintArrowMusic().equals(this.getMusic()))
+		{
+			hintArrowLabel.setToolTipText("Add a hint arrow to the minimap to point to the unlock point.");
+			hintArrowLabel.setIcon(plugin.getHintArrowHide());
+		}
+		else
+		{
+			hintArrowLabel.setToolTipText("Remove the hint arrow from the minimap.");
+			hintArrowLabel.setIcon(plugin.getHintArrowShow());
+		}
+		hintArrowLabel.setHorizontalTextPosition(JLabel.LEFT);
+		hintArrowLabel.setVerticalTextPosition(JLabel.CENTER);
+	}
+
 	public void setTextColour()
 	{
 		if (completed && plugin.isPlayerLoggedIn())
@@ -161,6 +197,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		setExpanded();
 		setTextColour();
 		setRowPinIcon();
+		setHintArrowLabel();
 		revalidate();
 		repaint();
 	}
