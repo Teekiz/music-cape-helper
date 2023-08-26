@@ -153,6 +153,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 
 	public void setHintArrowLabel()
 	{
+		//todo - make hint arrow more understandable
 		hintArrowLabel.setText("Hint Arrow: ");
 		if (plugin.getHintArrowMusic() == null || !plugin.getHintArrowMusic().equals(this.getMusic()))
 		{
