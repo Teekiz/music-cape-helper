@@ -49,7 +49,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 
 		//this is new GridBagConstraints for this panel only
 		GridBagConstraints gbcMusicRow = new GridBagConstraints();
-		gbcMusicRow.insets = new Insets(4, 0, 0, 6);
+		gbcMusicRow.insets = new Insets(4, 2, 0, 2);
 
 		JLabel songRegionLabel = new JLabel("Region: " + music.getSettingsRegion().getName(), JLabel.LEFT);
 		songRegionLabel.setFont(font);
