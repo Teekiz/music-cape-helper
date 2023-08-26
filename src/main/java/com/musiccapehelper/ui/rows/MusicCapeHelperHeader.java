@@ -6,6 +6,7 @@ import com.musiccapehelper.enums.HeaderType;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
 import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
+import java.awt.Color;
 import java.util.Arrays;
 import javax.swing.JLabel;
 import lombok.Getter;

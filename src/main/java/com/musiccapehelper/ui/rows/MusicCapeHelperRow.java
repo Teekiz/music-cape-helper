@@ -97,7 +97,7 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 	{
 		rowTitle.setText(music.getSongName());
 		rowTitle.setHorizontalAlignment(JLabel.LEFT);
-		rowTitle.setFont(FontManager.getRunescapeFont());
+		rowTitle.setFont(FontManager.getRunescapeBoldFont());
 		if (expanded)
 		{
 			rowTitle.setIcon(plugin.getUpIcon());

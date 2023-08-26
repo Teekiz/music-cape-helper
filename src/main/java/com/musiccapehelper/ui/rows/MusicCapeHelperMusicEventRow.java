@@ -2,6 +2,7 @@ package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.enums.Music;
 import java.awt.BorderLayout;
+import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -12,7 +13,7 @@ public class MusicCapeHelperMusicEventRow extends JPanel
 {
 	private final Music music;
 
-	public MusicCapeHelperMusicEventRow(Music music)
+	public MusicCapeHelperMusicEventRow(Music music, Font font)
 	{
 		this.music = music;
 
@@ -24,11 +25,11 @@ public class MusicCapeHelperMusicEventRow extends JPanel
 		{
 			String eventLabelText = "Unlocked during: ";
 			JLabel eventLabel = new JLabel(eventLabelText);
-			eventLabel.setFont(FontManager.getRunescapeSmallFont());
+			eventLabel.setFont(font);
 
 			String eventNameLabelText = music.getEventType().getEventName();
 			JLabel eventNameLabel = new JLabel(eventNameLabelText);
-			eventNameLabel.setFont(FontManager.getRunescapeSmallFont());
+			eventNameLabel.setFont(font);
 
 			add(eventLabel, BorderLayout.PAGE_START);
 			add(eventNameLabel, BorderLayout.LINE_START);

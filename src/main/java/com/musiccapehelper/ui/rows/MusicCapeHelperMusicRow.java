@@ -3,6 +3,8 @@ package com.musiccapehelper.ui.rows;
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.Music;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -11,9 +13,11 @@ import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
 import lombok.Getter;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.game.ItemManager;
+import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
 public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
@@ -27,6 +31,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 	{
 		super(music, plugin, config);
 		this.completed = completed;
+		Font font = FontManager.getRunescapeFont();
 		setTextColour();
 
 		//this is for the inherited GridBagConstraints
@@ -42,10 +47,10 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 
 		//this is new GridBagConstraints for this panel only
 		GridBagConstraints gbcMusicRow = new GridBagConstraints();
-		gbcMusicRow.insets = new Insets(4, 5, 0, 5);
+		gbcMusicRow.insets = new Insets(4, 0, 0, 6);
 
 		JLabel songRegionLabel = new JLabel("Region: " + music.getSettingsRegion().getName(), JLabel.LEFT);
-		songRegionLabel.setFont(FontManager.getRunescapeSmallFont());
+		songRegionLabel.setFont(font);
 		songRegionLabel.setHorizontalAlignment(JLabel.LEFT);
 		gbcMusicRow.ipadx = 0;
 		gbcMusicRow.gridx = 0;
@@ -54,7 +59,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		informationPanel.add(songRegionLabel, gbcMusicRow);
 
 		hintArrowLabel = new JLabel();
-		hintArrowLabel.setFont(FontManager.getRunescapeSmallFont());
+		hintArrowLabel.setFont(font);
 		hintArrowLabel.setHorizontalAlignment(JLabel.LEFT);
 		gbcMusicRow.gridx = 2;
 		setHintArrowLabel();
@@ -78,7 +83,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		{
 			songIsQuestLabel.setText("Quest Unlock: No");
 		}
-		songIsQuestLabel.setFont(FontManager.getRunescapeSmallFont());
+		songIsQuestLabel.setFont(font);
 		songIsQuestLabel.setHorizontalAlignment(JLabel.LEFT);
 		gbcMusicRow.gridy = 1;
 		gbcMusicRow.gridx = 0;
@@ -94,7 +99,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		{
 			songIsRequiredLabel.setText("Optional");
 		}
-		songIsRequiredLabel.setFont(FontManager.getRunescapeSmallFont());
+		songIsRequiredLabel.setFont(font);
 		songIsRequiredLabel.setHorizontalAlignment(JLabel.LEFT);
 		gbcMusicRow.gridx = 2;
 		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
@@ -102,7 +107,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 
 		JLabel descriptionTextAreaLabel = new JLabel();
 		descriptionTextAreaLabel.setText("Description:");
-		descriptionTextAreaLabel.setFont(FontManager.getRunescapeSmallFont());
+		descriptionTextAreaLabel.setFont(font);
 		descriptionTextAreaLabel.setHorizontalAlignment(JLabel.LEFT);
 		gbcMusicRow.gridy = 2;
 		gbcMusicRow.gridx = 0;
@@ -111,12 +116,12 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		informationPanel.add(descriptionTextAreaLabel, gbcMusicRow);
 
 		JTextArea descriptionTextArea = new JTextArea();
-		descriptionTextArea.setEnabled(false);
 		descriptionTextArea.setLineWrap(true);
 		descriptionTextArea.setWrapStyleWord(true);
 		descriptionTextArea.setEditable(false);
 		descriptionTextArea.setOpaque(false);
-		descriptionTextArea.setFont(FontManager.getRunescapeSmallFont());
+		descriptionTextArea.setFont(font);
+		descriptionTextArea.setForeground(Color.LIGHT_GRAY);
 		descriptionTextArea.append(music.getDescription());
 
 		gbcMusicRow.gridy = 3;
@@ -134,17 +139,17 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		//events
 		if (!music.isQuest() && !music.isRequired())
 		{
-			informationPanel.add(new MusicCapeHelperMusicEventRow(music), gbcMusicRow);
+			informationPanel.add(new MusicCapeHelperMusicEventRow(music, font), gbcMusicRow);
 		}
 		//quests
 		else if (music.isQuest() && music.isRequired())
 		{
-			informationPanel.add(new MusicCapeHelperMusicQuestRow(music), gbcMusicRow);
+			informationPanel.add(new MusicCapeHelperMusicQuestRow(music, font), gbcMusicRow);
 		}
 		//normal
 		else if (!music.isQuest() && music.isRequired() && !music.getItems().isEmpty())
 		{
-			informationPanel.add(new MusicCapeHelperMusicItemRow(music, itemManager, clientThread), gbcMusicRow);
+			informationPanel.add(new MusicCapeHelperMusicItemRow(music, itemManager, clientThread, font), gbcMusicRow);
 		}
 
 		add(informationPanel, gbc);

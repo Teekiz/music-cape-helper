@@ -3,6 +3,7 @@ package com.musiccapehelper.ui.rows;
 import com.musiccapehelper.enums.Music;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -25,7 +26,7 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 	private final ClientThread clientThread;
 	private final Color backgroundColour = new Color(85,85,85);
 
-	public MusicCapeHelperMusicItemRow(Music music, ItemManager itemManager, ClientThread clientThread)
+	public MusicCapeHelperMusicItemRow(Music music, ItemManager itemManager, ClientThread clientThread, Font font)
 	{
 		this.music = music;
 		this.itemManager = itemManager;
@@ -40,7 +41,7 @@ public class MusicCapeHelperMusicItemRow extends JPanel
 			JLabel itemsPanelLabel = new JLabel();
 			itemsPanelLabel.setText("Items Required: ");
 			itemsPanelLabel.setHorizontalAlignment(JLabel.LEFT);
-			itemsPanelLabel.setFont(FontManager.getRunescapeSmallFont());
+			itemsPanelLabel.setFont(font);
 			add(itemsPanelLabel, BorderLayout.PAGE_START);
 
 			JPanel itemsPanel = new JPanel();
