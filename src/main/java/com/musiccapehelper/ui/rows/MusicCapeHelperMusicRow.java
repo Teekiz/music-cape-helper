@@ -13,11 +13,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.border.EmptyBorder;
 import lombok.Getter;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.game.ItemManager;
-import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
 public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
@@ -166,12 +164,10 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		hintArrowLabel.setText("Hint Arrow: ");
 		if (plugin.getHintArrowMusic() == null || !plugin.getHintArrowMusic().equals(this.getMusic()))
 		{
-			hintArrowLabel.setToolTipText("Add a hint arrow to the minimap to point to the unlock point.");
 			hintArrowLabel.setIcon(plugin.getHintArrowHide());
 		}
 		else
 		{
-			hintArrowLabel.setToolTipText("Remove the hint arrow from the minimap.");
 			hintArrowLabel.setIcon(plugin.getHintArrowShow());
 		}
 		hintArrowLabel.setHorizontalTextPosition(JLabel.LEFT);

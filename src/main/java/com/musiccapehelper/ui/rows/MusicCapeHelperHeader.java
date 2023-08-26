@@ -6,7 +6,6 @@ import com.musiccapehelper.enums.HeaderType;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
 import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
-import java.awt.Color;
 import java.util.Arrays;
 import javax.swing.JLabel;
 import lombok.Getter;
@@ -19,7 +18,6 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 	private HeaderType headerType;
 	@Getter @Setter
 	private boolean enabled = false;
-	private String rowIconToolTip = "";
 
 	public MusicCapeHelperHeader(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
@@ -37,7 +35,6 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 		{
 			headerType = Arrays.stream(HeaderType.values()).filter(m -> m.getSettingsRegion().equals(music.getSettingsRegion())).findFirst().orElse(HeaderType.ERROR);
 			rowTitle.setText("Region: " + music.getSettingsRegion().getName());
-			rowIconToolTip = "tracks from the region " + music.getSettingsRegion().getName();
 		}
 		else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 		{
@@ -45,13 +42,11 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 			{
 				headerType = HeaderType.REQUIRED;
 				rowTitle.setText("Required tracks: ");
-				rowIconToolTip = "required tracks";
 			}
 			else
 			{
 				headerType = HeaderType.OPTIONAL;
 				rowTitle.setText("Optional tracks: ");
-				rowIconToolTip = "optional tracks";
 			}
 		}
 	}
@@ -62,14 +57,10 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 		if (enabled)
 		{
 			rowPinIcon.setIcon(plugin.getRemoveIcon());
-			rowPinIcon.setToolTipText("Click to unpin all " + rowIconToolTip + " icons from map");
-			this.setToolTipText("Click to unpin all " + rowIconToolTip + " icons from map");
 		}
 		else
 		{
 			rowPinIcon.setIcon(plugin.getAddIcon());
-			rowPinIcon.setToolTipText("Click to pin all icons " + rowIconToolTip + " to the map");
-			this.setToolTipText("Click to pin all icons " + rowIconToolTip + " to the map");
 		}
 	}
 

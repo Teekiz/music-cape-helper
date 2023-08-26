@@ -14,7 +14,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.ToolTipManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import lombok.Getter;
@@ -112,12 +111,10 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 		if (enabled)
 		{
 			rowPinIcon.setIcon(plugin.getRemoveIcon());
-			rowPinIcon.setToolTipText("Click to unpin icon to the map");
 		}
 		else
 		{
 			rowPinIcon.setIcon(plugin.getAddIcon());
-			rowPinIcon.setToolTipText("Click to pin icon to the map");
 		}
 	}
 
