@@ -31,7 +31,9 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 	{
 		super(music, plugin, config);
 		this.completed = completed;
-		Font font = FontManager.getRunescapeFont();
+
+		//used to standardise all the label fonts (NOTE: description uses a custom version of this because it wouldn't update for some reason)
+		Font font = FontManager.getRunescapeSmallFont();
 		setTextColour();
 
 		//this is for the inherited GridBagConstraints
@@ -120,7 +122,8 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		descriptionTextArea.setWrapStyleWord(true);
 		descriptionTextArea.setEditable(false);
 		descriptionTextArea.setOpaque(false);
-		descriptionTextArea.setFont(font);
+		descriptionTextArea.setFont(new Font(FontManager.getRunescapeSmallFont().getName(),
+		FontManager.getRunescapeSmallFont().getStyle(), 16));
 		descriptionTextArea.setForeground(Color.LIGHT_GRAY);
 		descriptionTextArea.append(music.getDescription());
 

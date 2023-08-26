@@ -45,8 +45,6 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 	protected JMenuItem popupMenuIconText = new JMenuItem();
 	protected JMenuItem popupMenuBackgroundText = new JMenuItem();
 
-	ToolTipManager toolTipManager = ToolTipManager.sharedInstance();
-
 	public MusicCapeHelperRow(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
 		this.music = music;
@@ -57,10 +55,6 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 		setLayout(new GridBagLayout());
 		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
-		setToolTipText(music.getSongName());
-		toolTipManager.setDismissDelay(2000);
-		toolTipManager.setInitialDelay(1000);
-		toolTipManager.setReshowDelay(1000);
 
 		setRowTitle();
 		setEnabled();
@@ -98,7 +92,7 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 	{
 		rowTitle.setText(music.getSongName());
 		rowTitle.setHorizontalAlignment(JLabel.LEFT);
-		rowTitle.setFont(FontManager.getRunescapeBoldFont());
+		rowTitle.setFont(FontManager.getRunescapeFont());
 		if (expanded)
 		{
 			rowTitle.setIcon(plugin.getUpIcon());
