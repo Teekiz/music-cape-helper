@@ -2,6 +2,7 @@ package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
+import com.musiccapehelper.enums.Icon;
 import com.musiccapehelper.enums.Music;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -94,11 +95,12 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 		rowTitle.setFont(FontManager.getRunescapeFont());
 		if (expanded)
 		{
-			rowTitle.setIcon(plugin.getUpIcon());
+			rowTitle.setIcon(Icon.UP_ICON.getIcon());
+
 		}
 		else
 		{
-			rowTitle.setIcon(plugin.getDownIcon());
+			rowTitle.setIcon(Icon.DOWN_ICON.getIcon());
 		}
 		rowTitle.setHorizontalTextPosition(JLabel.RIGHT);
 		rowTitle.setVerticalTextPosition(JLabel.CENTER);
@@ -110,11 +112,11 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 
 		if (enabled)
 		{
-			rowPinIcon.setIcon(plugin.getRemoveIcon());
+			rowPinIcon.setIcon(Icon.REMOVE_ICON.getIcon());
 		}
 		else
 		{
-			rowPinIcon.setIcon(plugin.getAddIcon());
+			rowPinIcon.setIcon(Icon.ADD_ICON.getIcon());
 		}
 	}
 

@@ -3,6 +3,7 @@ package com.musiccapehelper;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
 import com.musiccapehelper.enums.HeaderType;
+import com.musiccapehelper.enums.Icon;
 import com.musiccapehelper.enums.settings.SettingsLocked;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.settings.SettingsOptional;
@@ -71,21 +72,6 @@ public class MusicCapeHelperPlugin extends Plugin
 	private HashMap<Music, Boolean> musicList;
 	@Getter
 	private Music hintArrowMusic;
-	//icons
-	private final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "/pluginicon.png");
-	@Getter
-	private final ImageIcon addIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/addicon.png"));
-	@Getter
-	private final ImageIcon removeIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/removeicon.png"));
-	@Getter
-	private final ImageIcon upIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/up_icon.png"));
-	@Getter
-	private final ImageIcon downIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/down_icon.png"));
-	@Getter
-	private final ImageIcon hintArrowShow = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/arrow_show.png"));
-	@Getter
-	private final ImageIcon hintArrowHide = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/arrow_hide.png"));
-
 
 	//button at bottom of panel to add list
 	//instead of multiple lists, create a hashmap at start up
@@ -118,7 +104,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		musicCapeHelperPanel = new MusicCapeHelperPanel(this, config, itemManager, clientThread);
 		navigationButton = NavigationButton.builder()
 			.tooltip("Music Cape Helper Panel")
-			.icon(icon)
+			.icon(Icon.PLUGIN_ICON.getImage())
 			.panel(musicCapeHelperPanel)
 			.build();
 

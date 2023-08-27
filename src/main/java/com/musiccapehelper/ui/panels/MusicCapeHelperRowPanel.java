@@ -2,6 +2,7 @@ package com.musiccapehelper.ui.panels;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
+import com.musiccapehelper.enums.Icon;
 import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
 import com.musiccapehelper.ui.rows.MusicCapeHelperRow;
@@ -12,6 +13,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.BoxLayout;
@@ -61,24 +64,64 @@ public class MusicCapeHelperRowPanel extends JPanel
 		controlPanel.setLayout(new GridLayout(0, 5, 0, 5));
 
 		JButton pinAllControl = new JButton();
-		pinAllControl.setIcon(plugin.getAddIcon());
+		pinAllControl.setIcon(Icon.ADD_ICON.getIcon());
+		pinAllControl.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				//todo - add control
+			}
+		});
 		controlPanel.add(pinAllControl);
 
-		JButton upinAllControl = new JButton();
-		upinAllControl.setIcon(plugin.getRemoveIcon());
-		controlPanel.add(upinAllControl);
+		JButton unpinAllControl = new JButton();
+		unpinAllControl.setIcon(Icon.REMOVE_ICON.getIcon());
+		controlPanel.add(unpinAllControl);
+		unpinAllControl.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				//todo - add control
+			}
+		});
 
 		JButton removeHintArrowControl = new JButton();
-		removeHintArrowControl.setIcon(plugin.getHintArrowHide());
+		removeHintArrowControl.setIcon(Icon.HIDE_HINT_ARROW.getIcon());
 		controlPanel.add(removeHintArrowControl);
+		removeHintArrowControl.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				//todo - add control
+			}
+		});
 
 		JButton expandAllControl = new JButton();
-		expandAllControl.setIcon(plugin.getDownIcon());
+		expandAllControl.setIcon(Icon.SHOW_HINT_ARROW.getIcon());
 		controlPanel.add(expandAllControl);
+		expandAllControl.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				//todo - add control
+			}
+		});
 
 		JButton shrinkAllControl = new JButton();
-		shrinkAllControl.setIcon(plugin.getUpIcon());
+		shrinkAllControl.setIcon(Icon.UP_ICON.getIcon());
 		controlPanel.add(shrinkAllControl);
+		shrinkAllControl.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				//todo - add control
+			}
+		});
 
 		headerPanel.add(controlPanel);
 		add(headerPanel, BorderLayout.PAGE_START);
@@ -170,7 +213,7 @@ public class MusicCapeHelperRowPanel extends JPanel
 						"<br/>  arrow on the music list" +
 						"<br/> page to add new rows to" +
 						"<br/> the map.</html>");
-				noRowsLabel.setIcon(plugin.getAddIcon());
+				noRowsLabel.setIcon(Icon.ADD_ICON.getIcon());
 			}
 			else
 			{
