@@ -243,6 +243,12 @@ public class MusicCapeHelperPanel extends PluginPanel
 		rowPanel.refreshList();
 	}
 
+	//this verifies that only the correct rows are showing.
+	public void checkMapRowPanels()
+	{
+		rowPanel.tabSwitched(rowPanel.isOnMapPanel());
+	}
+
 	//this method is used to completely update the panel, with new rows being added where required.
 	public void createAndRefreshRows(String searchText)
 	{

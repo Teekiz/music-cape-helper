@@ -21,12 +21,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
+import lombok.Getter;
 import net.runelite.client.ui.FontManager;
 
 public class MusicCapeHelperRowPanel extends JPanel
 {
 	final MusicCapeHelperPlugin plugin;
 	final MusicCapeHelperConfig config;
+	@Getter
 	boolean isOnMapPanel;
 	private final JScrollPane musicScrollPane;
 	private final JPanel musicScrollPaneContentPanel;
@@ -123,7 +125,6 @@ public class MusicCapeHelperRowPanel extends JPanel
 		tabSwitched(isOnMapPanel);
 	}
 
-
 	public void tabSwitched(boolean setToMapPanel)
 	{
 		isOnMapPanel = setToMapPanel;
@@ -162,9 +163,8 @@ public class MusicCapeHelperRowPanel extends JPanel
 			noRowsLabel.setHorizontalTextPosition(JLabel.CENTER);
 			noRowsLabel.setVerticalTextPosition(JLabel.BOTTOM);
 
-			if (isOnMapPanel)
+			if (isOnMapPanel && plugin.getMapPoints().size() == 0)
 			{
-
 				noRowsLabel.setText("<html>You have no markers on" +
 						"<br/> the map. Click the green" +
 						"<br/>  arrow on the music list" +
