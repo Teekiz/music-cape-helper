@@ -37,13 +37,10 @@ public class MusicCapeHelperPanel extends PluginPanel
 	private final MusicCapeHelperPlugin plugin;
 	private final MusicCapeHelperConfig config;
 	private final MusicCapeHelperRowPanel rowPanel;
-	private ItemManager itemManager;
-	private ClientThread clientThread;
-	//then when it needs to be updated, call the list instead of components
+	private final ItemManager itemManager;
+	private final ClientThread clientThread;
 	@Getter
 	private final List<MusicCapeHelperRow> panelRows = new ArrayList<>();
-	private final JPanel displayPanel = new JPanel();
-	private final MaterialTabGroup musicMapTabGroup = new MaterialTabGroup(displayPanel);
 
 	public MusicCapeHelperPanel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, ItemManager itemManager, ClientThread clientThread)
 	{
@@ -77,6 +74,8 @@ public class MusicCapeHelperPanel extends PluginPanel
 		add(new MusicCapeHelperSettingsPanel(plugin, config, this));
 
 		rowPanel = new MusicCapeHelperRowPanel(plugin, config, false);
+		JPanel displayPanel = new JPanel();
+		MaterialTabGroup musicMapTabGroup = new MaterialTabGroup(displayPanel);
 		MaterialTab musicTab = new MaterialTab("Music", musicMapTabGroup, rowPanel);
 		MaterialTab mapTab = new MaterialTab("Map", musicMapTabGroup, rowPanel);
 

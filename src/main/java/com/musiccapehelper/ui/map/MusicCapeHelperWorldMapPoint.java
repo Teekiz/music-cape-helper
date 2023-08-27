@@ -1,4 +1,5 @@
-package com.musiccapehelper;
+package com.musiccapehelper.ui.map;
+import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.enums.Music;
 import lombok.Getter;
 import net.runelite.api.Point;
@@ -8,15 +9,14 @@ import net.runelite.client.util.ImageUtil;
 public class MusicCapeHelperWorldMapPoint extends WorldMapPoint
 {
 	@Getter
-	Music music;
+	private final Music music;
 	@Getter
-	boolean completed;
-	MusicCapeHelperConfig config;
+	private boolean completed;
+	private final MusicCapeHelperConfig config;
 
 	public MusicCapeHelperWorldMapPoint(Music music, boolean completed, MusicCapeHelperConfig config)
 	{
 		//ImagePoint code used from "clue scrolls" plugin constructor
-		//todo - if the player right clicks, pan and zoom to quest start point
 		super(null, null);
 
 		this.music = music;

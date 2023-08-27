@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.musiccapehelper.enums.Music;
+import com.musiccapehelper.ui.map.MusicCapeHelperWorldMapPoint;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,18 +17,15 @@ public class MusicCapeHelperAccess
 	private final ConfigManager configManager;
 	private final Gson gson;
 
-	private final MusicCapeHelperPlugin plugin;
-
 	/*
 		This class is used to access the config file for more complex saved items (MapPoint data and Row Expanded Data).
 	 */
 
-	public MusicCapeHelperAccess(MusicCapeHelperConfig config, ConfigManager configManager, Gson gson, MusicCapeHelperPlugin plugin)
+	public MusicCapeHelperAccess(MusicCapeHelperConfig config, ConfigManager configManager, Gson gson)
 	{
 		this.config = config;
 		this.configManager = configManager;
 		this.gson = gson;
-		this.plugin = plugin;
 	}
 
 	public void saveMapMarkers(List<MusicCapeHelperWorldMapPoint> saveMapPoints)
@@ -37,8 +35,8 @@ public class MusicCapeHelperAccess
 			JsonArray mapData = new JsonArray();
 			saveMapPoints.forEach(m -> {
 				JsonObject jsonObject = new JsonObject();
-				jsonObject.addProperty("music", m.music.getSongName());
-				jsonObject.addProperty("completed", m.completed);
+				jsonObject.addProperty("music", m.getMusic().getSongName());
+				jsonObject.addProperty("completed", m.isCompleted());
 				mapData.add(jsonObject);
 			});
 			String json = mapData.toString();

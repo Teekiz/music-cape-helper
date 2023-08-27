@@ -9,12 +9,8 @@ import javax.swing.border.EmptyBorder;
 
 public class MusicCapeHelperMusicEventRow extends JPanel
 {
-	private final Music music;
-
 	public MusicCapeHelperMusicEventRow(Music music, Font font)
 	{
-		this.music = music;
-
 		setLayout(new BorderLayout());
 		setBorder(new EmptyBorder(5, 0, 5, 0));
 		setOpaque(false);

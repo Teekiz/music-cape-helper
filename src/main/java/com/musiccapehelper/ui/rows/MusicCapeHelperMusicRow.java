@@ -2,6 +2,7 @@ package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
+import com.musiccapehelper.enums.Icon;
 import com.musiccapehelper.enums.Music;
 import java.awt.Color;
 import java.awt.Font;
@@ -168,12 +169,12 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		if (plugin.getHintArrowMusic() == null || !plugin.getHintArrowMusic().equals(this.getMusic()))
 		{
 			hintArrowLabel.setText("Set Arrow:");
-			hintArrowLabel.setIcon(plugin.getHintArrowShow());
+			hintArrowLabel.setIcon(Icon.SHOW_HINT_ARROW.getIcon());
 		}
 		else
 		{
 			hintArrowLabel.setText("Unset Arrow:");
-			hintArrowLabel.setIcon(plugin.getHintArrowHide());
+			hintArrowLabel.setIcon(Icon.HIDE_HINT_ARROW.getIcon());
 		}
 		hintArrowLabel.setHorizontalTextPosition(JLabel.LEFT);
 		hintArrowLabel.setVerticalTextPosition(JLabel.BOTTOM);

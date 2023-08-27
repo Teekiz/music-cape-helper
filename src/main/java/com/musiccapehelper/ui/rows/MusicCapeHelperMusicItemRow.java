@@ -20,16 +20,9 @@ import net.runelite.client.util.AsyncBufferedImage;
 
 public class MusicCapeHelperMusicItemRow extends JPanel
 {
-	private final Music music;
-	private final ItemManager itemManager;
-	private final ClientThread clientThread;
 	private final Color backgroundColour = new Color(85,85,85);
-
 	public MusicCapeHelperMusicItemRow(Music music, ItemManager itemManager, ClientThread clientThread, Font font)
 	{
-		this.music = music;
-		this.itemManager = itemManager;
-		this.clientThread = clientThread;
 
 		if (!music.getItems().isEmpty())
 		{

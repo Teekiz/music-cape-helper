@@ -3,6 +3,7 @@ package com.musiccapehelper.ui.rows;
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.HeaderType;
+import com.musiccapehelper.enums.Icon;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
 import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
@@ -16,8 +17,6 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 {
 	@Getter
 	private HeaderType headerType;
-	@Getter @Setter
-	private boolean enabled = false;
 
 	public MusicCapeHelperHeader(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
@@ -56,11 +55,11 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 	{
 		if (enabled)
 		{
-			rowPinIcon.setIcon(plugin.getRemoveIcon());
+			rowPinIcon.setIcon(Icon.REMOVE_ICON.getIcon());
 		}
 		else
 		{
-			rowPinIcon.setIcon(plugin.getAddIcon());
+			rowPinIcon.setIcon(Icon.ADD_ICON.getIcon());
 		}
 	}
 

@@ -3,21 +3,21 @@ package com.musiccapehelper;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
 import com.musiccapehelper.enums.HeaderType;
+import com.musiccapehelper.enums.Icon;
 import com.musiccapehelper.enums.settings.SettingsLocked;
 import com.musiccapehelper.enums.Music;
 import com.musiccapehelper.enums.settings.SettingsOptional;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
 import com.musiccapehelper.enums.settings.SettingsQuest;
 import com.musiccapehelper.enums.settings.SettingsRegion;
+import com.musiccapehelper.ui.map.MusicCapeHelperWorldMapPoint;
 import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
 import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
 import com.musiccapehelper.ui.rows.MusicCapeHelperRow;
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
-import javax.swing.ImageIcon;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
@@ -36,7 +36,6 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.ui.overlay.worldmap.WorldMapPointManager;
-import net.runelite.client.util.ImageUtil;
 
 @Slf4j
 @PluginDescriptor(
@@ -71,21 +70,6 @@ public class MusicCapeHelperPlugin extends Plugin
 	private HashMap<Music, Boolean> musicList;
 	@Getter
 	private Music hintArrowMusic;
-	//icons
-	private final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "/pluginicon.png");
-	@Getter
-	private final ImageIcon addIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/addicon.png"));
-	@Getter
-	private final ImageIcon removeIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/removeicon.png"));
-	@Getter
-	private final ImageIcon upIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/up_icon.png"));
-	@Getter
-	private final ImageIcon downIcon = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/down_icon.png"));
-	@Getter
-	private final ImageIcon hintArrowShow = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/arrow_show.png"));
-	@Getter
-	private final ImageIcon hintArrowHide = new ImageIcon(ImageUtil.loadImageResource(getClass(), "/arrow_hide.png"));
-
 
 	//button at bottom of panel to add list
 	//instead of multiple lists, create a hashmap at start up
@@ -101,7 +85,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-		musicCapeHelperAccess = new MusicCapeHelperAccess(config, configManager, gson, this);
+		musicCapeHelperAccess = new MusicCapeHelperAccess(config, configManager, gson);
 
 		musicList = new HashMap<>();
 
@@ -118,7 +102,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		musicCapeHelperPanel = new MusicCapeHelperPanel(this, config, itemManager, clientThread);
 		navigationButton = NavigationButton.builder()
 			.tooltip("Music Cape Helper Panel")
-			.icon(icon)
+			.icon(Icon.PLUGIN_ICON.getImage())
 			.panel(musicCapeHelperPanel)
 			.build();
 
@@ -271,11 +255,12 @@ public class MusicCapeHelperPlugin extends Plugin
 		return filteredList;
 	}
 
+	//consider moving to event handling class
 	public void rowPinClicked(MusicCapeHelperRow row)
 	{
 		if (row instanceof MusicCapeHelperMusicRow)
 		{
-			MusicCapeHelperWorldMapPoint check = mapPoints.stream().filter(m -> m.music == row.getMusic()).findAny().orElse(null);
+			MusicCapeHelperWorldMapPoint check = mapPoints.stream().filter(m -> m.getMusic() == row.getMusic()).findAny().orElse(null);
 
 			//checks if the world map should be updated
 			if (check == null)
@@ -303,7 +288,7 @@ public class MusicCapeHelperPlugin extends Plugin
 						.filter(r -> r.isEnabled())
 						.forEach(r ->
 						{
-							mapPoints.remove(mapPoints.stream().filter(m -> m.music.equals(r.getMusic())).findFirst().orElse(null));
+							mapPoints.remove(mapPoints.stream().filter(m -> m.getMusic().equals(r.getMusic())).findFirst().orElse(null));
 							musicCapeHelperPanel.updateRow(r);
 						});
 				}
@@ -331,7 +316,7 @@ public class MusicCapeHelperPlugin extends Plugin
 							.filter(r -> r.isEnabled())
 							.forEach(r ->
 							{
-								mapPoints.remove(mapPoints.stream().filter(m -> m.music.equals(r.getMusic())).findFirst().orElse(null));
+								mapPoints.remove(mapPoints.stream().filter(m -> m.getMusic().equals(r.getMusic())).findFirst().orElse(null));
 								musicCapeHelperPanel.updateRow(r);
 							});
 					}
@@ -357,7 +342,7 @@ public class MusicCapeHelperPlugin extends Plugin
 							.filter(r -> r.isEnabled())
 							.forEach(r ->
 							{
-								mapPoints.remove(mapPoints.stream().filter(m -> m.music.equals(r.getMusic())).findFirst().orElse(null));
+								mapPoints.remove(mapPoints.stream().filter(m -> m.getMusic().equals(r.getMusic())).findFirst().orElse(null));
 								musicCapeHelperPanel.updateRow(r);
 							});
 					}
