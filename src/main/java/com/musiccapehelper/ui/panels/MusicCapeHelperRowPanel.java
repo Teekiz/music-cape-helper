@@ -2,17 +2,24 @@ package com.musiccapehelper.ui.panels;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
+import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
+import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
 import com.musiccapehelper.ui.rows.MusicCapeHelperRow;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import net.runelite.client.ui.FontManager;
 
@@ -23,7 +30,9 @@ public class MusicCapeHelperRowPanel extends JPanel
 	boolean isOnMapPanel;
 	private final JScrollPane musicScrollPane;
 	private final JPanel musicScrollPaneContentPanel;
-	private JLabel songNameLabelHeader;
+	private JPanel emptySpacePanel;
+	private final JLabel songNameLabelHeader;
+
 
 	//todo add an empty panel to the map and music panels if empty
 
@@ -37,18 +46,49 @@ public class MusicCapeHelperRowPanel extends JPanel
 		setLayout(new BorderLayout(0, 10));
 		setBorder(new EmptyBorder(10, 0, 10, 0));
 
+		// header label and control panels
+		JPanel headerPanel = new JPanel();
+		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+
 		songNameLabelHeader = new JLabel();
 		songNameLabelHeader.setFont(FontManager.getRunescapeBoldFont());
-		songNameLabelHeader.setHorizontalAlignment(JLabel.CENTER);
-		add(songNameLabelHeader, BorderLayout.PAGE_START);
+		songNameLabelHeader.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		headerPanel.add(songNameLabelHeader);
 
+		JPanel controlPanel = new JPanel();
+		controlPanel.setLayout(new GridLayout(0, 5, 0, 5));
+
+		JButton pinAllControl = new JButton();
+		pinAllControl.setIcon(plugin.getAddIcon());
+		controlPanel.add(pinAllControl);
+
+		JButton upinAllControl = new JButton();
+		upinAllControl.setIcon(plugin.getRemoveIcon());
+		controlPanel.add(upinAllControl);
+
+		JButton removeHintArrowControl = new JButton();
+		removeHintArrowControl.setIcon(plugin.getHintArrowHide());
+		controlPanel.add(removeHintArrowControl);
+
+		JButton expandAllControl = new JButton();
+		expandAllControl.setIcon(plugin.getDownIcon());
+		controlPanel.add(expandAllControl);
+
+		JButton shrinkAllControl = new JButton();
+		shrinkAllControl.setIcon(plugin.getUpIcon());
+		controlPanel.add(shrinkAllControl);
+
+		headerPanel.add(controlPanel);
+		add(headerPanel, BorderLayout.PAGE_START);
+
+		//scroll pane
 		musicScrollPane = new JScrollPane();
 		musicScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		musicScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		musicScrollPaneContentPanel = new JPanel();
 		musicScrollPaneContentPanel.setLayout(new GridBagLayout());
 		musicScrollPane.setViewportView(musicScrollPaneContentPanel);
-		musicScrollPane.setPreferredSize(new Dimension(0, 700));
+		musicScrollPane.setPreferredSize(new Dimension(0, 650));
 		add(musicScrollPane, BorderLayout.CENTER);
 
 		tabSwitched(isOnMapPanel);
@@ -73,7 +113,7 @@ public class MusicCapeHelperRowPanel extends JPanel
 		/*
 			creates a new jpanel to take up space for the rest of the page, this prevents the remaining space being distributed between other rows.
 		 */
-		JPanel emptySpacePanel = new JPanel();
+		emptySpacePanel = new JPanel();
 		gridBagConstraints.weighty = 1.0;
 		gridBagConstraints.gridheight = GridBagConstraints.REMAINDER;
 		gridBagConstraints.fill = GridBagConstraints.BOTH;
@@ -106,7 +146,48 @@ public class MusicCapeHelperRowPanel extends JPanel
 				.forEach(r -> r.setVisible(true));
 		}
 
+		addNoRowsReturnedTextLabel();
 		refreshList();
+	}
+
+	public void addNoRowsReturnedTextLabel()
+	{
+		//checks to see if all rows are hidden, if they are add to the empty space panel a label
+		if (Arrays.stream(musicScrollPaneContentPanel.getComponents())
+			.filter(r -> r instanceof MusicCapeHelperMusicRow || r instanceof MusicCapeHelperHeader)
+			.noneMatch(Component::isVisible) && emptySpacePanel != null)
+		{
+			emptySpacePanel.removeAll();
+			JLabel noRowsLabel = new JLabel();
+			noRowsLabel.setHorizontalTextPosition(JLabel.CENTER);
+			noRowsLabel.setVerticalTextPosition(JLabel.BOTTOM);
+
+			if (isOnMapPanel)
+			{
+
+				noRowsLabel.setText("<html>You have no markers on" +
+						"<br/> the map. Click the green" +
+						"<br/>  arrow on the music list" +
+						"<br/> page to add new rows to" +
+						"<br/> the map.</html>");
+				noRowsLabel.setIcon(plugin.getAddIcon());
+			}
+			else
+			{
+				noRowsLabel.setText("<html> " +
+					"<br/>No music tracks available" +
+					"<br/> to show. Please change" +
+					"<br/> the filters to return" +
+					"<br/> available relevant " +
+					"<br/> music tracks.</html>");
+
+			}
+			emptySpacePanel.add(noRowsLabel);
+		}
+		else if (emptySpacePanel != null)
+		{
+			emptySpacePanel.removeAll();
+		}
 	}
 
 	public void refreshList()

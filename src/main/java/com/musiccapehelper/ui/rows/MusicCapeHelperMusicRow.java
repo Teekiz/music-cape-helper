@@ -47,7 +47,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 
 		//this is new GridBagConstraints for this panel only
 		GridBagConstraints gbcMusicRow = new GridBagConstraints();
-		gbcMusicRow.insets = new Insets(4, 2, 0, 2);
+		gbcMusicRow.insets = new Insets(2, 2, 2, 2);
 
 		JLabel songRegionLabel = new JLabel("Region: " + music.getSettingsRegion().getName(), JLabel.LEFT);
 		songRegionLabel.setFont(font);
@@ -61,7 +61,9 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		hintArrowLabel = new JLabel();
 		hintArrowLabel.setFont(font);
 		hintArrowLabel.setHorizontalAlignment(JLabel.LEFT);
+		gbcMusicRow.anchor = GridBagConstraints.SOUTHEAST;
 		gbcMusicRow.gridx = 2;
+		gbcMusicRow.weighty = 0.0;
 		setHintArrowLabel();
 		informationPanel.add(hintArrowLabel, gbcMusicRow);
 
@@ -88,21 +90,23 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		gbcMusicRow.gridy = 1;
 		gbcMusicRow.gridx = 0;
 		gbcMusicRow.weightx = 1.0;
+		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
 		informationPanel.add(songIsQuestLabel, gbcMusicRow);
 
+		//spaces add to line up with pin/unpin
 		JLabel songIsRequiredLabel = new JLabel();
 		if (music.isRequired())
 		{
-			songIsRequiredLabel.setText("Required");
+			songIsRequiredLabel.setText("Required       ");
 		}
 		else
 		{
-			songIsRequiredLabel.setText("Optional");
+			songIsRequiredLabel.setText("Optional       ");
 		}
 		songIsRequiredLabel.setFont(font);
 		songIsRequiredLabel.setHorizontalAlignment(JLabel.LEFT);
 		gbcMusicRow.gridx = 2;
-		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
+		gbcMusicRow.anchor = GridBagConstraints.SOUTHEAST;
 		informationPanel.add(songIsRequiredLabel, gbcMusicRow);
 
 		JLabel descriptionTextAreaLabel = new JLabel();
@@ -161,18 +165,18 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 
 	public void setHintArrowLabel()
 	{
-		//todo - make hint arrow more understandable
-		hintArrowLabel.setText("Hint Arrow: ");
 		if (plugin.getHintArrowMusic() == null || !plugin.getHintArrowMusic().equals(this.getMusic()))
 		{
-			hintArrowLabel.setIcon(plugin.getHintArrowHide());
+			hintArrowLabel.setText("Set Arrow:");
+			hintArrowLabel.setIcon(plugin.getHintArrowShow());
 		}
 		else
 		{
-			hintArrowLabel.setIcon(plugin.getHintArrowShow());
+			hintArrowLabel.setText("Unset Arrow:");
+			hintArrowLabel.setIcon(plugin.getHintArrowHide());
 		}
 		hintArrowLabel.setHorizontalTextPosition(JLabel.LEFT);
-		hintArrowLabel.setVerticalTextPosition(JLabel.CENTER);
+		hintArrowLabel.setVerticalTextPosition(JLabel.BOTTOM);
 	}
 
 	public void setTextColour()
