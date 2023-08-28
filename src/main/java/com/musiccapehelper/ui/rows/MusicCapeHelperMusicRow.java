@@ -9,7 +9,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -68,15 +67,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		gbcMusicRow.weighty = 0.0;
 		setHintArrowLabel();
 		informationPanel.add(hintArrowLabel, gbcMusicRow);
-
-		hintArrowLabel.addMouseListener(new MouseAdapter()
-		{
-			@Override
-			public void mousePressed(MouseEvent e)
-			{
-				plugin.setHintArrow(MusicCapeHelperMusicRow.this);
-			}
-		});
+		hintArrowLabel.addMouseListener(this);
 
 		JLabel songIsQuestLabel = new JLabel();
 		if (music.isQuest())
@@ -251,6 +242,11 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 			{
 				popupMenu.setVisible(true);
 			}
+		}
+
+		else if (e.getComponent().equals(hintArrowLabel))
+		{
+			plugin.setHintArrow(MusicCapeHelperMusicRow.this);
 		}
 	}
 }

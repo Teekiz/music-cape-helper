@@ -167,17 +167,17 @@ public class MusicCapeHelperPanel extends PluginPanel
 			{
 				if (panelRows.indexOf(row) == 0)
 				{
-					headersToAdd.put(panelRows.indexOf(row), new MusicCapeHelperHeader(row.getMusic(), plugin, config));
+					headersToAdd.put(panelRows.indexOf(row), new MusicCapeHelperHeader(row.getMusic(), plugin, config, this));
 				}
 				else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION)
 					&& !panelRows.get(panelRows.indexOf(row) - 1).getMusic().getSettingsRegion().equals(row.getMusic().getSettingsRegion()))
 				{
-					headersToAdd.put(panelRows.indexOf(row), new MusicCapeHelperHeader(row.getMusic(), plugin, config));
+					headersToAdd.put(panelRows.indexOf(row), new MusicCapeHelperHeader(row.getMusic(), plugin, config, this));
 				}
 				else if ((config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 					&& !panelRows.get(panelRows.indexOf(row) - 1).getMusic().isRequired() == row.getMusic().isRequired())
 				{
-					headersToAdd.put(panelRows.indexOf(row), new MusicCapeHelperHeader(row.getMusic(), plugin, config));
+					headersToAdd.put(panelRows.indexOf(row), new MusicCapeHelperHeader(row.getMusic(), plugin, config, this));
 				}
 			}
 		}

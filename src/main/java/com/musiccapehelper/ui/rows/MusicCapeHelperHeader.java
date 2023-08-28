@@ -18,10 +18,10 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 	@Getter
 	private HeaderType headerType;
 
-	public MusicCapeHelperHeader(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
+	public MusicCapeHelperHeader(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, MusicCapeHelperPanel panel)
 	{
 		//could get the panel from plugin and use that
-		super(music, plugin, config);
+		super(music, plugin, config, panel);
 	}
 
 	@Override
@@ -66,9 +66,11 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 	@Override
 	public void setEnabled()
 	{
-		//look at potentially injecting
-		MusicCapeHelperPanel panel = plugin.getMusicCapeHelperPanel();
-		plugin.loginfo("set enabled on row " + enabled);
+		if (panel == null)
+		{
+			return;
+		}
+
 		if (headerType.equals(HeaderType.REQUIRED))
 		{
 			enabled = panel.getPanelRows()

@@ -3,8 +3,6 @@ package com.musiccapehelper.ui.panels;
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.data.Icon;
-import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
-import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
 import com.musiccapehelper.ui.rows.MusicCapeHelperRow;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -197,7 +195,7 @@ public class MusicCapeHelperRowPanel extends JPanel
 	{
 		//checks to see if all rows are hidden, if they are add to the empty space panel a label
 		if (Arrays.stream(musicScrollPaneContentPanel.getComponents())
-			.filter(r -> r instanceof MusicCapeHelperMusicRow || r instanceof MusicCapeHelperHeader)
+			.filter(r -> r instanceof MusicCapeHelperRow)
 			.noneMatch(Component::isVisible) && emptySpacePanel != null)
 		{
 			emptySpacePanel.removeAll();

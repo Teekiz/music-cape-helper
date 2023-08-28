@@ -1,21 +1,18 @@
 package com.musiccapehelper.ui.rows;
 
+import com.google.inject.Injector;
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.data.Icon;
 import com.musiccapehelper.enums.data.Music;
+import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,13 +31,13 @@ public abstract class MusicCapeHelperRow extends JPanel implements MouseListener
 	protected MusicCapeHelperPlugin plugin;
 
 	protected MusicCapeHelperConfig config;
+	protected MusicCapeHelperPanel panel;
 
 	//content
 	protected JLabel rowTitle = new JLabel();
 	protected JLabel rowPinIcon = new JLabel();
 	protected GridBagConstraints gbc = new GridBagConstraints();
 	protected MusicCapeHelperPopupMenu popupMenu;
-
 
 	public MusicCapeHelperRow(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
@@ -49,7 +46,8 @@ public abstract class MusicCapeHelperRow extends JPanel implements MouseListener
 		this.config = config;
 		this.expanded = false;
 
-		popupMenu = new MusicCapeHelperPopupMenu(this, plugin);
+		//popupMenu = new MusicCapeHelperPopupMenu(this, plugin);
+		popupMenu = new MusicCapeHelperPopupMenu(this, plugin.getInjector().getInstance(MusicCapeHelperPlugin.class));
 		setComponentPopupMenu(popupMenu);
 
 		setLayout(new GridBagLayout());
@@ -77,12 +75,20 @@ public abstract class MusicCapeHelperRow extends JPanel implements MouseListener
 		gbc.anchor = GridBagConstraints.NORTHEAST;
 		add(rowPinIcon, gbc);
 
-		for (MouseListener mouseListener : this.getMouseListeners()) { this.removeMouseListener(mouseListener); }
-		for (MouseListener mouseListener : rowPinIcon.getMouseListeners()) { rowPinIcon.removeMouseListener(mouseListener); }
-
 		addMouseListener(this);
 		rowPinIcon.addMouseListener(this);
 		setComponentPopupMenu(popupMenu);
+	}
+
+	/*
+	 	this is used for dependency injection for the header class,
+	 	setEnabled() must be called again in order to work correctly as the first pass will have panel set to null
+	 */
+	public MusicCapeHelperRow(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, MusicCapeHelperPanel panel)
+	{
+		this(music, plugin, config);
+		this.panel = panel;
+		setEnabled();
 	}
 
 	public void setRowTitle()
