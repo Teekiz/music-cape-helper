@@ -7,6 +7,7 @@ import com.musiccapehelper.enums.data.Icon;
 import com.musiccapehelper.enums.data.Music;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
 import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import javax.swing.JLabel;
 import lombok.Getter;
@@ -99,7 +100,25 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 	{
 		setEnabled();
 		setRowPinIcon();
+		popupMenu.setText();
 		revalidate();
 		repaint();
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e)
+	{
+		//pin icon
+		if (e.getComponent().equals(rowPinIcon) || e.getComponent().equals(this))
+		{
+			if (e.getButton() == MouseEvent.BUTTON1)
+			{
+				plugin.rowPinClicked(this);
+			}
+			else if (e.getButton() == MouseEvent.BUTTON3)
+			{
+				popupMenu.setVisible(true);
+			}
+		}
 	}
 }

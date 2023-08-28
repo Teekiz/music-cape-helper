@@ -22,7 +22,7 @@ import lombok.Setter;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
-public abstract class MusicCapeHelperRow extends JPanel implements ActionListener, MouseListener
+public abstract class MusicCapeHelperRow extends JPanel implements MouseListener
 {
 	@Getter
 	protected Music music;
@@ -39,11 +39,8 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 	protected JLabel rowTitle = new JLabel();
 	protected JLabel rowPinIcon = new JLabel();
 	protected GridBagConstraints gbc = new GridBagConstraints();
+	protected MusicCapeHelperPopupMenu popupMenu;
 
-	//popup
-	protected JPopupMenu popupMenu = new JPopupMenu();
-	protected JMenuItem popupMenuIconText = new JMenuItem();
-	protected JMenuItem popupMenuBackgroundText = new JMenuItem();
 
 	public MusicCapeHelperRow(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
 	{
@@ -52,6 +49,9 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 		this.config = config;
 		this.expanded = false;
 
+		popupMenu = new MusicCapeHelperPopupMenu(this, plugin);
+		setComponentPopupMenu(popupMenu);
+
 		setLayout(new GridBagLayout());
 		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
@@ -59,7 +59,6 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 		setRowTitle();
 		setEnabled();
 		setRowPinIcon();
-		setPopup();
 
 		//row title (song name)
 		gbc.insets = new Insets(4, 5, 0, 5);
@@ -80,12 +79,10 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 
 		for (MouseListener mouseListener : this.getMouseListeners()) { this.removeMouseListener(mouseListener); }
 		for (MouseListener mouseListener : rowPinIcon.getMouseListeners()) { rowPinIcon.removeMouseListener(mouseListener); }
-		for (ActionListener actionListener : popupMenuIconText.getActionListeners()) { popupMenuIconText.removeActionListener(actionListener); }
 
 		addMouseListener(this);
 		rowPinIcon.addMouseListener(this);
-		popupMenuIconText.addActionListener(this);
-		popupMenuBackgroundText.addActionListener(this);
+		setComponentPopupMenu(popupMenu);
 	}
 
 	public void setRowTitle()
@@ -120,92 +117,12 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 		}
 	}
 
-	public void setEnabled()
-	{
-		enabled = plugin.getMapPoints().stream().anyMatch(m -> m.getMusic().equals(this.getMusic()));
-	}
-
-	public void setPopup()
-	{
-		//right click popup
-		popupMenu.setBorder(new EmptyBorder(5, 5, 5, 5));
-		if (enabled)
-		{
-			popupMenuIconText.setText("Unpin map icon");
-		}
-		else
-		{
-			popupMenuIconText.setText("Pin map icon");
-		}
-		popupMenuIconText.setFont(FontManager.getRunescapeSmallFont());
-		popupMenu.add(popupMenuIconText);
-
-		if (this instanceof MusicCapeHelperMusicRow)
-		{
-			if (expanded)
-			{
-				popupMenuBackgroundText.setText("Hide music details");
-			}
-			else
-			{
-				popupMenuBackgroundText.setText("Show music details");
-			}
-			popupMenuBackgroundText.setFont(FontManager.getRunescapeSmallFont());
-			popupMenu.add(popupMenuBackgroundText);
-		}
-		setComponentPopupMenu(popupMenu);
-	}
-
-	public void updateRow()
-	{
-		setEnabled();
-		setRowPinIcon();
-		revalidate();
-		repaint();
-	}
-
-	//todo - could an event class be injected here?
-
+	public abstract void setEnabled();
+	public abstract void updateRow();
 	@Override
-	public void mouseClicked(MouseEvent e)
-	{
-		setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);
-	}
-
+	public abstract void mousePressed(MouseEvent e);
 	@Override
-	public void mousePressed(MouseEvent e)
-	{
-		//upin/pin icon
-		if (e.getComponent().equals(rowPinIcon))
-		{
-			if (e.getButton() == MouseEvent.BUTTON1)
-			{
-				plugin.rowPinClicked(this);
-			}
-			else if (e.getButton() == MouseEvent.BUTTON3)
-			{
-				popupMenu.setVisible(true);
-			}
-		}
-
-		//clicking the background
-		else if (e.getComponent().equals(this))
-		{
-			if (e.getButton() == MouseEvent.BUTTON1 && this instanceof MusicCapeHelperMusicRow)
-			{
-				plugin.rowExpandClicked(this);
-
-			}
-			else if (e.getButton() == MouseEvent.BUTTON1 && this instanceof MusicCapeHelperHeader)
-			{
-				plugin.rowPinClicked(this);
-			}
-			else if (e.getButton() == MouseEvent.BUTTON3)
-			{
-				popupMenu.setVisible(true);
-			}
-		}
-	}
+	public void mouseClicked(MouseEvent e) {setBackground(ColorScheme.DARK_GRAY_HOVER_COLOR);}
 
 	@Override
 	public void mouseReleased(MouseEvent e)
@@ -223,21 +140,5 @@ public abstract class MusicCapeHelperRow extends JPanel implements ActionListene
 	public void mouseExited(MouseEvent e)
 	{
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		if (e.getSource().equals(popupMenuIconText))
-		{
-			plugin.rowPinClicked(this);
-			popupMenu.setVisible(false);
-		}
-
-		if (e.getSource().equals(popupMenuBackgroundText))
-		{
-			plugin.rowExpandClicked(this);
-			popupMenu.setVisible(false);
-		}
 	}
 }

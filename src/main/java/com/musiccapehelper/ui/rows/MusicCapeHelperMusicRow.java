@@ -25,6 +25,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 	protected boolean completed;
 	private final JPanel informationPanel = new JPanel();
 	private final JLabel hintArrowLabel;
+
 	public MusicCapeHelperMusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin,
 								   MusicCapeHelperConfig config, ItemManager itemManager, ClientThread clientThread)
 	{
@@ -154,7 +155,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 			informationPanel.add(new MusicCapeHelperMusicQuestRow(music, font), gbcMusicRow);
 		}
 		//normal
-		else if (!music.isQuest() && music.isRequired() && !music.getItems().isEmpty())
+		else if (!music.isQuest() && !music.getItems().isEmpty())
 		{
 			informationPanel.add(new MusicCapeHelperMusicItemRow(music, itemManager, clientThread, font), gbcMusicRow);
 		}
@@ -162,6 +163,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		add(informationPanel, gbc);
 		setExpanded();
 		setRowTitle();
+
 	}
 
 	public void setHintArrowLabel()
@@ -203,6 +205,12 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 	}
 
 	@Override
+	public void setEnabled()
+	{
+		enabled = plugin.getMapPoints().stream().anyMatch(m -> m.getMusic().equals(this.getMusic()));
+	}
+
+	@Override
 	public void updateRow()
 	{
 		setEnabled();
@@ -211,7 +219,38 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		setRowTitle();
 		setRowPinIcon();
 		setHintArrowLabel();
+		popupMenu.setText();
 		revalidate();
 		repaint();
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e)
+	{
+		if (e.getComponent().equals(rowPinIcon))
+		{
+			if (e.getButton() == MouseEvent.BUTTON1)
+			{
+				plugin.rowPinClicked(this);
+			}
+			else if (e.getButton() == MouseEvent.BUTTON3)
+			{
+				popupMenu.setVisible(true);
+			}
+		}
+
+		//clicking the background
+		else if (e.getComponent().equals(this))
+		{
+			if (e.getButton() == MouseEvent.BUTTON1)
+			{
+				plugin.rowExpandClicked(this);
+
+			}
+			else if (e.getButton() == MouseEvent.BUTTON3)
+			{
+				popupMenu.setVisible(true);
+			}
+		}
 	}
 }
