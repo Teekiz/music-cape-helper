@@ -1,6 +1,6 @@
 package com.musiccapehelper.ui.rows;
 
-import com.musiccapehelper.enums.Music;
+import com.musiccapehelper.enums.data.Music;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.JLabel;

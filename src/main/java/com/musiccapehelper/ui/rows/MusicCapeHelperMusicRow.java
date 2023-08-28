@@ -2,8 +2,8 @@ package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
-import com.musiccapehelper.enums.Icon;
-import com.musiccapehelper.enums.Music;
+import com.musiccapehelper.enums.data.Icon;
+import com.musiccapehelper.enums.data.Music;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;

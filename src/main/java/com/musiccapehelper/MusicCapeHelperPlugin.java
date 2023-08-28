@@ -2,10 +2,10 @@ package com.musiccapehelper;
 
 import com.google.gson.Gson;
 import com.google.inject.Provides;
-import com.musiccapehelper.enums.HeaderType;
-import com.musiccapehelper.enums.Icon;
+import com.musiccapehelper.enums.data.HeaderType;
+import com.musiccapehelper.enums.data.Icon;
 import com.musiccapehelper.enums.settings.SettingsLocked;
-import com.musiccapehelper.enums.Music;
+import com.musiccapehelper.enums.data.Music;
 import com.musiccapehelper.enums.settings.SettingsOptional;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
 import com.musiccapehelper.enums.settings.SettingsQuest;

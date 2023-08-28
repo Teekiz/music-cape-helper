@@ -2,7 +2,7 @@ package com.musiccapehelper.ui.panels;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
-import com.musiccapehelper.enums.Icon;
+import com.musiccapehelper.enums.data.Icon;
 import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
 import com.musiccapehelper.ui.rows.MusicCapeHelperRow;

@@ -1,6 +1,6 @@
 package com.musiccapehelper.ui.map;
 import com.musiccapehelper.MusicCapeHelperConfig;
-import com.musiccapehelper.enums.Music;
+import com.musiccapehelper.enums.data.Music;
 import lombok.Getter;
 import net.runelite.api.Point;
 import net.runelite.client.ui.overlay.worldmap.WorldMapPoint;

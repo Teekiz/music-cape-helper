@@ -2,8 +2,8 @@ package com.musiccapehelper.ui.panels;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
-import com.musiccapehelper.enums.HeaderType;
-import com.musiccapehelper.enums.Music;
+import com.musiccapehelper.enums.data.HeaderType;
+import com.musiccapehelper.enums.data.Music;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
 import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;

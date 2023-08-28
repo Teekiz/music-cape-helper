@@ -2,15 +2,14 @@ package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
-import com.musiccapehelper.enums.HeaderType;
-import com.musiccapehelper.enums.Icon;
-import com.musiccapehelper.enums.Music;
+import com.musiccapehelper.enums.data.HeaderType;
+import com.musiccapehelper.enums.data.Icon;
+import com.musiccapehelper.enums.data.Music;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
 import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
 import java.util.Arrays;
 import javax.swing.JLabel;
 import lombok.Getter;
-import lombok.Setter;
 import net.runelite.client.ui.FontManager;
 
 public class MusicCapeHelperHeader extends MusicCapeHelperRow

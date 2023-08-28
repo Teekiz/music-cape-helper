@@ -1,4 +1,4 @@
-package com.musiccapehelper.enums;
+package com.musiccapehelper.enums.data;
 
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import java.awt.image.BufferedImage;

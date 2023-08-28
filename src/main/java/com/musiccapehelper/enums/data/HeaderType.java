@@ -1,4 +1,4 @@
-package com.musiccapehelper.enums;
+package com.musiccapehelper.enums.data;
 
 import com.musiccapehelper.enums.settings.SettingsRegion;
 import lombok.Getter;
