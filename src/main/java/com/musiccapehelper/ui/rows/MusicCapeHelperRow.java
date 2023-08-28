@@ -46,8 +46,7 @@ public abstract class MusicCapeHelperRow extends JPanel implements MouseListener
 		this.config = config;
 		this.expanded = false;
 
-		//popupMenu = new MusicCapeHelperPopupMenu(this, plugin);
-		popupMenu = new MusicCapeHelperPopupMenu(this, plugin.getInjector().getInstance(MusicCapeHelperPlugin.class));
+		popupMenu = new MusicCapeHelperPopupMenu(this, plugin);
 		setComponentPopupMenu(popupMenu);
 
 		setLayout(new GridBagLayout());
