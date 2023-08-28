@@ -6,7 +6,7 @@ public enum SettingsOrderBy
 {
 	AZ("A-Z"), ZA("Z-A"), REGION("Region"), REQUIRED_FIRST("Required First"), OPTIONAL_FIRST("Optional First");
 	@Getter
-	private String text;
+	private final String text;
 	SettingsOrderBy(String text)
 	{
 		this.text = text;

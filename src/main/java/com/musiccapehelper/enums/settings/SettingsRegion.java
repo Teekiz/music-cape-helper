@@ -11,7 +11,7 @@ public enum SettingsRegion
 	OTHER("Other");
 
 	@Getter
-	private String name;
+	private final String name;
 	SettingsRegion(String name)
 	{
 		this.name = name;

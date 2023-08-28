@@ -6,7 +6,7 @@ public enum SettingsOptional
 {
 	ALL("All"), REQUIRED_ONLY("Required Only"), OPTIONAL_ONLY("Optional Only");
 	@Getter
-	private String text;
+	private final String text;
 	SettingsOptional(String text)
 	{
 		this.text = text;

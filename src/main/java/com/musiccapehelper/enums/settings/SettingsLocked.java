@@ -6,7 +6,7 @@ public enum SettingsLocked
 {
 	ALL("All"), LOCKED("Locked Only"), UNLOCKED("Unlocked Only");
 	@Getter
-	private String text;
+	private final String text;
 	SettingsLocked(String text)
 	{
 		this.text = text;
