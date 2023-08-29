@@ -173,7 +173,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	{
 		if (client.getWidget(239, 6) != null)
 		{
-
+			musicList.updateMusicList(client.getWidget(239, 6).getChildren());
 		}
 
 		panel.createAndRefreshRows("");
