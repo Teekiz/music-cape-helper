@@ -4,7 +4,10 @@ import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.data.Icon;
 import com.musiccapehelper.enums.data.Music;
-import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
+import com.musiccapehelper.ui.panels.Panel;
+import com.musiccapehelper.ui.rows.addons.MusicRowEvent;
+import com.musiccapehelper.ui.rows.addons.MusicRowItems;
+import com.musiccapehelper.ui.rows.addons.MusicRowQuest;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -19,15 +22,15 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.FontManager;
 
-public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
+public class MusicRow extends Row
 {
 	@Getter
 	protected boolean completed;
 	private final JPanel informationPanel = new JPanel();
 	private final JLabel hintArrowLabel;
 
-	public MusicCapeHelperMusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin,
-								   MusicCapeHelperConfig config, MusicCapeHelperPanel panel, ItemManager itemManager, ClientThread clientThread)
+	public MusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin,
+					MusicCapeHelperConfig config, Panel panel, ItemManager itemManager, ClientThread clientThread)
 	{
 		super(music, plugin, config, panel);
 		this.completed = completed;
@@ -139,17 +142,17 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 		//events
 		if (!music.isQuest() && !music.isRequired())
 		{
-			informationPanel.add(new MusicCapeHelperMusicEventRow(music, font), gbcMusicRow);
+			informationPanel.add(new MusicRowEvent(music, font), gbcMusicRow);
 		}
 		//quests
 		else if (music.isQuest() && music.isRequired())
 		{
-			informationPanel.add(new MusicCapeHelperMusicQuestRow(music, font), gbcMusicRow);
+			informationPanel.add(new MusicRowQuest(music, font), gbcMusicRow);
 		}
 		//normal
 		else if (!music.isQuest() && !music.getItems().isEmpty())
 		{
-			informationPanel.add(new MusicCapeHelperMusicItemRow(music, itemManager, clientThread, font), gbcMusicRow);
+			informationPanel.add(new MusicRowItems(music, itemManager, clientThread, font), gbcMusicRow);
 		}
 
 		add(informationPanel, gbc);
@@ -247,7 +250,7 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 
 		else if (e.getComponent().equals(hintArrowLabel))
 		{
-			plugin.setHintArrow(MusicCapeHelperMusicRow.this);
+			plugin.setHintArrow(MusicRow.this);
 		}
 	}
 }

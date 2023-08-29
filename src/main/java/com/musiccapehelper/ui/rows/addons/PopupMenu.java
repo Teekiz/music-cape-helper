@@ -1,6 +1,8 @@
-package com.musiccapehelper.ui.rows;
+package com.musiccapehelper.ui.rows.addons;
 
 import com.musiccapehelper.MusicCapeHelperPlugin;
+import com.musiccapehelper.ui.rows.MusicRow;
+import com.musiccapehelper.ui.rows.Row;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
@@ -8,14 +10,14 @@ import javax.swing.JPopupMenu;
 import javax.swing.border.EmptyBorder;
 import net.runelite.client.ui.FontManager;
 
-public class MusicCapeHelperPopupMenu extends JPopupMenu implements ActionListener
+public class PopupMenu extends JPopupMenu implements ActionListener
 {
 	private final MusicCapeHelperPlugin plugin;
-	private final MusicCapeHelperRow row;
+	private final Row row;
 	private final JMenuItem popupMenuIconText;
 	private JMenuItem popupMenuBackgroundText;
 
-	public MusicCapeHelperPopupMenu(MusicCapeHelperRow row,MusicCapeHelperPlugin plugin)
+	public PopupMenu(Row row, MusicCapeHelperPlugin plugin)
 	{
 		this.plugin = plugin;
 		this.row = row;
@@ -27,7 +29,7 @@ public class MusicCapeHelperPopupMenu extends JPopupMenu implements ActionListen
 		popupMenuIconText.addActionListener(this);
 		add(popupMenuIconText);
 
-		if (row instanceof MusicCapeHelperMusicRow)
+		if (row instanceof MusicRow)
 		{
 			popupMenuBackgroundText = new JMenuItem();
 			popupMenuBackgroundText.setFont(FontManager.getRunescapeSmallFont());

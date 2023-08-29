@@ -21,7 +21,7 @@ import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.DynamicGridLayout;
 import net.runelite.client.ui.components.IconTextField;
 
-public class MusicCapeHelperSettingsPanel extends JPanel
+public class PanelSettings extends JPanel
 {
 	private final IconTextField searchBar;
 	private final JComboBox<String> completedCombo;
@@ -30,7 +30,7 @@ public class MusicCapeHelperSettingsPanel extends JPanel
 	private final JComboBox<String> includeOptionalCombo;
 	private final JComboBox<String> orderCombo;
 
-	public MusicCapeHelperSettingsPanel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, MusicCapeHelperPanel panel)
+	public PanelSettings(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, Panel panel)
 	{
 
 		//Order of the panel Components - Search Bar, Settings tab, Music List

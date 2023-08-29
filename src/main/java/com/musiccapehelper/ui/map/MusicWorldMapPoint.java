@@ -6,7 +6,7 @@ import net.runelite.api.Point;
 import net.runelite.client.ui.overlay.worldmap.WorldMapPoint;
 import net.runelite.client.util.ImageUtil;
 
-public class MusicCapeHelperWorldMapPoint extends WorldMapPoint
+public class MusicWorldMapPoint extends WorldMapPoint
 {
 	@Getter
 	private final Music music;
@@ -14,7 +14,7 @@ public class MusicCapeHelperWorldMapPoint extends WorldMapPoint
 	private boolean completed;
 	private final MusicCapeHelperConfig config;
 
-	public MusicCapeHelperWorldMapPoint(Music music, boolean completed, MusicCapeHelperConfig config)
+	public MusicWorldMapPoint(Music music, boolean completed, MusicCapeHelperConfig config)
 	{
 		//ImagePoint code used from "clue scrolls" plugin constructor
 		super(null, null);

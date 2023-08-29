@@ -6,19 +6,19 @@ import com.musiccapehelper.enums.data.HeaderType;
 import com.musiccapehelper.enums.data.Icon;
 import com.musiccapehelper.enums.data.Music;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
-import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
+import com.musiccapehelper.ui.panels.Panel;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import javax.swing.JLabel;
 import lombok.Getter;
 import net.runelite.client.ui.FontManager;
 
-public class MusicCapeHelperHeader extends MusicCapeHelperRow
+public class HeaderRow extends Row
 {
 	@Getter
 	private HeaderType headerType;
 
-	public MusicCapeHelperHeader(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, MusicCapeHelperPanel panel)
+	public HeaderRow(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, Panel panel)
 	{
 		//could get the panel from plugin and use that
 		super(music, plugin, config, panel);
@@ -77,25 +77,25 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 		{
 			enabled = panel.getPanelRows()
 				.stream()
-				.filter(r -> r instanceof MusicCapeHelperMusicRow)
+				.filter(r -> r instanceof MusicRow)
 				.filter(r -> r.getMusic().isRequired())
-				.allMatch(MusicCapeHelperRow::isEnabled);
+				.allMatch(Row::isEnabled);
 		}
 		else if (headerType.equals(HeaderType.OPTIONAL))
 		{
 			enabled = panel.getPanelRows()
 				.stream()
-				.filter(r -> r instanceof MusicCapeHelperMusicRow)
+				.filter(r -> r instanceof MusicRow)
 				.filter(r -> !r.getMusic().isRequired())
-				.allMatch(MusicCapeHelperRow::isEnabled);
+				.allMatch(Row::isEnabled);
 		}
 		else
 		{
 			enabled = panel.getPanelRows()
 				.stream()
-				.filter(r -> r instanceof MusicCapeHelperMusicRow)
+				.filter(r -> r instanceof MusicRow)
 				.filter(r -> r.getMusic().getSettingsRegion().equals(headerType.getSettingsRegion()))
-				.allMatch(MusicCapeHelperRow::isEnabled);
+				.allMatch(Row::isEnabled);
 		}
 	}
 

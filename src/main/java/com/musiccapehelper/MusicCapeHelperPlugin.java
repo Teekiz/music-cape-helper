@@ -10,11 +10,11 @@ import com.musiccapehelper.enums.settings.SettingsOptional;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
 import com.musiccapehelper.enums.settings.SettingsQuest;
 import com.musiccapehelper.enums.settings.SettingsRegion;
-import com.musiccapehelper.ui.map.MusicCapeHelperWorldMapPoint;
-import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
-import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
-import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
-import com.musiccapehelper.ui.rows.MusicCapeHelperRow;
+import com.musiccapehelper.ui.map.MusicWorldMapPoint;
+import com.musiccapehelper.ui.rows.HeaderRow;
+import com.musiccapehelper.ui.panels.Panel;
+import com.musiccapehelper.ui.rows.MusicRow;
+import com.musiccapehelper.ui.rows.Row;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -62,10 +62,10 @@ public class MusicCapeHelperPlugin extends Plugin
 	private Gson gson;
 	private NavigationButton navigationButton;
 	@Getter
-	private MusicCapeHelperPanel musicCapeHelperPanel;
+	private Panel panel;
 	private MusicCapeHelperAccess musicCapeHelperAccess;
 	@Getter
-	private List<MusicCapeHelperWorldMapPoint> mapPoints;
+	private List<MusicWorldMapPoint> mapPoints;
 	@Getter
 	private List<Music> expandedRows;
 	@Getter
@@ -96,11 +96,11 @@ public class MusicCapeHelperPlugin extends Plugin
 		mapPoints = musicCapeHelperAccess.loadMapMarkers();
 		updateMapPoints();
 
-		musicCapeHelperPanel = new MusicCapeHelperPanel(this, config, itemManager, clientThread);
+		panel = new Panel(this, config, itemManager, clientThread);
 		navigationButton = NavigationButton.builder()
 			.tooltip("Music Cape Helper Panel")
 			.icon(Icon.PLUGIN_ICON.getImage())
-			.panel(musicCapeHelperPanel)
+			.panel(panel)
 			.build();
 
 		clientToolbar.addNavigation(navigationButton);
@@ -113,7 +113,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		musicCapeHelperAccess.saveMapMarkers(mapPoints);
 		musicCapeHelperAccess.saveExpandedRows(expandedRows);
 		clientToolbar.removeNavigation(navigationButton);
-		worldMapPointManager.removeIf(MusicCapeHelperWorldMapPoint.class::isInstance);
+		worldMapPointManager.removeIf(MusicWorldMapPoint.class::isInstance);
 	}
 
 	@Subscribe
@@ -136,7 +136,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		else if (configChanged.getKey().equals("panelDefaultTextColour") || configChanged.getKey().equals("panelCompleteTextColour") ||
 			configChanged.getKey().equals("panelIncompleteTextColour"))
 		{
-			musicCapeHelperPanel.updateAllRows();
+			panel.updateAllRows();
 		}
 	}
 
@@ -193,7 +193,7 @@ public class MusicCapeHelperPlugin extends Plugin
 			}
 		}
 
-		musicCapeHelperPanel.createAndRefreshRows("");
+		panel.createAndRefreshRows("");
 		this.updateMapPoints();
 	}
 
@@ -249,119 +249,119 @@ public class MusicCapeHelperPlugin extends Plugin
 	}
 
 	//consider moving to event handling class
-	public void rowPinClicked(MusicCapeHelperRow row)
+	public void rowPinClicked(Row row)
 	{
-		if (row instanceof MusicCapeHelperMusicRow)
+		if (row instanceof MusicRow)
 		{
-			MusicCapeHelperWorldMapPoint check = mapPoints.stream().filter(m -> m.getMusic() == row.getMusic()).findAny().orElse(null);
+			MusicWorldMapPoint check = mapPoints.stream().filter(m -> m.getMusic() == row.getMusic()).findAny().orElse(null);
 
 			//checks if the world map should be updated
 			if (check == null)
 			{
-				mapPoints.add(new MusicCapeHelperWorldMapPoint(row.getMusic(), ((MusicCapeHelperMusicRow) row).isCompleted(), config));
+				mapPoints.add(new MusicWorldMapPoint(row.getMusic(), ((MusicRow) row).isCompleted(), config));
 			}
 			else
 			{
 				mapPoints.remove(check);
 			}
 
-			musicCapeHelperPanel.updateRow(row);
-			musicCapeHelperPanel.updateHeader(row);
+			panel.updateRow(row);
+			panel.updateHeader(row);
 		}
 
-		else if (row instanceof MusicCapeHelperHeader)
+		else if (row instanceof HeaderRow)
 		{
 			//use the row name to determine what is updated in combo with the settings
 			if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION))
 			{
 				if (row.isEnabled())
 				{
-					musicCapeHelperPanel.getPanelRows().stream()
-						.filter(r -> r.getMusic().getSettingsRegion().equals(((MusicCapeHelperHeader) row).getHeaderType().getSettingsRegion()))
+					panel.getPanelRows().stream()
+						.filter(r -> r.getMusic().getSettingsRegion().equals(((HeaderRow) row).getHeaderType().getSettingsRegion()))
 						.filter(r -> r.isEnabled())
 						.forEach(r ->
 						{
 							mapPoints.remove(mapPoints.stream().filter(m -> m.getMusic().equals(r.getMusic())).findFirst().orElse(null));
-							musicCapeHelperPanel.updateRow(r);
+							panel.updateRow(r);
 						});
 				}
 				else
 				{
-					musicCapeHelperPanel.getPanelRows().stream()
-						.filter(r -> r instanceof MusicCapeHelperMusicRow)
-						.filter(r -> r.getMusic().getSettingsRegion().equals(((MusicCapeHelperHeader) row).getHeaderType().getSettingsRegion()))
+					panel.getPanelRows().stream()
+						.filter(r -> r instanceof MusicRow)
+						.filter(r -> r.getMusic().getSettingsRegion().equals(((HeaderRow) row).getHeaderType().getSettingsRegion()))
 						.filter(r -> !r.isEnabled())
 						.forEach(r ->
 						{
-							mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), ((MusicCapeHelperMusicRow) r).isCompleted(), config));
-							musicCapeHelperPanel.updateRow(r);
+							mapPoints.add(new MusicWorldMapPoint(r.getMusic(), ((MusicRow) r).isCompleted(), config));
+							panel.updateRow(r);
 						});
 				}
 			}
 			else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 			{
-				if (((MusicCapeHelperHeader) row).getHeaderType().equals(HeaderType.REQUIRED))
+				if (((HeaderRow) row).getHeaderType().equals(HeaderType.REQUIRED))
 				{
 					if (row.isEnabled())
 					{
-						musicCapeHelperPanel.getPanelRows().stream()
+						panel.getPanelRows().stream()
 							.filter(r -> r.getMusic().isRequired())
 							.filter(r -> r.isEnabled())
 							.forEach(r ->
 							{
 								mapPoints.remove(mapPoints.stream().filter(m -> m.getMusic().equals(r.getMusic())).findFirst().orElse(null));
-								musicCapeHelperPanel.updateRow(r);
+								panel.updateRow(r);
 							});
 					}
 					else
 					{
-						musicCapeHelperPanel.getPanelRows().stream()
-							.filter(r -> r instanceof MusicCapeHelperMusicRow)
+						panel.getPanelRows().stream()
+							.filter(r -> r instanceof MusicRow)
 							.filter(r -> r.getMusic().isRequired())
 							.filter(r -> !r.isEnabled())
 							.forEach(r ->
 							{
-								mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), ((MusicCapeHelperMusicRow) r).isCompleted(), config));
-								musicCapeHelperPanel.updateRow(r);
+								mapPoints.add(new MusicWorldMapPoint(r.getMusic(), ((MusicRow) r).isCompleted(), config));
+								panel.updateRow(r);
 							});
 					}
 				}
-				else if (((MusicCapeHelperHeader) row).getHeaderType().equals(HeaderType.OPTIONAL))
+				else if (((HeaderRow) row).getHeaderType().equals(HeaderType.OPTIONAL))
 				{
 					if (row.isEnabled())
 					{
-						musicCapeHelperPanel.getPanelRows().stream()
+						panel.getPanelRows().stream()
 							.filter(r -> !r.getMusic().isRequired())
 							.filter(r -> r.isEnabled())
 							.forEach(r ->
 							{
 								mapPoints.remove(mapPoints.stream().filter(m -> m.getMusic().equals(r.getMusic())).findFirst().orElse(null));
-								musicCapeHelperPanel.updateRow(r);
+								panel.updateRow(r);
 							});
 					}
 					else
 					{
-						musicCapeHelperPanel.getPanelRows().stream()
-							.filter(r -> r instanceof MusicCapeHelperMusicRow)
+						panel.getPanelRows().stream()
+							.filter(r -> r instanceof MusicRow)
 							.filter(r -> !r.getMusic().isRequired())
 							.filter(r -> !r.isEnabled())
 							.forEach(r ->
 							{
-								mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), ((MusicCapeHelperMusicRow) r).isCompleted(), config));
-								musicCapeHelperPanel.updateRow(r);
+								mapPoints.add(new MusicWorldMapPoint(r.getMusic(), ((MusicRow) r).isCompleted(), config));
+								panel.updateRow(r);
 							});
 					}
 				}
 			}
-			musicCapeHelperPanel.updateHeader(row);
+			panel.updateHeader(row);
 		}
-		musicCapeHelperPanel.checkMapRowPanels();
+		panel.checkMapRowPanels();
 		addMapPointsToMap();
 	}
 
-	public void rowExpandClicked(MusicCapeHelperRow row)
+	public void rowExpandClicked(Row row)
 	{
-		if (row instanceof MusicCapeHelperMusicRow)
+		if (row instanceof MusicRow)
 		{
 			boolean found = getExpandedRows().stream().anyMatch(e -> e.equals(row.getMusic()));
 			//checks if the world map should be updated
@@ -374,7 +374,7 @@ public class MusicCapeHelperPlugin extends Plugin
 				expandedRows.remove(row.getMusic());
 			}
 
-			musicCapeHelperPanel.updateRow(row);
+			panel.updateRow(row);
 			musicCapeHelperAccess.saveExpandedRows(expandedRows);
 		}
 	}
@@ -392,13 +392,13 @@ public class MusicCapeHelperPlugin extends Plugin
 			});
 		});
 
-		mapPoints.forEach(MusicCapeHelperWorldMapPoint::setMapPointImage);
+		mapPoints.forEach(MusicWorldMapPoint::setMapPointImage);
 		addMapPointsToMap();
 	}
 
 	public void addMapPointsToMap()
 	{
-		worldMapPointManager.removeIf(MusicCapeHelperWorldMapPoint.class::isInstance);
+		worldMapPointManager.removeIf(MusicWorldMapPoint.class::isInstance);
 		mapPoints.forEach(p -> worldMapPointManager.add(p));
 		musicCapeHelperAccess.saveMapMarkers(mapPoints);
 	}
@@ -406,11 +406,11 @@ public class MusicCapeHelperPlugin extends Plugin
 	public void clearHintArrow()
 	{
 		client.clearHintArrow();
-		musicCapeHelperPanel.updateAllRows();
+		panel.updateAllRows();
 	}
 
 	//clears the hint arrow and either sets it to null or updates the arrow to the new music unlock point
-	public void setHintArrow(MusicCapeHelperRow row)
+	public void setHintArrow(Row row)
 	{
 		client.clearHintArrow();
 
@@ -424,7 +424,7 @@ public class MusicCapeHelperPlugin extends Plugin
 			hintArrowMusic = row.getMusic();
 			client.setHintArrow(row.getMusic().getSongUnlockPoint());
 		}
-		musicCapeHelperPanel.updateAllRows();
+		panel.updateAllRows();
 	}
 
 	public void addOrRemoveAllMapPoints(boolean addMapPoint)
@@ -432,11 +432,11 @@ public class MusicCapeHelperPlugin extends Plugin
 		//if addMapPoint is true, add all the existing rows to the map
 		if (addMapPoint)
 		{
-			musicCapeHelperPanel.getPanelRows()
+			panel.getPanelRows()
 				.stream()
-				.filter(r -> r instanceof MusicCapeHelperMusicRow)
+				.filter(r -> r instanceof MusicRow)
 				.filter(r -> !r.isEnabled())
-				.forEach(r -> mapPoints.add(new MusicCapeHelperWorldMapPoint(r.getMusic(), ((MusicCapeHelperMusicRow) r).isCompleted(), config)));
+				.forEach(r -> mapPoints.add(new MusicWorldMapPoint(r.getMusic(), ((MusicRow) r).isCompleted(), config)));
 		}
 		//if it is false, remove all the rows
 		else
@@ -445,7 +445,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		}
 
 		addMapPointsToMap();
-		musicCapeHelperPanel.updateAllRows();
+		panel.updateAllRows();
 		musicCapeHelperAccess.saveMapMarkers(mapPoints);
 	}
 
@@ -454,9 +454,9 @@ public class MusicCapeHelperPlugin extends Plugin
 		//if expandRow is true, expand all rows
 		if (expandRow)
 		{
-			musicCapeHelperPanel.getPanelRows()
+			panel.getPanelRows()
 				.stream()
-				.filter(r -> r instanceof MusicCapeHelperMusicRow)
+				.filter(r -> r instanceof MusicRow)
 				.filter(r -> !r.isExpanded())
 				.forEach(r -> expandedRows.add(r.getMusic()));
 		}
@@ -466,7 +466,7 @@ public class MusicCapeHelperPlugin extends Plugin
 			expandedRows.clear();
 		}
 
-		musicCapeHelperPanel.updateAllRows();
+		panel.updateAllRows();
 		musicCapeHelperAccess.saveExpandedRows(expandedRows);
 	}
 

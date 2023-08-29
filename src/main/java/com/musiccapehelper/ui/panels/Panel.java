@@ -4,9 +4,9 @@ import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.data.HeaderType;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
-import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
-import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
-import com.musiccapehelper.ui.rows.MusicCapeHelperRow;
+import com.musiccapehelper.ui.rows.HeaderRow;
+import com.musiccapehelper.ui.rows.MusicRow;
+import com.musiccapehelper.ui.rows.Row;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -31,17 +31,17 @@ import net.runelite.client.ui.components.materialtabs.MaterialTab;
 import net.runelite.client.ui.components.materialtabs.MaterialTabGroup;
 import org.apache.commons.lang3.StringUtils;
 
-public class MusicCapeHelperPanel extends PluginPanel
+public class Panel extends PluginPanel
 {
 	private final MusicCapeHelperPlugin plugin;
 	private final MusicCapeHelperConfig config;
-	private final MusicCapeHelperRowPanel rowPanel;
+	private final PanelRows rowPanel;
 	private final ItemManager itemManager;
 	private final ClientThread clientThread;
 	@Getter
-	private final List<MusicCapeHelperRow> panelRows = new ArrayList<>();
+	private final List<Row> panelRows = new ArrayList<>();
 
-	public MusicCapeHelperPanel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, ItemManager itemManager, ClientThread clientThread)
+	public Panel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, ItemManager itemManager, ClientThread clientThread)
 	{
 		this.plugin = plugin;
 		this.config = config;
@@ -70,9 +70,9 @@ public class MusicCapeHelperPanel extends PluginPanel
 		titlePanel.add(titleLabel);
 		add(titlePanel);
 
-		add(new MusicCapeHelperSettingsPanel(plugin, config, this));
+		add(new PanelSettings(plugin, config, this));
 
-		rowPanel = new MusicCapeHelperRowPanel(plugin, config, false);
+		rowPanel = new PanelRows(plugin, config, false);
 		JPanel displayPanel = new JPanel();
 		MaterialTabGroup musicMapTabGroup = new MaterialTabGroup(displayPanel);
 		MaterialTab musicTab = new MaterialTab("Music", musicMapTabGroup, rowPanel);
@@ -110,7 +110,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 		//creates a list from the music enums, sorts the music by the filter and then adds headers to it.
 		if (searchText.isEmpty())
 		{
-			plugin.filterMusicList().forEach((key, value) -> panelRows.add(new MusicCapeHelperMusicRow(key, value, plugin, config, this, itemManager, clientThread)));
+			plugin.filterMusicList().forEach((key, value) -> panelRows.add(new MusicRow(key, value, plugin, config, this, itemManager, clientThread)));
 			sortMusicRows();
 			addRowHeaders();
 		}
@@ -119,7 +119,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 			plugin.getMusicList().entrySet()
 				.stream()
 				.filter(s -> StringUtils.containsIgnoreCase(s.getKey().getSongName(), searchText))
-				.forEach(e -> panelRows.add(new MusicCapeHelperMusicRow(e.getKey(), e.getValue(), plugin, config, this, itemManager, clientThread)));
+				.forEach(e -> panelRows.add(new MusicRow(e.getKey(), e.getValue(), plugin, config, this, itemManager, clientThread)));
 			sortMusicRows();
 		}
 		rowPanel.addMusicRows(panelRows);
@@ -156,66 +156,66 @@ public class MusicCapeHelperPanel extends PluginPanel
 
 	public void addRowHeaders()
 	{
-		TreeMap<Integer, MusicCapeHelperHeader> headersToAdd = new TreeMap<>();
-		for (MusicCapeHelperRow row : panelRows)
+		TreeMap<Integer, HeaderRow> headersToAdd = new TreeMap<>();
+		for (Row row : panelRows)
 		{
 			if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION) || config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST)
 				|| config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 			{
 				if (panelRows.indexOf(row) == 0)
 				{
-					headersToAdd.put(panelRows.indexOf(row), new MusicCapeHelperHeader(row.getMusic(), plugin, config, this));
+					headersToAdd.put(panelRows.indexOf(row), new HeaderRow(row.getMusic(), plugin, config, this));
 				}
 				else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION)
 					&& !panelRows.get(panelRows.indexOf(row) - 1).getMusic().getSettingsRegion().equals(row.getMusic().getSettingsRegion()))
 				{
-					headersToAdd.put(panelRows.indexOf(row), new MusicCapeHelperHeader(row.getMusic(), plugin, config, this));
+					headersToAdd.put(panelRows.indexOf(row), new HeaderRow(row.getMusic(), plugin, config, this));
 				}
 				else if ((config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 					&& !panelRows.get(panelRows.indexOf(row) - 1).getMusic().isRequired() == row.getMusic().isRequired())
 				{
-					headersToAdd.put(panelRows.indexOf(row), new MusicCapeHelperHeader(row.getMusic(), plugin, config, this));
+					headersToAdd.put(panelRows.indexOf(row), new HeaderRow(row.getMusic(), plugin, config, this));
 				}
 			}
 		}
 
 		//adds at a specific index backwards from the insertion order so that the index doesn't change for lower entries.
-		for (Map.Entry<Integer, MusicCapeHelperHeader> entry : headersToAdd.descendingMap().entrySet())
+		for (Map.Entry<Integer, HeaderRow> entry : headersToAdd.descendingMap().entrySet())
 		{
 			panelRows.add(entry.getKey(), entry.getValue());
 		}
 	}
 
-	public void updateHeader(MusicCapeHelperRow row)
+	public void updateHeader(Row row)
 	{
 		if (config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 		{
 			if (row.getMusic().isRequired())
 			{
 				panelRows.stream()
-					.filter(r -> r instanceof MusicCapeHelperHeader)
-					.filter(r -> ((MusicCapeHelperHeader) r).getHeaderType().equals(HeaderType.REQUIRED))
-					.findFirst().ifPresent(MusicCapeHelperRow::updateRow);
+					.filter(r -> r instanceof HeaderRow)
+					.filter(r -> ((HeaderRow) r).getHeaderType().equals(HeaderType.REQUIRED))
+					.findFirst().ifPresent(Row::updateRow);
 			}
 			else
 			{
 				panelRows.stream()
-					.filter(r -> r instanceof MusicCapeHelperHeader)
-					.filter(r -> ((MusicCapeHelperHeader) r).getHeaderType().equals(HeaderType.OPTIONAL))
-					.findFirst().ifPresent(MusicCapeHelperRow::updateRow);
+					.filter(r -> r instanceof HeaderRow)
+					.filter(r -> ((HeaderRow) r).getHeaderType().equals(HeaderType.OPTIONAL))
+					.findFirst().ifPresent(Row::updateRow);
 			}
 		}
 		else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION))
 		{
 			panelRows.stream()
-				.filter(r -> r instanceof MusicCapeHelperHeader)
-				.filter(r -> ((MusicCapeHelperHeader) r).getHeaderType().getSettingsRegion().equals(row.getMusic().getSettingsRegion()))
-				.findFirst().ifPresent(MusicCapeHelperRow::updateRow);
+				.filter(r -> r instanceof HeaderRow)
+				.filter(r -> ((HeaderRow) r).getHeaderType().getSettingsRegion().equals(row.getMusic().getSettingsRegion()))
+				.findFirst().ifPresent(Row::updateRow);
 		}
 		rowPanel.refreshList();
 	}
 
-	public void updateRow(MusicCapeHelperRow row)
+	public void updateRow(Row row)
 	{
 		row.updateRow();
 		rowPanel.refreshList();
@@ -224,8 +224,8 @@ public class MusicCapeHelperPanel extends PluginPanel
 	public void updateAllRows()
 	{
 		//panelRows.forEach(MusicCapeHelperRow::updateRow);
-		panelRows.stream().filter(r -> r instanceof MusicCapeHelperMusicRow).forEach(MusicCapeHelperRow::updateRow);
-		panelRows.stream().filter(r -> r instanceof MusicCapeHelperHeader).forEach(MusicCapeHelperRow::updateRow);
+		panelRows.stream().filter(r -> r instanceof MusicRow).forEach(Row::updateRow);
+		panelRows.stream().filter(r -> r instanceof HeaderRow).forEach(Row::updateRow);
 		rowPanel.refreshList();
 	}
 

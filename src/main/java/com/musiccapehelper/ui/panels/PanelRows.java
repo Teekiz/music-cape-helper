@@ -3,7 +3,7 @@ package com.musiccapehelper.ui.panels;
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.data.Icon;
-import com.musiccapehelper.ui.rows.MusicCapeHelperRow;
+import com.musiccapehelper.ui.rows.Row;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -24,7 +24,7 @@ import javax.swing.border.EmptyBorder;
 import lombok.Getter;
 import net.runelite.client.ui.FontManager;
 
-public class MusicCapeHelperRowPanel extends JPanel
+public class PanelRows extends JPanel
 {
 	final MusicCapeHelperPlugin plugin;
 	final MusicCapeHelperConfig config;
@@ -38,7 +38,7 @@ public class MusicCapeHelperRowPanel extends JPanel
 
 	//todo add an empty panel to the map and music panels if empty
 
-	public MusicCapeHelperRowPanel(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, boolean isOnMapPanel)
+	public PanelRows(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, boolean isOnMapPanel)
 	{
 		this.plugin = plugin;
 		this.config = config;
@@ -138,7 +138,7 @@ public class MusicCapeHelperRowPanel extends JPanel
 		tabSwitched(isOnMapPanel);
 	}
 
-	public void addMusicRows(List<MusicCapeHelperRow> rows)
+	public void addMusicRows(List<Row> rows)
 	{
 		musicScrollPaneContentPanel.removeAll();
 
@@ -198,7 +198,7 @@ public class MusicCapeHelperRowPanel extends JPanel
 	{
 		//checks to see if all rows are hidden, if they are add to the empty space panel a label
 		if (Arrays.stream(musicScrollPaneContentPanel.getComponents())
-			.filter(r -> r instanceof MusicCapeHelperRow)
+			.filter(r -> r instanceof Row)
 			.noneMatch(Component::isVisible) && emptySpacePanel != null)
 		{
 			emptySpacePanel.removeAll();

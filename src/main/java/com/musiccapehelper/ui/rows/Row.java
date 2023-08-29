@@ -1,11 +1,11 @@
 package com.musiccapehelper.ui.rows;
 
-import com.google.inject.Injector;
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.data.Icon;
 import com.musiccapehelper.enums.data.Music;
-import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
+import com.musiccapehelper.ui.panels.Panel;
+import com.musiccapehelper.ui.rows.addons.PopupMenu;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -19,7 +19,7 @@ import lombok.Setter;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
 
-public abstract class MusicCapeHelperRow extends JPanel implements MouseListener
+public abstract class Row extends JPanel implements MouseListener
 {
 	@Getter
 	protected Music music;
@@ -31,15 +31,15 @@ public abstract class MusicCapeHelperRow extends JPanel implements MouseListener
 	protected MusicCapeHelperPlugin plugin;
 
 	protected MusicCapeHelperConfig config;
-	protected MusicCapeHelperPanel panel;
+	protected Panel panel;
 
 	//content
 	protected JLabel rowTitle = new JLabel();
 	protected JLabel rowPinIcon = new JLabel();
 	protected GridBagConstraints gbc = new GridBagConstraints();
-	protected MusicCapeHelperPopupMenu popupMenu;
+	protected PopupMenu popupMenu;
 
-	public MusicCapeHelperRow(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, MusicCapeHelperPanel panel)
+	public Row(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, Panel panel)
 	{
 		this.music = music;
 		this.plugin = plugin;
@@ -47,7 +47,7 @@ public abstract class MusicCapeHelperRow extends JPanel implements MouseListener
 		this.panel = panel;
 		this.expanded = false;
 
-		popupMenu = new MusicCapeHelperPopupMenu(this, plugin);
+		popupMenu = new PopupMenu(this, plugin);
 		setComponentPopupMenu(popupMenu);
 
 		setLayout(new GridBagLayout());

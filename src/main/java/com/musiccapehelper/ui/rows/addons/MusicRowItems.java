@@ -1,4 +1,4 @@
-package com.musiccapehelper.ui.rows;
+package com.musiccapehelper.ui.rows.addons;
 
 import com.musiccapehelper.enums.data.Music;
 import java.awt.BorderLayout;
@@ -18,10 +18,10 @@ import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.util.AsyncBufferedImage;
 
-public class MusicCapeHelperMusicItemRow extends JPanel
+public class MusicRowItems extends JPanel
 {
 	private final Color backgroundColour = new Color(85,85,85);
-	public MusicCapeHelperMusicItemRow(Music music, ItemManager itemManager, ClientThread clientThread, Font font)
+	public MusicRowItems(Music music, ItemManager itemManager, ClientThread clientThread, Font font)
 	{
 
 		if (!music.getItems().isEmpty())

@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.musiccapehelper.enums.data.Music;
-import com.musiccapehelper.ui.map.MusicCapeHelperWorldMapPoint;
+import com.musiccapehelper.ui.map.MusicWorldMapPoint;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +28,7 @@ public class MusicCapeHelperAccess
 		this.gson = gson;
 	}
 
-	public void saveMapMarkers(List<MusicCapeHelperWorldMapPoint> saveMapPoints)
+	public void saveMapMarkers(List<MusicWorldMapPoint> saveMapPoints)
 	{
 			//overwrites the existing data
 			configManager.unsetConfiguration("musicTrackInfoConfig", "worldMapMarkers");
@@ -57,9 +57,9 @@ public class MusicCapeHelperAccess
 			configManager.setConfiguration("musicTrackInfoConfig", "expandedRows", json);
 	}
 
-	public List<MusicCapeHelperWorldMapPoint> loadMapMarkers()
+	public List<MusicWorldMapPoint> loadMapMarkers()
 	{
-		List<MusicCapeHelperWorldMapPoint> point = new ArrayList<>();
+		List<MusicWorldMapPoint> point = new ArrayList<>();
 
 		String json = configManager.getConfiguration("musicTrackInfoConfig", "worldMapMarkers");
 		if (json != null)
@@ -75,7 +75,7 @@ public class MusicCapeHelperAccess
 
 				if (music != null)
 				{
-					point.add(new MusicCapeHelperWorldMapPoint(music, completed, config));
+					point.add(new MusicWorldMapPoint(music, completed, config));
 				}
 			}
 		}

@@ -1,4 +1,4 @@
-package com.musiccapehelper.ui.rows;
+package com.musiccapehelper.ui.rows.addons;
 
 import com.musiccapehelper.enums.data.Music;
 import java.awt.BorderLayout;
@@ -7,9 +7,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class MusicCapeHelperMusicEventRow extends JPanel
+public class MusicRowEvent extends JPanel
 {
-	public MusicCapeHelperMusicEventRow(Music music, Font font)
+	public MusicRowEvent(Music music, Font font)
 	{
 		setLayout(new BorderLayout());
 		setBorder(new EmptyBorder(5, 0, 5, 0));
