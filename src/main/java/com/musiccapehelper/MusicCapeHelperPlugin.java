@@ -67,6 +67,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	private List<MusicCapeHelperWorldMapPoint> mapPoints;
 	@Getter
 	private List<Music> expandedRows;
+	@Getter
 	private HashMap<Music, Boolean> musicList;
 	@Getter
 	private Music hintArrowMusic;
@@ -167,11 +168,6 @@ public class MusicCapeHelperPlugin extends Plugin
 		}
 	}
 
-	public HashMap<Music, Boolean> getOriginalMusicList()
-	{
-		return musicList;
-	}
-
 	public boolean isPlayerLoggedIn()
 	{
 		return client.getGameState().equals(GameState.LOGGED_IN);
@@ -181,25 +177,28 @@ public class MusicCapeHelperPlugin extends Plugin
 	{
 		if (client.getWidget(239, 6) != null)
 		{
-			for (Music music : Music.values())
-			{
-				for (Widget widget : client.getWidget(239, 6).getChildren())
-				{
-					if (widget.getText().equals(music.getSongName()))
-					{
-						if (Integer.toHexString(widget.getTextColor()).equals("dc10d"))
-						{
+			return;
+		}
 
-							musicList.put(music, true);
-						}
-						else
-						{
-							musicList.put(music, false);
-						}
+		for (Music music : Music.values())
+		{
+			for (Widget widget : client.getWidget(239, 6).getChildren())
+			{
+				if (widget.getText().equals(music.getSongName()))
+				{
+					if (Integer.toHexString(widget.getTextColor()).equals("dc10d"))
+					{
+
+						musicList.put(music, true);
+					}
+					else
+					{
+						musicList.put(music, false);
 					}
 				}
 			}
 		}
+
 		musicCapeHelperPanel.createAndRefreshRows("");
 		this.updateMapPoints();
 	}

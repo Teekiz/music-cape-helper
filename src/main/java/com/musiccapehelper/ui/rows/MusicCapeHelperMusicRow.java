@@ -4,6 +4,7 @@ import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.data.Icon;
 import com.musiccapehelper.enums.data.Music;
+import com.musiccapehelper.ui.panels.MusicCapeHelperPanel;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -26,9 +27,9 @@ public class MusicCapeHelperMusicRow extends MusicCapeHelperRow
 	private final JLabel hintArrowLabel;
 
 	public MusicCapeHelperMusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin,
-								   MusicCapeHelperConfig config, ItemManager itemManager, ClientThread clientThread)
+								   MusicCapeHelperConfig config, MusicCapeHelperPanel panel, ItemManager itemManager, ClientThread clientThread)
 	{
-		super(music, plugin, config);
+		super(music, plugin, config, panel);
 		this.completed = completed;
 
 		//used to standardise all the label fonts (NOTE: description uses a custom version of this because it wouldn't update for some reason)

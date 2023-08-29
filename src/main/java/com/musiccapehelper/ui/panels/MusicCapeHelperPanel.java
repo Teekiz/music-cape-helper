@@ -111,16 +111,16 @@ public class MusicCapeHelperPanel extends PluginPanel
 		//creates a list from the music enums, sorts the music by the filter and then adds headers to it.
 		if (searchText.isEmpty())
 		{
-			plugin.filterMusicList().forEach((key, value) -> panelRows.add(new MusicCapeHelperMusicRow(key, value, plugin, config, itemManager, clientThread)));
+			plugin.filterMusicList().forEach((key, value) -> panelRows.add(new MusicCapeHelperMusicRow(key, value, plugin, config, this, itemManager, clientThread)));
 			sortMusicRows();
 			addRowHeaders();
 		}
 		else
 		{
-			plugin.getOriginalMusicList().entrySet()
+			plugin.getMusicList().entrySet()
 				.stream()
 				.filter(s -> StringUtils.containsIgnoreCase(s.getKey().getSongName(), searchText))
-				.forEach(e -> panelRows.add(new MusicCapeHelperMusicRow(e.getKey(), e.getValue(), plugin, config, itemManager, clientThread)));
+				.forEach(e -> panelRows.add(new MusicCapeHelperMusicRow(e.getKey(), e.getValue(), plugin, config, this, itemManager, clientThread)));
 			sortMusicRows();
 		}
 

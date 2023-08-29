@@ -39,11 +39,12 @@ public abstract class MusicCapeHelperRow extends JPanel implements MouseListener
 	protected GridBagConstraints gbc = new GridBagConstraints();
 	protected MusicCapeHelperPopupMenu popupMenu;
 
-	public MusicCapeHelperRow(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config)
+	public MusicCapeHelperRow(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, MusicCapeHelperPanel panel)
 	{
 		this.music = music;
 		this.plugin = plugin;
 		this.config = config;
+		this.panel = panel;
 		this.expanded = false;
 
 		popupMenu = new MusicCapeHelperPopupMenu(this, plugin);
@@ -77,17 +78,6 @@ public abstract class MusicCapeHelperRow extends JPanel implements MouseListener
 		addMouseListener(this);
 		rowPinIcon.addMouseListener(this);
 		setComponentPopupMenu(popupMenu);
-	}
-
-	/*
-	 	this is used for dependency injection for the header class,
-	 	setEnabled() must be called again in order to work correctly as the first pass will have panel set to null
-	 */
-	public MusicCapeHelperRow(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, MusicCapeHelperPanel panel)
-	{
-		this(music, plugin, config);
-		this.panel = panel;
-		setEnabled();
 	}
 
 	public void setRowTitle()
