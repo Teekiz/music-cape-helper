@@ -69,7 +69,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Getter
 	private List<Music> expandedRows;
 	@Getter
-	private HashMap<Music, Boolean> musicList;
+	private MusicCollection musicList;
 	@Getter
 	private Music hintArrowMusic;
 
@@ -88,8 +88,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	protected void startUp() throws Exception
 	{
 		musicCapeHelperAccess = new MusicCapeHelperAccess(config, configManager, gson);
-		musicList = new HashMap<>();
-		Arrays.stream(Music.values()).forEach(r -> musicList.put(r, false));
+		musicList = new MusicCollection(config);
 
 		hintArrowMusic = null;
 		expandedRows = musicCapeHelperAccess.loadExpandedRows();
@@ -169,83 +168,16 @@ public class MusicCapeHelperPlugin extends Plugin
 		return client.getGameState().equals(GameState.LOGGED_IN);
 	}
 
+	//todo - update this
 	public void updateMusicList()
 	{
 		if (client.getWidget(239, 6) != null)
 		{
-			for (Music music : Music.values())
-			{
-				for (Widget widget : client.getWidget(239, 6).getChildren())
-				{
-					if (widget.getText().equals(music.getSongName()))
-					{
-						if (Integer.toHexString(widget.getTextColor()).equals("dc10d"))
-						{
 
-							musicList.put(music, true);
-						}
-						else
-						{
-							musicList.put(music, false);
-						}
-					}
-				}
-			}
 		}
 
 		panel.createAndRefreshRows("");
 		this.updateMapPoints();
-	}
-
-	public HashMap<Music, Boolean> filterMusicList()
-	{
-		HashMap<Music, Boolean> filteredList = new HashMap<>(musicList);
-
-		//check one - does the music match the selected settings for quest discovered status
-		if (!config.panelSettingLocked().equals(SettingsLocked.ALL))
-		{
-			if (config.panelSettingLocked().equals(SettingsLocked.LOCKED))
-			{
-				filteredList.entrySet().removeIf(b -> b.getValue());
-			}
-			else
-			{
-				filteredList.entrySet().removeIf(b -> !b.getValue());
-			}
-		}
-
-		//check two - does the music match the selected settings for the selected region
-		if (!config.panelSettingRegion().equals(SettingsRegion.ALL))
-		{
-			filteredList.entrySet().removeIf(r -> !r.getKey().getSettingsRegion().equals(config.panelSettingRegion()));
-		}
-
-		//check three - does the music match the selected settings for the selected quest option
-		if (!config.panelSettingQuest().equals(SettingsQuest.ALL))
-		{
-			if (config.panelSettingQuest().equals(SettingsQuest.NOT_QUEST_UNLOCK))
-			{
-				filteredList.entrySet().removeIf(q -> q.getKey().isQuest());
-			}
-			else
-			{
-				filteredList.entrySet().removeIf(q -> !q.getKey().isQuest());
-			}
-		}
-
-		//check four - does the music match the selected settings for the selected optional option
-		if (!config.panelSettingOptional().equals(SettingsOptional.ALL))
-		{
-			if (config.panelSettingOptional().equals(SettingsOptional.OPTIONAL_ONLY))
-			{
-				filteredList.entrySet().removeIf(q -> q.getKey().isRequired());
-			}
-			else
-			{
-				filteredList.entrySet().removeIf(q -> !q.getKey().isRequired());
-			}
-		}
-		return filteredList;
 	}
 
 	//consider moving to event handling class
@@ -384,7 +316,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	{
 		//checks to see if the map point has been completed or not
 		mapPoints.forEach(p -> {
-			musicList.entrySet().forEach(m -> {
+			musicList.getDefaultMusicList().entrySet().forEach(m -> {
 				if (m.getKey().equals(p.getMusic()))
 				{
 					p.setCompleted(m.getValue());

@@ -110,13 +110,13 @@ public class Panel extends PluginPanel
 		//creates a list from the music enums, sorts the music by the filter and then adds headers to it.
 		if (searchText.isEmpty())
 		{
-			plugin.filterMusicList().forEach((key, value) -> panelRows.add(new MusicRow(key, value, plugin, config, this, itemManager, clientThread)));
+			plugin.getMusicList().getFilteredMusicList().forEach((key, value) -> panelRows.add(new MusicRow(key, value, plugin, config, this, itemManager, clientThread)));
 			sortMusicRows();
 			addRowHeaders();
 		}
 		else
 		{
-			plugin.getMusicList().entrySet()
+			plugin.getMusicList().getDefaultMusicList().entrySet()
 				.stream()
 				.filter(s -> StringUtils.containsIgnoreCase(s.getKey().getSongName(), searchText))
 				.forEach(e -> panelRows.add(new MusicRow(e.getKey(), e.getValue(), plugin, config, this, itemManager, clientThread)));
