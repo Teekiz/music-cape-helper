@@ -3,7 +3,6 @@ package com.musiccapehelper.ui.panels;
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.data.HeaderType;
-import com.musiccapehelper.enums.data.Music;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
 import com.musiccapehelper.ui.rows.MusicCapeHelperHeader;
 import com.musiccapehelper.ui.rows.MusicCapeHelperMusicRow;
@@ -123,9 +122,7 @@ public class MusicCapeHelperPanel extends PluginPanel
 				.forEach(e -> panelRows.add(new MusicCapeHelperMusicRow(e.getKey(), e.getValue(), plugin, config, this, itemManager, clientThread)));
 			sortMusicRows();
 		}
-
 		rowPanel.addMusicRows(panelRows);
-
 	}
 
 	public void sortMusicRows()
@@ -191,8 +188,6 @@ public class MusicCapeHelperPanel extends PluginPanel
 
 	public void updateHeader(MusicCapeHelperRow row)
 	{
-		plugin.loginfo("trhkhth Update header called " + row);
-
 		if (config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 		{
 			if (row.getMusic().isRequired())
@@ -212,22 +207,12 @@ public class MusicCapeHelperPanel extends PluginPanel
 		}
 		else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION))
 		{
-			plugin.loginfo("AAAAAAA region called " + row);
-
 			panelRows.stream()
 				.filter(r -> r instanceof MusicCapeHelperHeader)
 				.filter(r -> ((MusicCapeHelperHeader) r).getHeaderType().getSettingsRegion().equals(row.getMusic().getSettingsRegion()))
 				.findFirst().ifPresent(MusicCapeHelperRow::updateRow);
 		}
 		rowPanel.refreshList();
-	}
-
-	public MusicCapeHelperRow getRowByMusic(Music music)
-	{
-		 return panelRows.stream()
-			.filter(r -> r instanceof MusicCapeHelperMusicRow)
-			.filter(r -> r.getMusic().equals(music))
-			 .findFirst().orElse(null);
 	}
 
 	public void updateRow(MusicCapeHelperRow row)
@@ -238,7 +223,9 @@ public class MusicCapeHelperPanel extends PluginPanel
 
 	public void updateAllRows()
 	{
-		panelRows.forEach(MusicCapeHelperRow::updateRow);
+		//panelRows.forEach(MusicCapeHelperRow::updateRow);
+		panelRows.stream().filter(r -> r instanceof MusicCapeHelperMusicRow).forEach(MusicCapeHelperRow::updateRow);
+		panelRows.stream().filter(r -> r instanceof MusicCapeHelperHeader).forEach(MusicCapeHelperRow::updateRow);
 		rowPanel.refreshList();
 	}
 

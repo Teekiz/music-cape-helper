@@ -66,6 +66,8 @@ public class MusicCapeHelperHeader extends MusicCapeHelperRow
 	@Override
 	public void setEnabled()
 	{
+		//todo - could change to use plugin only by comparing filteredList to mapPoints
+		//todo- if this is done, changed helperPanel updateAllRows() to use only one line
 		if (panel == null)
 		{
 			return;

@@ -67,7 +67,8 @@ public class MusicCapeHelperRowPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//todo - add control
+				plugin.addOrRemoveAllMapPoints(true);
+				refreshList();
 			}
 		});
 		controlPanel.add(pinAllControl);
@@ -80,7 +81,8 @@ public class MusicCapeHelperRowPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//todo - add control
+				plugin.addOrRemoveAllMapPoints(false);
+				refreshList();
 			}
 		});
 
@@ -92,19 +94,7 @@ public class MusicCapeHelperRowPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//todo - add control
-			}
-		});
-
-		JButton expandAllControl = new JButton();
-		expandAllControl.setIcon(Icon.SHOW_HINT_ARROW.getIcon());
-		controlPanel.add(expandAllControl);
-		expandAllControl.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				//todo - add control
+				plugin.clearHintArrow();
 			}
 		});
 
@@ -116,7 +106,19 @@ public class MusicCapeHelperRowPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//todo - add control
+				plugin.addOrRemoveAllExpandedRows(false);
+			}
+		});
+
+		JButton expandAllControl = new JButton();
+		expandAllControl.setIcon(Icon.DOWN_ICON.getIcon());
+		controlPanel.add(expandAllControl);
+		expandAllControl.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				plugin.addOrRemoveAllExpandedRows(true);
 			}
 		});
 
@@ -168,6 +170,7 @@ public class MusicCapeHelperRowPanel extends JPanel
 	public void tabSwitched(boolean setToMapPanel)
 	{
 		isOnMapPanel = setToMapPanel;
+
 		if (isOnMapPanel)
 		{
 			songNameLabelHeader.setText("Map List");
