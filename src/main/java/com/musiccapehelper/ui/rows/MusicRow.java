@@ -35,6 +35,7 @@ public class MusicRow extends Row
 		super(music, plugin, config, panel);
 		this.completed = completed;
 
+
 		//used to standardise all the label fonts (NOTE: description uses a custom version of this because it wouldn't update for some reason)
 		Font font = FontManager.getRunescapeSmallFont();
 		setTextColour();
@@ -195,7 +196,7 @@ public class MusicRow extends Row
 
 	public void setExpanded()
 	{
-		expanded = plugin.getExpandedRows().stream().anyMatch(e -> e.equals(music));
+		expanded = plugin.getExpandedRowsData().getExpandedRows().stream().anyMatch(e -> e.equals(music));
 		informationPanel.setVisible(expanded);
 	}
 
@@ -239,7 +240,8 @@ public class MusicRow extends Row
 		{
 			if (e.getButton() == MouseEvent.BUTTON1)
 			{
-				plugin.rowExpandClicked(this);
+				plugin.getExpandedRowsData().updateExpandedRows(this);
+				panel.updateRow(this);
 
 			}
 			else if (e.getButton() == MouseEvent.BUTTON3)

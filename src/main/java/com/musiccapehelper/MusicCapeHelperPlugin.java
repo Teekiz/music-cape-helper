@@ -2,21 +2,17 @@ package com.musiccapehelper;
 
 import com.google.gson.Gson;
 import com.google.inject.Provides;
+import com.musiccapehelper.data.ExpandedRowsData;
+import com.musiccapehelper.data.MusicData;
 import com.musiccapehelper.enums.data.HeaderType;
 import com.musiccapehelper.enums.data.Icon;
-import com.musiccapehelper.enums.settings.SettingsLocked;
 import com.musiccapehelper.enums.data.Music;
-import com.musiccapehelper.enums.settings.SettingsOptional;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
-import com.musiccapehelper.enums.settings.SettingsQuest;
-import com.musiccapehelper.enums.settings.SettingsRegion;
 import com.musiccapehelper.ui.map.MusicWorldMapPoint;
 import com.musiccapehelper.ui.rows.HeaderRow;
 import com.musiccapehelper.ui.panels.Panel;
 import com.musiccapehelper.ui.rows.MusicRow;
 import com.musiccapehelper.ui.rows.Row;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
 import lombok.Getter;
@@ -26,7 +22,7 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.WidgetLoaded;
-import net.runelite.api.widgets.Widget;
+import net.runelite.api.widgets.WidgetID;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -67,9 +63,9 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Getter
 	private List<MusicWorldMapPoint> mapPoints;
 	@Getter
-	private List<Music> expandedRows;
+	private ExpandedRowsData expandedRowsData;
 	@Getter
-	private MusicCollection musicList;
+	private MusicData musicList;
 	@Getter
 	private Music hintArrowMusic;
 
@@ -88,10 +84,10 @@ public class MusicCapeHelperPlugin extends Plugin
 	protected void startUp() throws Exception
 	{
 		musicCapeHelperAccess = new MusicCapeHelperAccess(config, configManager, gson);
-		musicList = new MusicCollection(config);
+		musicList = new MusicData(config);
+		expandedRowsData = new ExpandedRowsData(configManager, gson);
 
 		hintArrowMusic = null;
-		expandedRows = musicCapeHelperAccess.loadExpandedRows();
 		mapPoints = musicCapeHelperAccess.loadMapMarkers();
 		updateMapPoints();
 
@@ -110,7 +106,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		musicCapeHelperAccess.saveMapMarkers(mapPoints);
-		musicCapeHelperAccess.saveExpandedRows(expandedRows);
+		expandedRowsData.saveExpandedRows();
 		clientToolbar.removeNavigation(navigationButton);
 		worldMapPointManager.removeIf(MusicWorldMapPoint.class::isInstance);
 	}
@@ -121,10 +117,6 @@ public class MusicCapeHelperPlugin extends Plugin
 		if (configChanged.getKey().equals("differentiateQuestMarkers") || configChanged.getKey().equals("differentiateCompletedMarkers"))
 		{
 			clientThread.invokeAtTickEnd(this::updateMapPoints);
-		}
-		else if (configChanged.getKey().equals("worldMapMarkers"))
-		{
-			//if the map markers are saved, do nothing
 		}
 		else if (configChanged.getKey().equals("panelSettingLocked") || configChanged.getKey().equals("panelSettingQuest") ||
 			configChanged.getKey().equals("panelSettingRegion") || configChanged.getKey().equals("panelSettingOptional") ||
@@ -137,13 +129,17 @@ public class MusicCapeHelperPlugin extends Plugin
 		{
 			panel.updateAllRows();
 		}
+		else if (configChanged.getKey().equals("worldMapMarkers"))
+		{
+			//if the map markers are saved, do nothing
+		}
 	}
 
 	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded widgetLoaded)
 	{
 		//todo - update this to use WidgetInfo.MUSIC_TRACK_LIST
-		if (widgetLoaded.getGroupId() != 239)
+		if (widgetLoaded.getGroupId() != WidgetID.MUSIC_GROUP_ID)
 		{
 			return;
 		}
@@ -208,7 +204,7 @@ public class MusicCapeHelperPlugin extends Plugin
 			{
 				if (row.isEnabled())
 				{
-					panel.getPanelRows().stream()
+					panel.getRows().stream()
 						.filter(r -> r.getMusic().getSettingsRegion().equals(((HeaderRow) row).getHeaderType().getSettingsRegion()))
 						.filter(r -> r.isEnabled())
 						.forEach(r ->
@@ -219,7 +215,7 @@ public class MusicCapeHelperPlugin extends Plugin
 				}
 				else
 				{
-					panel.getPanelRows().stream()
+					panel.getRows().stream()
 						.filter(r -> r instanceof MusicRow)
 						.filter(r -> r.getMusic().getSettingsRegion().equals(((HeaderRow) row).getHeaderType().getSettingsRegion()))
 						.filter(r -> !r.isEnabled())
@@ -236,7 +232,7 @@ public class MusicCapeHelperPlugin extends Plugin
 				{
 					if (row.isEnabled())
 					{
-						panel.getPanelRows().stream()
+						panel.getRows().stream()
 							.filter(r -> r.getMusic().isRequired())
 							.filter(r -> r.isEnabled())
 							.forEach(r ->
@@ -247,7 +243,7 @@ public class MusicCapeHelperPlugin extends Plugin
 					}
 					else
 					{
-						panel.getPanelRows().stream()
+						panel.getRows().stream()
 							.filter(r -> r instanceof MusicRow)
 							.filter(r -> r.getMusic().isRequired())
 							.filter(r -> !r.isEnabled())
@@ -262,7 +258,7 @@ public class MusicCapeHelperPlugin extends Plugin
 				{
 					if (row.isEnabled())
 					{
-						panel.getPanelRows().stream()
+						panel.getRows().stream()
 							.filter(r -> !r.getMusic().isRequired())
 							.filter(r -> r.isEnabled())
 							.forEach(r ->
@@ -273,7 +269,7 @@ public class MusicCapeHelperPlugin extends Plugin
 					}
 					else
 					{
-						panel.getPanelRows().stream()
+						panel.getRows().stream()
 							.filter(r -> r instanceof MusicRow)
 							.filter(r -> !r.getMusic().isRequired())
 							.filter(r -> !r.isEnabled())
@@ -289,26 +285,6 @@ public class MusicCapeHelperPlugin extends Plugin
 		}
 		panel.checkMapRowPanels();
 		addMapPointsToMap();
-	}
-
-	public void rowExpandClicked(Row row)
-	{
-		if (row instanceof MusicRow)
-		{
-			boolean found = getExpandedRows().stream().anyMatch(e -> e.equals(row.getMusic()));
-			//checks if the world map should be updated
-			if (!found)
-			{
-				expandedRows.add(row.getMusic());
-			}
-			else
-			{
-				expandedRows.remove(row.getMusic());
-			}
-
-			panel.updateRow(row);
-			musicCapeHelperAccess.saveExpandedRows(expandedRows);
-		}
 	}
 
 	//this both adds and removes the markers, to update the map, add or remove from the mapPoint list
@@ -364,7 +340,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		//if addMapPoint is true, add all the existing rows to the map
 		if (addMapPoint)
 		{
-			panel.getPanelRows()
+			panel.getRows()
 				.stream()
 				.filter(r -> r instanceof MusicRow)
 				.filter(r -> !r.isEnabled())
@@ -379,27 +355,6 @@ public class MusicCapeHelperPlugin extends Plugin
 		addMapPointsToMap();
 		panel.updateAllRows();
 		musicCapeHelperAccess.saveMapMarkers(mapPoints);
-	}
-
-	public void addOrRemoveAllExpandedRows(boolean expandRow)
-	{
-		//if expandRow is true, expand all rows
-		if (expandRow)
-		{
-			panel.getPanelRows()
-				.stream()
-				.filter(r -> r instanceof MusicRow)
-				.filter(r -> !r.isExpanded())
-				.forEach(r -> expandedRows.add(r.getMusic()));
-		}
-		//if false, shrink/hide all rows
-		else
-		{
-			expandedRows.clear();
-		}
-
-		panel.updateAllRows();
-		musicCapeHelperAccess.saveExpandedRows(expandedRows);
 	}
 
 	@Provides

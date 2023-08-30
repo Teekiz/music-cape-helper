@@ -34,15 +34,14 @@ public class PanelRows extends JPanel
 	private final JPanel musicScrollPaneContentPanel;
 	private JPanel emptySpacePanel;
 	private final JLabel songNameLabelHeader;
+	private final Panel panel;
 
-
-	//todo add an empty panel to the map and music panels if empty
-
-	public PanelRows(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, boolean isOnMapPanel)
+	public PanelRows(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, Panel panel, boolean isOnMapPanel)
 	{
 		this.plugin = plugin;
 		this.config = config;
 		this.isOnMapPanel = isOnMapPanel;
+		this.panel = panel;
 
 		//name region required
 		setLayout(new BorderLayout(0, 10));
@@ -106,7 +105,8 @@ public class PanelRows extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.addOrRemoveAllExpandedRows(false);
+				plugin.getExpandedRowsData().addOrRemoveAllExpandedRows(false, panel.getRows());
+				panel.updateAllRows();
 			}
 		});
 
@@ -118,7 +118,8 @@ public class PanelRows extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.addOrRemoveAllExpandedRows(true);
+				plugin.getExpandedRowsData().addOrRemoveAllExpandedRows(true, panel.getRows());
+				panel.updateAllRows();
 			}
 		});
 
@@ -138,7 +139,7 @@ public class PanelRows extends JPanel
 		tabSwitched(isOnMapPanel);
 	}
 
-	public void addMusicRows(List<Row> rows)
+	public void addMusicRows()
 	{
 		musicScrollPaneContentPanel.removeAll();
 
@@ -149,7 +150,7 @@ public class PanelRows extends JPanel
 		gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 
-		rows.forEach(r ->
+		panel.getRows().forEach(r ->
 		{
 			musicScrollPaneContentPanel.add(r, gridBagConstraints);
 			gridBagConstraints.gridy++;

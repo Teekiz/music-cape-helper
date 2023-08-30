@@ -1,5 +1,6 @@
-package com.musiccapehelper;
+package com.musiccapehelper.data;
 
+import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.enums.data.Music;
 import com.musiccapehelper.enums.settings.SettingsLocked;
 import com.musiccapehelper.enums.settings.SettingsOptional;
@@ -9,12 +10,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import net.runelite.api.widgets.Widget;
 
-public class MusicCollection
+public class MusicData
 {
 	private final HashMap<Music, Boolean> musicList = new HashMap<>();
 	private final MusicCapeHelperConfig config;
 
-	public MusicCollection(MusicCapeHelperConfig config)
+	public MusicData(MusicCapeHelperConfig config)
 	{
 		this.config = config;
 		Arrays.stream(Music.values()).forEach(r -> musicList.put(r, false));

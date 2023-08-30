@@ -43,19 +43,6 @@ public class MusicCapeHelperAccess
 			configManager.setConfiguration("musicTrackInfoConfig", "worldMapMarkers", json);
 	}
 
-	public void saveExpandedRows(List<Music> expandedRows)
-	{
-			//overwrites the existing data
-			configManager.unsetConfiguration("musicTrackInfoConfig", "expandedRows");
-			JsonArray expandedData = new JsonArray();
-			expandedRows.forEach(m -> {
-				JsonObject jsonObject = new JsonObject();
-				jsonObject.addProperty("music", m.getSongName());
-				expandedData.add(jsonObject);
-			});
-			String json = expandedData.toString();
-			configManager.setConfiguration("musicTrackInfoConfig", "expandedRows", json);
-	}
 
 	public List<MusicWorldMapPoint> loadMapMarkers()
 	{
@@ -80,23 +67,5 @@ public class MusicCapeHelperAccess
 			}
 		}
 		return point;
-	}
-
-	public List<Music> loadExpandedRows()
-	{
-		List<Music> rows = new ArrayList<>();
-
-		String json = configManager.getConfiguration("musicTrackInfoConfig", "expandedRows");
-		if (json != null)
-		{
-			for (JsonElement element : gson.fromJson(json, JsonArray.class))
-			{
-				String song = element.getAsJsonObject().get("music").getAsString();
-				Arrays.stream(Music.values())
-					.filter(m -> m.getSongName().equals(song))
-					.findAny().ifPresent(rows::add);
-			}
-		}
-		return rows;
 	}
 }

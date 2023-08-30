@@ -47,7 +47,7 @@ public abstract class Row extends JPanel implements MouseListener
 		this.panel = panel;
 		this.expanded = false;
 
-		popupMenu = new PopupMenu(this, plugin);
+		popupMenu = new PopupMenu(this, plugin, panel);
 		setComponentPopupMenu(popupMenu);
 
 		setLayout(new GridBagLayout());

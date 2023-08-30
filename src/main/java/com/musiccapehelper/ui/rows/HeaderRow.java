@@ -75,7 +75,7 @@ public class HeaderRow extends Row
 
 		if (headerType.equals(HeaderType.REQUIRED))
 		{
-			enabled = panel.getPanelRows()
+			enabled = panel.getRows()
 				.stream()
 				.filter(r -> r instanceof MusicRow)
 				.filter(r -> r.getMusic().isRequired())
@@ -83,7 +83,7 @@ public class HeaderRow extends Row
 		}
 		else if (headerType.equals(HeaderType.OPTIONAL))
 		{
-			enabled = panel.getPanelRows()
+			enabled = panel.getRows()
 				.stream()
 				.filter(r -> r instanceof MusicRow)
 				.filter(r -> !r.getMusic().isRequired())
@@ -91,7 +91,7 @@ public class HeaderRow extends Row
 		}
 		else
 		{
-			enabled = panel.getPanelRows()
+			enabled = panel.getRows()
 				.stream()
 				.filter(r -> r instanceof MusicRow)
 				.filter(r -> r.getMusic().getSettingsRegion().equals(headerType.getSettingsRegion()))
