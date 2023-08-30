@@ -108,7 +108,7 @@ public class HeaderRow extends Row
 		{
 			if (e.getButton() == MouseEvent.BUTTON1)
 			{
-				plugin.rowPinClicked(this);
+				plugin.getMapPoints().rowPinClicked(this);
 			}
 			else if (e.getButton() == MouseEvent.BUTTON3)
 			{

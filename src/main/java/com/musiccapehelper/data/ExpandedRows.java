@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import com.musiccapehelper.enums.data.MusicData;
 import com.musiccapehelper.ui.rows.MusicRow;
 import com.musiccapehelper.ui.rows.Row;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
@@ -114,6 +113,7 @@ public class ExpandedRows
 		propertyChangeSupport.removePropertyChangeListener(listener);
 	}
 
+	//todo change with new value
 	public void propertyChanged()
 	{
 		propertyChangeSupport.firePropertyChange("update", null, null);

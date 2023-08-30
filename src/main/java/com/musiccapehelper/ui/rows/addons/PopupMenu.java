@@ -72,7 +72,7 @@ public class PopupMenu extends JPopupMenu implements ActionListener
 	{
 		if (e.getSource().equals(popupMenuIconText))
 		{
-			plugin.rowPinClicked(row);
+			plugin.getMapPoints().rowPinClicked(row);
 			setVisible(false);
 		}
 

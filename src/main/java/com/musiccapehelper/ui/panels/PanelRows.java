@@ -65,8 +65,7 @@ public class PanelRows extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.addOrRemoveAllMapPoints(true);
-				refreshList();
+				plugin.getMapPoints().addOrRemoveAllMapPoints(true);
 			}
 		});
 		controlPanel.add(pinAllControl);
@@ -79,8 +78,7 @@ public class PanelRows extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.addOrRemoveAllMapPoints(false);
-				refreshList();
+				plugin.getMapPoints().addOrRemoveAllMapPoints(false);
 			}
 		});
 
@@ -105,7 +103,6 @@ public class PanelRows extends JPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				plugin.getExpandedRows().addOrRemoveAllExpandedRows(false, panel.getRows());
-				//panel.updateAllRows();
 			}
 		});
 
@@ -118,7 +115,6 @@ public class PanelRows extends JPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				plugin.getExpandedRows().addOrRemoveAllExpandedRows(true, panel.getRows());
-				//panel.updateAllRows();
 			}
 		});
 
@@ -206,7 +202,7 @@ public class PanelRows extends JPanel
 			noRowsLabel.setHorizontalTextPosition(JLabel.CENTER);
 			noRowsLabel.setVerticalTextPosition(JLabel.BOTTOM);
 
-			if (isOnMapPanel && plugin.getMapPoints().size() == 0)
+			if (isOnMapPanel && plugin.getMapPoints().getMapPoints().size() == 0)
 			{
 				noRowsLabel.setText("<html>You have no markers on" +
 						"<br/> the map. Click the green" +
