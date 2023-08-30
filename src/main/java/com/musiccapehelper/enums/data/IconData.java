@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import net.runelite.client.util.ImageUtil;
 
-public enum Icon
+public enum IconData
 {
 	PLUGIN_ICON("/pluginicon.png"),
 	ADD_ICON("/addicon.png"),
@@ -16,7 +16,7 @@ public enum Icon
 	HIDE_HINT_ARROW("/arrow_hide.png");
 
 	private final String path;
-	Icon(String path)
+	IconData(String path)
 	{
 		this.path = path;
 	}

@@ -4,24 +4,21 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.musiccapehelper.MusicCapeHelperConfig;
-import com.musiccapehelper.enums.data.Music;
+import com.musiccapehelper.enums.data.MusicData;
 import com.musiccapehelper.ui.rows.MusicRow;
 import com.musiccapehelper.ui.rows.Row;
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.JPanel;
 import net.runelite.client.config.ConfigManager;
 
-public class ExpandedRowsData
+public class ExpandedRows
 {
-	private final List<Music> expandedRows;
+	private final List<MusicData> expandedRows;
 	private final ConfigManager configManager;
 	private final Gson gson;
 
-	public ExpandedRowsData(ConfigManager configManager, Gson gson)
+	public ExpandedRows(ConfigManager configManager, Gson gson)
 	{
 		this.configManager = configManager;
 		this.gson = gson;
@@ -29,22 +26,22 @@ public class ExpandedRowsData
 		expandedRows = loadExpandedRows();
 	}
 
-	public List<Music> getExpandedRows()
+	public List<MusicData> getExpandedRows()
 	{
 		return expandedRows;
 	}
 
 	public void updateExpandedRows(MusicRow row)
 	{
-		boolean found = getExpandedRows().stream().anyMatch(e -> e.equals(row.getMusic()));
+		boolean found = getExpandedRows().stream().anyMatch(e -> e.equals(row.getMusicData()));
 		//checks if the world map should be updated
 		if (!found)
 		{
-			expandedRows.add(row.getMusic());
+			expandedRows.add(row.getMusicData());
 		}
 		else
 		{
-			expandedRows.remove(row.getMusic());
+			expandedRows.remove(row.getMusicData());
 		}
 
 		saveExpandedRows();
@@ -58,7 +55,7 @@ public class ExpandedRowsData
 			rows.stream()
 				.filter(r -> r instanceof MusicRow)
 				.filter(r -> !r.isExpanded())
-				.forEach(r -> expandedRows.add(r.getMusic()));
+				.forEach(r -> expandedRows.add(r.getMusicData()));
 		}
 		//if false, shrink/hide all rows
 		else
@@ -83,9 +80,9 @@ public class ExpandedRowsData
 		configManager.setConfiguration("musicTrackInfoConfig", "expandedRows", json);
 	}
 
-	public List<Music> loadExpandedRows()
+	public List<MusicData> loadExpandedRows()
 	{
-		List<Music> rows = new ArrayList<>();
+		List<MusicData> rows = new ArrayList<>();
 
 		String json = configManager.getConfiguration("musicTrackInfoConfig", "expandedRows");
 		if (json != null)
@@ -93,7 +90,7 @@ public class ExpandedRowsData
 			for (JsonElement element : gson.fromJson(json, JsonArray.class))
 			{
 				String song = element.getAsJsonObject().get("music").getAsString();
-				Arrays.stream(Music.values())
+				Arrays.stream(MusicData.values())
 					.filter(m -> m.getSongName().equals(song))
 					.findAny().ifPresent(rows::add);
 			}

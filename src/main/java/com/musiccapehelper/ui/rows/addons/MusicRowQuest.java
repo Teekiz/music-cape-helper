@@ -1,6 +1,6 @@
 package com.musiccapehelper.ui.rows.addons;
 
-import com.musiccapehelper.enums.data.Music;
+import com.musiccapehelper.enums.data.MusicData;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.JLabel;
@@ -9,19 +9,19 @@ import javax.swing.border.EmptyBorder;
 
 public class MusicRowQuest extends JPanel
 {
-	public MusicRowQuest(Music music, Font font)
+	public MusicRowQuest(MusicData musicData, Font font)
 	{
 		setLayout(new BorderLayout());
 		setBorder(new EmptyBorder(5, 0, 5, 0));
 		setOpaque(false);
 
-		if (music.isQuest())
+		if (musicData.isQuest())
 		{
 			String questLabelText = "Unlocked during: ";
 			JLabel questLabel = new JLabel(questLabelText);
 			questLabel.setFont(font);
 
-			String questNameLabelText = music.getQuest().getName();
+			String questNameLabelText = musicData.getQuest().getName();
 			JLabel questNameLabel = new JLabel(questNameLabelText);
 			questNameLabel.setFont(font);
 

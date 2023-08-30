@@ -1,5 +1,5 @@
 package com.musiccapehelper.data;
 
-public class MapPointsData
+public class MapPoints
 {
 }

@@ -1,7 +1,7 @@
 package com.musiccapehelper.data;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
-import com.musiccapehelper.enums.data.Music;
+import com.musiccapehelper.enums.data.MusicData;
 import com.musiccapehelper.enums.settings.SettingsLocked;
 import com.musiccapehelper.enums.settings.SettingsOptional;
 import com.musiccapehelper.enums.settings.SettingsQuest;
@@ -10,47 +10,47 @@ import java.util.Arrays;
 import java.util.HashMap;
 import net.runelite.api.widgets.Widget;
 
-public class MusicData
+public class Music
 {
-	private final HashMap<Music, Boolean> musicList = new HashMap<>();
+	private final HashMap<MusicData, Boolean> musicList = new HashMap<>();
 	private final MusicCapeHelperConfig config;
 
-	public MusicData(MusicCapeHelperConfig config)
+	public Music(MusicCapeHelperConfig config)
 	{
 		this.config = config;
-		Arrays.stream(Music.values()).forEach(r -> musicList.put(r, false));
+		Arrays.stream(MusicData.values()).forEach(r -> musicList.put(r, false));
 	}
 
 	public void updateMusicList(Widget[] musicWidgetChildren)
 	{
-		for (Music music : musicList.keySet())
+		for (MusicData musicData : musicList.keySet())
 		{
 			for (Widget widget : musicWidgetChildren)
 			{
-				if (widget.getText().equals(music.getSongName()))
+				if (widget.getText().equals(musicData.getSongName()))
 				{
 					if (Integer.toHexString(widget.getTextColor()).equals("dc10d"))
 					{
 
-						musicList.put(music, true);
+						musicList.put(musicData, true);
 					}
 					else
 					{
-						musicList.put(music, false);
+						musicList.put(musicData, false);
 					}
 				}
 			}
 		}
 	}
 
-	public HashMap<Music, Boolean> getDefaultMusicList()
+	public HashMap<MusicData, Boolean> getDefaultMusicList()
 	{
 		return musicList;
 	}
 
-	public HashMap<Music, Boolean> getFilteredMusicList()
+	public HashMap<MusicData, Boolean> getFilteredMusicList()
 	{
-		HashMap<Music, Boolean> filteredList = new HashMap<>(musicList);
+		HashMap<MusicData, Boolean> filteredList = new HashMap<>(musicList);
 
 		//check one - does the music match the selected settings for quest discovered status
 		if (!config.panelSettingLocked().equals(SettingsLocked.ALL))

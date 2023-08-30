@@ -1,6 +1,6 @@
 package com.musiccapehelper.ui.rows.addons;
 
-import com.musiccapehelper.enums.data.Music;
+import com.musiccapehelper.enums.data.MusicData;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -21,10 +21,10 @@ import net.runelite.client.util.AsyncBufferedImage;
 public class MusicRowItems extends JPanel
 {
 	private final Color backgroundColour = new Color(85,85,85);
-	public MusicRowItems(Music music, ItemManager itemManager, ClientThread clientThread, Font font)
+	public MusicRowItems(MusicData musicData, ItemManager itemManager, ClientThread clientThread, Font font)
 	{
 
-		if (!music.getItems().isEmpty())
+		if (!musicData.getItems().isEmpty())
 		{
 			setLayout(new BorderLayout());
 			setBorder(new EmptyBorder(5, 0, 5, 0));
@@ -42,7 +42,7 @@ public class MusicRowItems extends JPanel
 			itemsPanel.setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
 			itemsPanel.setBackground(backgroundColour);
 
-			music.getItems().forEach(i ->
+			musicData.getItems().forEach(i ->
 			{
 					SwingUtilities.invokeLater(() ->
 					{

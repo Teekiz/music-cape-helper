@@ -9,7 +9,7 @@ import net.runelite.api.ItemID;
 import net.runelite.api.Quest;
 import net.runelite.api.coords.WorldPoint;
 
-public enum Music
+public enum MusicData
 {
 	SEVENTH_REALM("7th Realm", true, new WorldPoint(2743, 3154, 0), false, SettingsRegion.KARAMJA,
 		"Unlocked in the Brimhaven Dungeon", Collections.emptyList()),
@@ -43,8 +43,8 @@ public enum Music
 	private EventType eventType;
 
 	//standard tracks
-	Music(String songName, boolean isRequired, WorldPoint songUnlockPoint,
-		  boolean isQuest, SettingsRegion settingsRegion, String description, List<Integer> items)
+	MusicData(String songName, boolean isRequired, WorldPoint songUnlockPoint,
+			  boolean isQuest, SettingsRegion settingsRegion, String description, List<Integer> items)
 	{
 		this.songName = songName;
 		this.isRequired = isRequired;
@@ -56,8 +56,8 @@ public enum Music
 	}
 
 	//used for quests only
-	Music(String songName, boolean isRequired, WorldPoint songUnlockPoint,
-		  boolean isQuest, SettingsRegion settingsRegion, String description, Quest quest)
+	MusicData(String songName, boolean isRequired, WorldPoint songUnlockPoint,
+			  boolean isQuest, SettingsRegion settingsRegion, String description, Quest quest)
 	{
 		this.songName = songName;
 		this.isRequired = isRequired;
@@ -68,8 +68,8 @@ public enum Music
 		this.quest = quest;
 	}
 	//used for optional tracks only
-	Music(String songName, boolean isRequired, WorldPoint songUnlockPoint,
-		  boolean isQuest, SettingsRegion settingsRegion, String description, EventType eventType)
+	MusicData(String songName, boolean isRequired, WorldPoint songUnlockPoint,
+			  boolean isQuest, SettingsRegion settingsRegion, String description, EventType eventType)
 	{
 		this.songName = songName;
 		this.isRequired = isRequired;

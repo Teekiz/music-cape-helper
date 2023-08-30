@@ -2,8 +2,8 @@ package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
-import com.musiccapehelper.enums.data.Icon;
-import com.musiccapehelper.enums.data.Music;
+import com.musiccapehelper.enums.data.IconData;
+import com.musiccapehelper.enums.data.MusicData;
 import com.musiccapehelper.ui.panels.Panel;
 import com.musiccapehelper.ui.rows.addons.PopupMenu;
 import java.awt.GridBagConstraints;
@@ -22,7 +22,7 @@ import net.runelite.client.ui.FontManager;
 public abstract class Row extends JPanel implements MouseListener
 {
 	@Getter
-	protected Music music;
+	protected MusicData musicData;
 	@Getter @Setter
 	protected boolean enabled;
 	@Getter @Setter
@@ -39,9 +39,9 @@ public abstract class Row extends JPanel implements MouseListener
 	protected GridBagConstraints gbc = new GridBagConstraints();
 	protected PopupMenu popupMenu;
 
-	public Row(Music music, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, Panel panel)
+	public Row(MusicData musicData, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, Panel panel)
 	{
-		this.music = music;
+		this.musicData = musicData;
 		this.plugin = plugin;
 		this.config = config;
 		this.panel = panel;
@@ -82,17 +82,17 @@ public abstract class Row extends JPanel implements MouseListener
 
 	public void setRowTitle()
 	{
-		rowTitle.setText(music.getSongName());
+		rowTitle.setText(musicData.getSongName());
 		rowTitle.setHorizontalAlignment(JLabel.LEFT);
 		rowTitle.setFont(FontManager.getRunescapeFont());
 		if (expanded)
 		{
-			rowTitle.setIcon(Icon.UP_ICON.getIcon());
+			rowTitle.setIcon(IconData.UP_ICON.getIcon());
 
 		}
 		else
 		{
-			rowTitle.setIcon(Icon.DOWN_ICON.getIcon());
+			rowTitle.setIcon(IconData.DOWN_ICON.getIcon());
 		}
 		rowTitle.setHorizontalTextPosition(JLabel.RIGHT);
 		rowTitle.setVerticalTextPosition(JLabel.CENTER);
@@ -100,15 +100,15 @@ public abstract class Row extends JPanel implements MouseListener
 
 	public void setRowPinIcon()
 	{
-		enabled = plugin.getMapPoints().stream().anyMatch(m -> m.getMusic().equals(this.getMusic()));
+		enabled = plugin.getMapPoints().stream().anyMatch(m -> m.getMusicData().equals(this.getMusicData()));
 
 		if (enabled)
 		{
-			rowPinIcon.setIcon(Icon.REMOVE_ICON.getIcon());
+			rowPinIcon.setIcon(IconData.REMOVE_ICON.getIcon());
 		}
 		else
 		{
-			rowPinIcon.setIcon(Icon.ADD_ICON.getIcon());
+			rowPinIcon.setIcon(IconData.ADD_ICON.getIcon());
 		}
 	}
 

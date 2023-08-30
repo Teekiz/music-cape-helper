@@ -2,7 +2,7 @@ package com.musiccapehelper.ui.panels;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
-import com.musiccapehelper.enums.data.Icon;
+import com.musiccapehelper.enums.data.IconData;
 import com.musiccapehelper.ui.rows.Row;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,7 +14,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
-import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -60,7 +59,7 @@ public class PanelRows extends JPanel
 		controlPanel.setLayout(new GridLayout(0, 5, 0, 5));
 
 		JButton pinAllControl = new JButton();
-		pinAllControl.setIcon(Icon.ADD_ICON.getIcon());
+		pinAllControl.setIcon(IconData.ADD_ICON.getIcon());
 		pinAllControl.addActionListener(new ActionListener()
 		{
 			@Override
@@ -73,7 +72,7 @@ public class PanelRows extends JPanel
 		controlPanel.add(pinAllControl);
 
 		JButton unpinAllControl = new JButton();
-		unpinAllControl.setIcon(Icon.REMOVE_ICON.getIcon());
+		unpinAllControl.setIcon(IconData.REMOVE_ICON.getIcon());
 		controlPanel.add(unpinAllControl);
 		unpinAllControl.addActionListener(new ActionListener()
 		{
@@ -86,7 +85,7 @@ public class PanelRows extends JPanel
 		});
 
 		JButton removeHintArrowControl = new JButton();
-		removeHintArrowControl.setIcon(Icon.HIDE_HINT_ARROW.getIcon());
+		removeHintArrowControl.setIcon(IconData.HIDE_HINT_ARROW.getIcon());
 		controlPanel.add(removeHintArrowControl);
 		removeHintArrowControl.addActionListener(new ActionListener()
 		{
@@ -98,27 +97,27 @@ public class PanelRows extends JPanel
 		});
 
 		JButton shrinkAllControl = new JButton();
-		shrinkAllControl.setIcon(Icon.UP_ICON.getIcon());
+		shrinkAllControl.setIcon(IconData.UP_ICON.getIcon());
 		controlPanel.add(shrinkAllControl);
 		shrinkAllControl.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.getExpandedRowsData().addOrRemoveAllExpandedRows(false, panel.getRows());
+				plugin.getExpandedRows().addOrRemoveAllExpandedRows(false, panel.getRows());
 				panel.updateAllRows();
 			}
 		});
 
 		JButton expandAllControl = new JButton();
-		expandAllControl.setIcon(Icon.DOWN_ICON.getIcon());
+		expandAllControl.setIcon(IconData.DOWN_ICON.getIcon());
 		controlPanel.add(expandAllControl);
 		expandAllControl.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.getExpandedRowsData().addOrRemoveAllExpandedRows(true, panel.getRows());
+				plugin.getExpandedRows().addOrRemoveAllExpandedRows(true, panel.getRows());
 				panel.updateAllRows();
 			}
 		});
@@ -214,7 +213,7 @@ public class PanelRows extends JPanel
 						"<br/>  arrow on the music list" +
 						"<br/> page to add new rows to" +
 						"<br/> the map.</html>");
-				noRowsLabel.setIcon(Icon.ADD_ICON.getIcon());
+				noRowsLabel.setIcon(IconData.ADD_ICON.getIcon());
 			}
 			else
 			{

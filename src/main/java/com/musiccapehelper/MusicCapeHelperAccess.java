@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.musiccapehelper.enums.data.Music;
+import com.musiccapehelper.enums.data.MusicData;
 import com.musiccapehelper.ui.map.MusicWorldMapPoint;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +35,7 @@ public class MusicCapeHelperAccess
 			JsonArray mapData = new JsonArray();
 			saveMapPoints.forEach(m -> {
 				JsonObject jsonObject = new JsonObject();
-				jsonObject.addProperty("music", m.getMusic().getSongName());
+				jsonObject.addProperty("music", m.getMusicData().getSongName());
 				jsonObject.addProperty("completed", m.isCompleted());
 				mapData.add(jsonObject);
 			});
@@ -54,15 +54,15 @@ public class MusicCapeHelperAccess
 			for (JsonElement element : gson.fromJson(json, JsonArray.class))
 			{
 				String song = element.getAsJsonObject().get("music").getAsString();
-				Music music = Arrays.stream(Music.values())
+				MusicData musicData = Arrays.stream(MusicData.values())
 					.filter(m -> m.getSongName().equals(song))
 					.findAny().orElse(null);
 
 				boolean completed = element.getAsJsonObject().get("completed").getAsBoolean();
 
-				if (music != null)
+				if (musicData != null)
 				{
-					point.add(new MusicWorldMapPoint(music, completed, config));
+					point.add(new MusicWorldMapPoint(musicData, completed, config));
 				}
 			}
 		}

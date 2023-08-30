@@ -2,8 +2,8 @@ package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
-import com.musiccapehelper.enums.data.Icon;
-import com.musiccapehelper.enums.data.Music;
+import com.musiccapehelper.enums.data.IconData;
+import com.musiccapehelper.enums.data.MusicData;
 import com.musiccapehelper.ui.panels.Panel;
 import com.musiccapehelper.ui.rows.addons.MusicRowEvent;
 import com.musiccapehelper.ui.rows.addons.MusicRowItems;
@@ -29,10 +29,10 @@ public class MusicRow extends Row
 	private final JPanel informationPanel = new JPanel();
 	private final JLabel hintArrowLabel;
 
-	public MusicRow(Music music, boolean completed, MusicCapeHelperPlugin plugin,
+	public MusicRow(MusicData musicData, boolean completed, MusicCapeHelperPlugin plugin,
 					MusicCapeHelperConfig config, Panel panel, ItemManager itemManager, ClientThread clientThread)
 	{
-		super(music, plugin, config, panel);
+		super(musicData, plugin, config, panel);
 		this.completed = completed;
 
 
@@ -55,7 +55,7 @@ public class MusicRow extends Row
 		GridBagConstraints gbcMusicRow = new GridBagConstraints();
 		gbcMusicRow.insets = new Insets(2, 2, 2, 2);
 
-		JLabel songRegionLabel = new JLabel("Region: " + music.getSettingsRegion().getName(), JLabel.LEFT);
+		JLabel songRegionLabel = new JLabel("Region: " + musicData.getSettingsRegion().getName(), JLabel.LEFT);
 		songRegionLabel.setFont(font);
 		songRegionLabel.setHorizontalAlignment(JLabel.LEFT);
 		gbcMusicRow.ipadx = 0;
@@ -75,7 +75,7 @@ public class MusicRow extends Row
 		hintArrowLabel.addMouseListener(this);
 
 		JLabel songIsQuestLabel = new JLabel();
-		if (music.isQuest())
+		if (musicData.isQuest())
 		{
 			songIsQuestLabel.setText("Quest Unlock: Yes");
 		}
@@ -93,7 +93,7 @@ public class MusicRow extends Row
 
 		//spaces add to line up with pin/unpin
 		JLabel songIsRequiredLabel = new JLabel();
-		if (music.isRequired())
+		if (musicData.isRequired())
 		{
 			songIsRequiredLabel.setText("Required       ");
 		}
@@ -126,7 +126,7 @@ public class MusicRow extends Row
 		FontManager.getRunescapeSmallFont().getStyle(), 16));
 		descriptionTextArea.setFocusable(false);
 		descriptionTextArea.setForeground(Color.LIGHT_GRAY);
-		descriptionTextArea.append(music.getDescription());
+		descriptionTextArea.append(musicData.getDescription());
 
 		gbcMusicRow.gridy = 3;
 		gbcMusicRow.weightx = 1.0;
@@ -141,19 +141,19 @@ public class MusicRow extends Row
 		gbcMusicRow.anchor = GridBagConstraints.SOUTH;
 
 		//events
-		if (!music.isQuest() && !music.isRequired())
+		if (!musicData.isQuest() && !musicData.isRequired())
 		{
-			informationPanel.add(new MusicRowEvent(music, font), gbcMusicRow);
+			informationPanel.add(new MusicRowEvent(musicData, font), gbcMusicRow);
 		}
 		//quests
-		else if (music.isQuest() && music.isRequired())
+		else if (musicData.isQuest() && musicData.isRequired())
 		{
-			informationPanel.add(new MusicRowQuest(music, font), gbcMusicRow);
+			informationPanel.add(new MusicRowQuest(musicData, font), gbcMusicRow);
 		}
 		//normal
-		else if (!music.isQuest() && !music.getItems().isEmpty())
+		else if (!musicData.isQuest() && !musicData.getItems().isEmpty())
 		{
-			informationPanel.add(new MusicRowItems(music, itemManager, clientThread, font), gbcMusicRow);
+			informationPanel.add(new MusicRowItems(musicData, itemManager, clientThread, font), gbcMusicRow);
 		}
 
 		add(informationPanel, gbc);
@@ -164,15 +164,15 @@ public class MusicRow extends Row
 
 	public void setHintArrowLabel()
 	{
-		if (plugin.getHintArrowMusic() == null || !plugin.getHintArrowMusic().equals(this.getMusic()))
+		if (plugin.getHintArrowMusicData() == null || !plugin.getHintArrowMusicData().equals(this.getMusicData()))
 		{
 			hintArrowLabel.setText("Set Arrow:");
-			hintArrowLabel.setIcon(Icon.SHOW_HINT_ARROW.getIcon());
+			hintArrowLabel.setIcon(IconData.SHOW_HINT_ARROW.getIcon());
 		}
 		else
 		{
 			hintArrowLabel.setText("Unset Arrow:");
-			hintArrowLabel.setIcon(Icon.HIDE_HINT_ARROW.getIcon());
+			hintArrowLabel.setIcon(IconData.HIDE_HINT_ARROW.getIcon());
 		}
 		hintArrowLabel.setHorizontalTextPosition(JLabel.LEFT);
 		hintArrowLabel.setVerticalTextPosition(JLabel.BOTTOM);
@@ -196,14 +196,14 @@ public class MusicRow extends Row
 
 	public void setExpanded()
 	{
-		expanded = plugin.getExpandedRowsData().getExpandedRows().stream().anyMatch(e -> e.equals(music));
+		expanded = plugin.getExpandedRows().getExpandedRows().stream().anyMatch(e -> e.equals(musicData));
 		informationPanel.setVisible(expanded);
 	}
 
 	@Override
 	public void setEnabled()
 	{
-		enabled = plugin.getMapPoints().stream().anyMatch(m -> m.getMusic().equals(this.getMusic()));
+		enabled = plugin.getMapPoints().stream().anyMatch(m -> m.getMusicData().equals(this.getMusicData()));
 	}
 
 	@Override
@@ -240,7 +240,7 @@ public class MusicRow extends Row
 		{
 			if (e.getButton() == MouseEvent.BUTTON1)
 			{
-				plugin.getExpandedRowsData().updateExpandedRows(this);
+				plugin.getExpandedRows().updateExpandedRows(this);
 				panel.updateRow(this);
 
 			}

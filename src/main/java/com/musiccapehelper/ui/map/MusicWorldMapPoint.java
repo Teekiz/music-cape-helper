@@ -1,6 +1,6 @@
 package com.musiccapehelper.ui.map;
 import com.musiccapehelper.MusicCapeHelperConfig;
-import com.musiccapehelper.enums.data.Music;
+import com.musiccapehelper.enums.data.MusicData;
 import lombok.Getter;
 import net.runelite.api.Point;
 import net.runelite.client.ui.overlay.worldmap.WorldMapPoint;
@@ -9,23 +9,23 @@ import net.runelite.client.util.ImageUtil;
 public class MusicWorldMapPoint extends WorldMapPoint
 {
 	@Getter
-	private final Music music;
+	private final MusicData musicData;
 	@Getter
 	private boolean completed;
 	private final MusicCapeHelperConfig config;
 
-	public MusicWorldMapPoint(Music music, boolean completed, MusicCapeHelperConfig config)
+	public MusicWorldMapPoint(MusicData musicData, boolean completed, MusicCapeHelperConfig config)
 	{
 		//ImagePoint code used from "clue scrolls" plugin constructor
 		super(null, null);
 
-		this.music = music;
+		this.musicData = musicData;
 		this.completed = completed;
 		this.config = config;
 
-		this.setName(music.getSongName());
-		this.setWorldPoint(music.getSongUnlockPoint());
-		this.setTooltip(music.getSongName());
+		this.setName(musicData.getSongName());
+		this.setWorldPoint(musicData.getSongUnlockPoint());
+		this.setTooltip(musicData.getSongName());
 		this.setMapPointImage();
 		this.setImagePoint(new Point(getImage().getWidth() / 2, getImage().getHeight()));
 		this.setJumpOnClick(true);
@@ -38,7 +38,7 @@ public class MusicWorldMapPoint extends WorldMapPoint
 
 	public void setMapPointImage()
 	{
-		if (config.differentiateQuestMarkers() && getMusic().isQuest())
+		if (config.differentiateQuestMarkers() && getMusicData().isQuest())
 		{
 			if (config.differentiateCompletedMarkers())
 			{

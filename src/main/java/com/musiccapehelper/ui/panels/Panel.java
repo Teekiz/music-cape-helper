@@ -129,28 +129,28 @@ public class Panel extends PluginPanel
 	{
 		if (config.panelSettingOrderBy().equals(SettingsOrderBy.AZ))
 		{
-			rows.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
+			rows.sort(Comparator.comparing(s -> s.getMusicData().getSongName()));
 		}
 		else if (config.panelSettingOrderBy().equals(SettingsOrderBy.ZA))
 		{
-			rows.sort((s1, s2) -> s2.getMusic().getSongName().compareTo(s1.getMusic().getSongName()));
+			rows.sort((s1, s2) -> s2.getMusicData().getSongName().compareTo(s1.getMusicData().getSongName()));
 		}
 
 		else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION))
 		{
-			rows.sort(Comparator.comparing(s -> s.getMusic().getSettingsRegion().getName()));
+			rows.sort(Comparator.comparing(s -> s.getMusicData().getSettingsRegion().getName()));
 		}
 
 		else if (config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 		{
-			rows.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
-			rows.sort((s1, s2) -> Boolean.compare(s1.getMusic().isRequired(), s2.getMusic().isRequired()));
+			rows.sort(Comparator.comparing(s -> s.getMusicData().getSongName()));
+			rows.sort((s1, s2) -> Boolean.compare(s1.getMusicData().isRequired(), s2.getMusicData().isRequired()));
 		}
 
 		else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST))
 		{
-			rows.sort(Comparator.comparing(s -> s.getMusic().getSongName()));
-			rows.sort((s1, s2) -> Boolean.compare(s2.getMusic().isRequired(), s1.getMusic().isRequired()));
+			rows.sort(Comparator.comparing(s -> s.getMusicData().getSongName()));
+			rows.sort((s1, s2) -> Boolean.compare(s2.getMusicData().isRequired(), s1.getMusicData().isRequired()));
 		}
 	}
 
@@ -164,17 +164,17 @@ public class Panel extends PluginPanel
 			{
 				if (rows.indexOf(row) == 0)
 				{
-					headersToAdd.put(rows.indexOf(row), new HeaderRow(row.getMusic(), plugin, config, this));
+					headersToAdd.put(rows.indexOf(row), new HeaderRow(row.getMusicData(), plugin, config, this));
 				}
 				else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION)
-					&& !rows.get(rows.indexOf(row) - 1).getMusic().getSettingsRegion().equals(row.getMusic().getSettingsRegion()))
+					&& !rows.get(rows.indexOf(row) - 1).getMusicData().getSettingsRegion().equals(row.getMusicData().getSettingsRegion()))
 				{
-					headersToAdd.put(rows.indexOf(row), new HeaderRow(row.getMusic(), plugin, config, this));
+					headersToAdd.put(rows.indexOf(row), new HeaderRow(row.getMusicData(), plugin, config, this));
 				}
 				else if ((config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
-					&& !rows.get(rows.indexOf(row) - 1).getMusic().isRequired() == row.getMusic().isRequired())
+					&& !rows.get(rows.indexOf(row) - 1).getMusicData().isRequired() == row.getMusicData().isRequired())
 				{
-					headersToAdd.put(rows.indexOf(row), new HeaderRow(row.getMusic(), plugin, config, this));
+					headersToAdd.put(rows.indexOf(row), new HeaderRow(row.getMusicData(), plugin, config, this));
 				}
 			}
 		}
@@ -190,7 +190,7 @@ public class Panel extends PluginPanel
 	{
 		if (config.panelSettingOrderBy().equals(SettingsOrderBy.REQUIRED_FIRST) || config.panelSettingOrderBy().equals(SettingsOrderBy.OPTIONAL_FIRST))
 		{
-			if (row.getMusic().isRequired())
+			if (row.getMusicData().isRequired())
 			{
 				rows.stream()
 					.filter(r -> r instanceof HeaderRow)
@@ -209,7 +209,7 @@ public class Panel extends PluginPanel
 		{
 			rows.stream()
 				.filter(r -> r instanceof HeaderRow)
-				.filter(r -> ((HeaderRow) r).getHeaderType().getSettingsRegion().equals(row.getMusic().getSettingsRegion()))
+				.filter(r -> ((HeaderRow) r).getHeaderType().getSettingsRegion().equals(row.getMusicData().getSettingsRegion()))
 				.findFirst().ifPresent(Row::updateRow);
 		}
 		rowPanel.refreshList();

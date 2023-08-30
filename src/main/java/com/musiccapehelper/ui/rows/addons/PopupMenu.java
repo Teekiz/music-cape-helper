@@ -78,7 +78,7 @@ public class PopupMenu extends JPopupMenu implements ActionListener
 
 		if (e.getSource().equals(popupMenuBackgroundText))
 		{
-			plugin.getExpandedRowsData().updateExpandedRows((MusicRow) row);
+			plugin.getExpandedRows().updateExpandedRows((MusicRow) row);
 			panel.updateRow(row);
 			setVisible(false);
 		}
