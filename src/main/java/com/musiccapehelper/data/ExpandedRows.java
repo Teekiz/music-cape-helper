@@ -116,6 +116,6 @@ public class ExpandedRows
 	//todo change with new value
 	public void propertyChanged()
 	{
-		propertyChangeSupport.firePropertyChange("update", null, null);
+		propertyChangeSupport.firePropertyChange("expandedRows", null, null);
 	}
 }

@@ -6,6 +6,8 @@ import com.musiccapehelper.enums.settings.SettingsLocked;
 import com.musiccapehelper.enums.settings.SettingsOptional;
 import com.musiccapehelper.enums.settings.SettingsQuest;
 import com.musiccapehelper.enums.settings.SettingsRegion;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Arrays;
 import java.util.HashMap;
 import net.runelite.api.widgets.Widget;
@@ -13,34 +15,47 @@ import net.runelite.api.widgets.Widget;
 public class Music
 {
 	private final HashMap<MusicData, Boolean> musicList = new HashMap<>();
+	private Widget[] gameMusicWidget;
 	private final MusicCapeHelperConfig config;
+	private final PropertyChangeSupport propertyChangeSupport
+		= new PropertyChangeSupport(this);
 
 	public Music(MusicCapeHelperConfig config)
 	{
 		this.config = config;
+
 		Arrays.stream(MusicData.values()).forEach(r -> musicList.put(r, false));
 	}
 
-	public void updateMusicList(Widget[] musicWidgetChildren)
+	public void updateMusicList()
 	{
-		for (MusicData musicData : musicList.keySet())
+		if (gameMusicWidget != null)
 		{
-			for (Widget widget : musicWidgetChildren)
+			for (MusicData musicData : musicList.keySet())
 			{
-				if (widget.getText().equals(musicData.getSongName()))
+				for (Widget widget : gameMusicWidget)
 				{
-					if (Integer.toHexString(widget.getTextColor()).equals("dc10d"))
+					if (widget.getText().equals(musicData.getSongName()))
 					{
+						if (Integer.toHexString(widget.getTextColor()).equals("dc10d"))
+						{
 
-						musicList.put(musicData, true);
-					}
-					else
-					{
-						musicList.put(musicData, false);
+							musicList.put(musicData, true);
+						}
+						else
+						{
+							musicList.put(musicData, false);
+						}
 					}
 				}
 			}
 		}
+		propertyChanged();
+	}
+
+	public void updateGameMusicWidget(Widget[] updatedList)
+	{
+		gameMusicWidget = updatedList;
 	}
 
 	public HashMap<MusicData, Boolean> getDefaultMusicList()
@@ -97,5 +112,19 @@ public class Music
 			}
 		}
 		return filteredList;
+	}
+
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeSupport.addPropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeSupport.removePropertyChangeListener(listener);
+	}
+
+	//todo change with new value
+	public void propertyChanged()
+	{
+		propertyChangeSupport.firePropertyChange("musicList", null, null);
 	}
 }

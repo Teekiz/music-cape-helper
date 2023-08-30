@@ -61,7 +61,7 @@ public class PanelSettings extends JPanel
 				panel.createAndRefreshRows(searchBar.getText());
 			}
 		});
-		searchBar.addClearListener(plugin::updateMusicList);
+		searchBar.addClearListener(() -> plugin.getMusicList().updateMusicList());
 		searchBar.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(searchBar);
 

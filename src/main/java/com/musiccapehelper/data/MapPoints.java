@@ -171,6 +171,8 @@ public class MapPoints
 
 		propertyChanged();
 		addMapPointsToMap();
+
+		plugin.getPanel().checkMapRowPanels();
 	}
 
 	//this both adds and removes the markers, to update the map, add or remove from the mapPoint list
@@ -248,6 +250,6 @@ public class MapPoints
 	//todo change with new value
 	public void propertyChanged()
 	{
-		propertyChangeSupport.firePropertyChange("update", null, null);
+		propertyChangeSupport.firePropertyChange("mapPoints", null, null);
 	}
 }

@@ -26,6 +26,7 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetID;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
@@ -73,9 +74,8 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Getter
 	private MusicData hintArrowMusicData;
 
-	//button at bottom of panel to add list
-	//instead of multiple lists, create a hashmap at start up
 
+	//todo - update this
 	/*
 		Map Marker Creation
 		1) When the plugin is enabled a list of a music enums is created.
@@ -96,12 +96,22 @@ public class MusicCapeHelperPlugin extends Plugin
 			@Override
 			public void propertyChange(PropertyChangeEvent evt)
 			{
-				panel.updateAllRows();
+				if (evt.getPropertyName().equals("musicList"))
+				{
+					panel.createAndRefreshRows("");
+					mapPoints.updateMapPoints();
+				}
+				else
+				{
+					panel.updateAllRows();
+				}
 			}
 		};
 
+		musicList.addPropertyChangeListener(propertyChangeListener);
 		expandedRows.addPropertyChangeListener(propertyChangeListener);
 		mapPoints.addPropertyChangeListener(propertyChangeListener);
+
 		hintArrowMusicData = null;
 
 		panel = new Panel(this, config, itemManager, clientThread);
@@ -112,7 +122,7 @@ public class MusicCapeHelperPlugin extends Plugin
 			.build();
 
 		clientToolbar.addNavigation(navigationButton);
-		clientThread.invokeAtTickEnd(this::updateMusicList);
+		clientThread.invokeAtTickEnd(musicList::updateMusicList);
 	}
 
 	@Override
@@ -136,7 +146,7 @@ public class MusicCapeHelperPlugin extends Plugin
 			configChanged.getKey().equals("panelSettingRegion") || configChanged.getKey().equals("panelSettingOptional") ||
 			configChanged.getKey().equals("panelSettingOrderBy"))
 		{
-			clientThread.invokeAtTickEnd(this::updateMusicList);
+			clientThread.invokeAtTickEnd(musicList::updateMusicList);
 		}
 		else if (configChanged.getKey().equals("panelDefaultTextColour") || configChanged.getKey().equals("panelCompleteTextColour") ||
 			configChanged.getKey().equals("panelIncompleteTextColour"))
@@ -152,13 +162,13 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Subscribe
 	public void onWidgetLoaded(WidgetLoaded widgetLoaded)
 	{
-		//todo - update this to use WidgetInfo.MUSIC_TRACK_LIST
 		if (widgetLoaded.getGroupId() != WidgetID.MUSIC_GROUP_ID)
 		{
 			return;
-		}
 
-		clientThread.invokeAtTickEnd(this::updateMusicList);
+		}
+		musicList.updateGameMusicWidget(client.getWidget(239, 6).getChildren());
+		clientThread.invokeAtTickEnd(musicList::updateMusicList);
 	}
 
 	@Subscribe
@@ -169,25 +179,13 @@ public class MusicCapeHelperPlugin extends Plugin
 			&& chatMessage.getMessage().startsWith("You have unlocked a new music track: "))
 		{
 			//todo - remove hint arrow of that type
-			clientThread.invokeAtTickEnd(this::updateMusicList);
+			clientThread.invokeAtTickEnd(musicList::updateMusicList);
 		}
 	}
 
 	public boolean isPlayerLoggedIn()
 	{
 		return client.getGameState().equals(GameState.LOGGED_IN);
-	}
-
-	//todo - update this
-	public void updateMusicList()
-	{
-		if (client.getWidget(239, 6) != null)
-		{
-			musicList.updateMusicList(client.getWidget(239, 6).getChildren());
-		}
-
-		panel.createAndRefreshRows("");
-		mapPoints.updateMapPoints();
 	}
 
 	public void clearHintArrow()
