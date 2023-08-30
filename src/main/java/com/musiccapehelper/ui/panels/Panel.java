@@ -195,14 +195,14 @@ public class Panel extends PluginPanel
 				rows.stream()
 					.filter(r -> r instanceof HeaderRow)
 					.filter(r -> ((HeaderRow) r).getHeaderType().equals(HeaderType.REQUIRED))
-					.findFirst().ifPresent(Row::updateRow);
+					.findFirst().ifPresent(Row::updateRowValues);
 			}
 			else
 			{
 				rows.stream()
 					.filter(r -> r instanceof HeaderRow)
 					.filter(r -> ((HeaderRow) r).getHeaderType().equals(HeaderType.OPTIONAL))
-					.findFirst().ifPresent(Row::updateRow);
+					.findFirst().ifPresent(Row::updateRowValues);
 			}
 		}
 		else if (config.panelSettingOrderBy().equals(SettingsOrderBy.REGION))
@@ -210,22 +210,21 @@ public class Panel extends PluginPanel
 			rows.stream()
 				.filter(r -> r instanceof HeaderRow)
 				.filter(r -> ((HeaderRow) r).getHeaderType().getSettingsRegion().equals(row.getMusicData().getSettingsRegion()))
-				.findFirst().ifPresent(Row::updateRow);
+				.findFirst().ifPresent(Row::updateRowValues);
 		}
 		rowPanel.refreshList();
 	}
 
 	public void updateRow(Row row)
 	{
-		row.updateRow();
+		row.updateRowValues();
 		rowPanel.refreshList();
 	}
 
 	public void updateAllRows()
 	{
-		//panelRows.forEach(MusicCapeHelperRow::updateRow);
-		rows.stream().filter(r -> r instanceof MusicRow).forEach(Row::updateRow);
-		rows.stream().filter(r -> r instanceof HeaderRow).forEach(Row::updateRow);
+		rows.stream().filter(r -> r instanceof MusicRow).forEach(Row::updateRowValues);
+		rows.stream().filter(r -> r instanceof HeaderRow).forEach(Row::updateRowValues);
 		rowPanel.refreshList();
 	}
 

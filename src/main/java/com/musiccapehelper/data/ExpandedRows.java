@@ -7,6 +7,9 @@ import com.google.gson.JsonObject;
 import com.musiccapehelper.enums.data.MusicData;
 import com.musiccapehelper.ui.rows.MusicRow;
 import com.musiccapehelper.ui.rows.Row;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +20,9 @@ public class ExpandedRows
 	private final List<MusicData> expandedRows;
 	private final ConfigManager configManager;
 	private final Gson gson;
+
+	private final PropertyChangeSupport propertyChangeSupport
+		= new PropertyChangeSupport(this);
 
 	public ExpandedRows(ConfigManager configManager, Gson gson)
 	{
@@ -44,6 +50,7 @@ public class ExpandedRows
 			expandedRows.remove(row.getMusicData());
 		}
 
+		propertyChanged();
 		saveExpandedRows();
 	}
 
@@ -63,6 +70,7 @@ public class ExpandedRows
 			expandedRows.clear();
 		}
 
+		propertyChanged();
 		saveExpandedRows();
 	}
 
@@ -96,5 +104,18 @@ public class ExpandedRows
 			}
 		}
 		return rows;
+	}
+
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeSupport.addPropertyChangeListener(listener);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		propertyChangeSupport.removePropertyChangeListener(listener);
+	}
+
+	public void propertyChanged()
+	{
+		propertyChangeSupport.firePropertyChange("update", null, null);
 	}
 }

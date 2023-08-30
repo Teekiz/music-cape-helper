@@ -2,7 +2,6 @@ package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
-import com.musiccapehelper.enums.data.IconData;
 import com.musiccapehelper.enums.data.MusicData;
 import com.musiccapehelper.ui.panels.Panel;
 import com.musiccapehelper.ui.rows.addons.PopupMenu;
@@ -15,17 +14,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import lombok.Getter;
-import lombok.Setter;
 import net.runelite.client.ui.ColorScheme;
-import net.runelite.client.ui.FontManager;
 
 public abstract class Row extends JPanel implements MouseListener
 {
 	@Getter
 	protected MusicData musicData;
-	@Getter @Setter
+	@Getter
 	protected boolean enabled;
-	@Getter @Setter
+	@Getter
 	protected boolean expanded;
 
 	protected MusicCapeHelperPlugin plugin;
@@ -54,10 +51,6 @@ public abstract class Row extends JPanel implements MouseListener
 		setBorder(new LineBorder(ColorScheme.SCROLL_TRACK_COLOR));
 		setBackground(ColorScheme.DARK_GRAY_COLOR);
 
-		setRowTitle();
-		setEnabled();
-		setRowPinIcon();
-
 		//row title (song name)
 		gbc.insets = new Insets(4, 5, 0, 5);
 		gbc.fill = GridBagConstraints.NONE;
@@ -80,40 +73,8 @@ public abstract class Row extends JPanel implements MouseListener
 		setComponentPopupMenu(popupMenu);
 	}
 
-	public void setRowTitle()
-	{
-		rowTitle.setText(musicData.getSongName());
-		rowTitle.setHorizontalAlignment(JLabel.LEFT);
-		rowTitle.setFont(FontManager.getRunescapeFont());
-		if (expanded)
-		{
-			rowTitle.setIcon(IconData.UP_ICON.getIcon());
-
-		}
-		else
-		{
-			rowTitle.setIcon(IconData.DOWN_ICON.getIcon());
-		}
-		rowTitle.setHorizontalTextPosition(JLabel.RIGHT);
-		rowTitle.setVerticalTextPosition(JLabel.CENTER);
-	}
-
-	public void setRowPinIcon()
-	{
-		enabled = plugin.getMapPoints().stream().anyMatch(m -> m.getMusicData().equals(this.getMusicData()));
-
-		if (enabled)
-		{
-			rowPinIcon.setIcon(IconData.REMOVE_ICON.getIcon());
-		}
-		else
-		{
-			rowPinIcon.setIcon(IconData.ADD_ICON.getIcon());
-		}
-	}
-
-	public abstract void setEnabled();
-	public abstract void updateRow();
+	public abstract void setRowTitle();
+	public abstract void updateRowValues();
 	@Override
 	public abstract void mousePressed(MouseEvent e);
 	@Override

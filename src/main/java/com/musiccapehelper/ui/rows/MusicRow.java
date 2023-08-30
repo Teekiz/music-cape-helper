@@ -38,7 +38,6 @@ public class MusicRow extends Row
 
 		//used to standardise all the label fonts (NOTE: description uses a custom version of this because it wouldn't update for some reason)
 		Font font = FontManager.getRunescapeSmallFont();
-		setTextColour();
 
 		//this is for the inherited GridBagConstraints
 		gbc.gridx = 0;
@@ -157,9 +156,66 @@ public class MusicRow extends Row
 		}
 
 		add(informationPanel, gbc);
-		setExpanded();
-		setRowTitle();
 
+		setRowTitle();
+		updateRowValues();
+	}
+
+	@Override
+	public void setRowTitle()
+	{
+		rowTitle.setText(musicData.getSongName());
+		rowTitle.setHorizontalAlignment(JLabel.LEFT);
+		rowTitle.setFont(FontManager.getRunescapeFont());
+		rowTitle.setHorizontalTextPosition(JLabel.RIGHT);
+		rowTitle.setVerticalTextPosition(JLabel.CENTER);
+	}
+
+	@Override
+	public void updateRowValues()
+	{
+		enabled = plugin.getMapPoints().stream().anyMatch(m -> m.getMusicData().equals(this.getMusicData()));
+		expanded = plugin.getExpandedRows().getExpandedRows().stream().anyMatch(e -> e.equals(musicData));
+		informationPanel.setVisible(expanded);
+
+		//enabled icon
+		if (enabled)
+		{
+			rowPinIcon.setIcon(IconData.REMOVE_ICON.getIcon());
+		}
+		else
+		{
+			rowPinIcon.setIcon(IconData.ADD_ICON.getIcon());
+		}
+
+		//expanded icon
+		if (expanded)
+		{
+			rowTitle.setIcon(IconData.UP_ICON.getIcon());
+
+		}
+		else
+		{
+			rowTitle.setIcon(IconData.DOWN_ICON.getIcon());
+		}
+
+		//text colour
+		if (completed && plugin.isPlayerLoggedIn())
+		{
+			rowTitle.setForeground(config.panelCompleteTextColour());
+		}
+		else if (!completed && plugin.isPlayerLoggedIn())
+		{
+			rowTitle.setForeground(config.panelIncompleteTextColour());
+		}
+		else
+		{
+			rowTitle.setForeground(config.panelDefaultTextColour());
+		}
+
+		popupMenu.setText();
+		revalidate();
+		repaint();
 	}
 
 	public void setHintArrowLabel()
@@ -176,48 +232,6 @@ public class MusicRow extends Row
 		}
 		hintArrowLabel.setHorizontalTextPosition(JLabel.LEFT);
 		hintArrowLabel.setVerticalTextPosition(JLabel.BOTTOM);
-	}
-
-	public void setTextColour()
-	{
-		if (completed && plugin.isPlayerLoggedIn())
-		{
-			rowTitle.setForeground(config.panelCompleteTextColour());
-		}
-		else if (!completed && plugin.isPlayerLoggedIn())
-		{
-			rowTitle.setForeground(config.panelIncompleteTextColour());
-		}
-		else
-		{
-			rowTitle.setForeground(config.panelDefaultTextColour());
-		}
-	}
-
-	public void setExpanded()
-	{
-		expanded = plugin.getExpandedRows().getExpandedRows().stream().anyMatch(e -> e.equals(musicData));
-		informationPanel.setVisible(expanded);
-	}
-
-	@Override
-	public void setEnabled()
-	{
-		enabled = plugin.getMapPoints().stream().anyMatch(m -> m.getMusicData().equals(this.getMusicData()));
-	}
-
-	@Override
-	public void updateRow()
-	{
-		setEnabled();
-		setExpanded();
-		setTextColour();
-		setRowTitle();
-		setRowPinIcon();
-		setHintArrowLabel();
-		popupMenu.setText();
-		revalidate();
-		repaint();
 	}
 
 	@Override
@@ -241,7 +255,7 @@ public class MusicRow extends Row
 			if (e.getButton() == MouseEvent.BUTTON1)
 			{
 				plugin.getExpandedRows().updateExpandedRows(this);
-				panel.updateRow(this);
+				//panel.updateRow(this);
 
 			}
 			else if (e.getButton() == MouseEvent.BUTTON3)

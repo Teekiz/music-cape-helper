@@ -105,7 +105,7 @@ public class PanelRows extends JPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				plugin.getExpandedRows().addOrRemoveAllExpandedRows(false, panel.getRows());
-				panel.updateAllRows();
+				//panel.updateAllRows();
 			}
 		});
 
@@ -118,7 +118,7 @@ public class PanelRows extends JPanel
 			public void actionPerformed(ActionEvent e)
 			{
 				plugin.getExpandedRows().addOrRemoveAllExpandedRows(true, panel.getRows());
-				panel.updateAllRows();
+				//panel.updateAllRows();
 			}
 		});
 

@@ -22,6 +22,9 @@ public class HeaderRow extends Row
 	{
 		//could get the panel from plugin and use that
 		super(musicData, plugin, config, panel);
+
+		setRowTitle();
+		updateRowValues();
 	}
 
 	@Override
@@ -51,23 +54,8 @@ public class HeaderRow extends Row
 	}
 
 	@Override
-	public void setRowPinIcon()
+	public void updateRowValues()
 	{
-		if (enabled)
-		{
-			rowPinIcon.setIcon(IconData.REMOVE_ICON.getIcon());
-		}
-		else
-		{
-			rowPinIcon.setIcon(IconData.ADD_ICON.getIcon());
-		}
-	}
-
-	@Override
-	public void setEnabled()
-	{
-		//todo - could change to use plugin only by comparing filteredList to mapPoints
-		//todo- if this is done, changed helperPanel updateAllRows() to use only one line
 		if (panel == null)
 		{
 			return;
@@ -97,13 +85,16 @@ public class HeaderRow extends Row
 				.filter(r -> r.getMusicData().getSettingsRegion().equals(headerType.getSettingsRegion()))
 				.allMatch(Row::isEnabled);
 		}
-	}
 
-	@Override
-	public void updateRow()
-	{
-		setEnabled();
-		setRowPinIcon();
+		if (enabled)
+		{
+			rowPinIcon.setIcon(IconData.REMOVE_ICON.getIcon());
+		}
+		else
+		{
+			rowPinIcon.setIcon(IconData.ADD_ICON.getIcon());
+		}
+
 		popupMenu.setText();
 		revalidate();
 		repaint();

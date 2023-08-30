@@ -13,7 +13,10 @@ import com.musiccapehelper.ui.rows.HeaderRow;
 import com.musiccapehelper.ui.panels.Panel;
 import com.musiccapehelper.ui.rows.MusicRow;
 import com.musiccapehelper.ui.rows.Row;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.Observable;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -86,6 +89,18 @@ public class MusicCapeHelperPlugin extends Plugin
 		musicCapeHelperAccess = new MusicCapeHelperAccess(config, configManager, gson);
 		musicList = new Music(config);
 		expandedRows = new ExpandedRows(configManager, gson);
+
+		PropertyChangeListener propertyChangeListener = new PropertyChangeListener()
+		{
+			@Override
+			public void propertyChange(PropertyChangeEvent evt)
+			{
+				log.info("updateAllRowsChanged");
+				panel.updateAllRows();
+			}
+		};
+
+		expandedRows.addPropertyChangeListener(propertyChangeListener);
 
 		hintArrowMusicData = null;
 		mapPoints = musicCapeHelperAccess.loadMapMarkers();
