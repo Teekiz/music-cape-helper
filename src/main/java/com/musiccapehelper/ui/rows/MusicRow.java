@@ -174,8 +174,8 @@ public class MusicRow extends Row
 	@Override
 	public void updateRowValues()
 	{
-		enabled = plugin.getMapPoints().getMapPoints().stream().anyMatch(m -> m.getMusicData().equals(this.getMusicData()));
-		expanded = plugin.getExpandedRows().getExpandedRows().stream().anyMatch(e -> e.equals(musicData));
+		enabled = plugin.getMusicMapPoints().getMapPoints().stream().anyMatch(m -> m.getMusicData().equals(this.getMusicData()));
+		expanded = plugin.getMusicExpandedRows().getExpandedRows().stream().anyMatch(e -> e.equals(musicData));
 		informationPanel.setVisible(expanded);
 
 		//enabled icon
@@ -241,7 +241,7 @@ public class MusicRow extends Row
 		{
 			if (e.getButton() == MouseEvent.BUTTON1)
 			{
-				plugin.getMapPoints().rowPinClicked(this);
+				plugin.getMusicMapPoints().rowPinClicked(this);
 			}
 			else if (e.getButton() == MouseEvent.BUTTON3)
 			{
@@ -254,7 +254,7 @@ public class MusicRow extends Row
 		{
 			if (e.getButton() == MouseEvent.BUTTON1)
 			{
-				plugin.getExpandedRows().updateExpandedRows(this);
+				plugin.getMusicExpandedRows().updateExpandedRows(this);
 				//panel.updateRow(this);
 
 			}

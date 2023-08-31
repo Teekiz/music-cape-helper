@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import net.runelite.api.widgets.Widget;
 
-public class Music
+public class MusicList
 {
 	private final HashMap<MusicData, Boolean> musicList = new HashMap<>();
 	private Widget[] gameMusicWidget;
@@ -20,7 +20,7 @@ public class Music
 	private final PropertyChangeSupport propertyChangeSupport
 		= new PropertyChangeSupport(this);
 
-	public Music(MusicCapeHelperConfig config)
+	public MusicList(MusicCapeHelperConfig config)
 	{
 		this.config = config;
 

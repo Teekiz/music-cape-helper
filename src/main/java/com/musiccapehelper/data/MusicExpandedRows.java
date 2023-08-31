@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import net.runelite.client.config.ConfigManager;
 
-public class ExpandedRows
+public class MusicExpandedRows
 {
 	private final List<MusicData> expandedRows;
 	private final ConfigManager configManager;
@@ -23,7 +23,7 @@ public class ExpandedRows
 	private final PropertyChangeSupport propertyChangeSupport
 		= new PropertyChangeSupport(this);
 
-	public ExpandedRows(ConfigManager configManager, Gson gson)
+	public MusicExpandedRows(ConfigManager configManager, Gson gson)
 	{
 		this.configManager = configManager;
 		this.gson = gson;

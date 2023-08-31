@@ -2,22 +2,16 @@ package com.musiccapehelper;
 
 import com.google.gson.Gson;
 import com.google.inject.Provides;
-import com.musiccapehelper.data.ExpandedRows;
-import com.musiccapehelper.data.MapPoints;
-import com.musiccapehelper.data.Music;
-import com.musiccapehelper.enums.data.HeaderType;
+import com.musiccapehelper.data.MusicExpandedRows;
+import com.musiccapehelper.data.MusicMapPoints;
+import com.musiccapehelper.data.MusicList;
 import com.musiccapehelper.enums.data.IconData;
 import com.musiccapehelper.enums.data.MusicData;
-import com.musiccapehelper.enums.settings.SettingsOrderBy;
 import com.musiccapehelper.ui.map.MusicWorldMapPoint;
-import com.musiccapehelper.ui.rows.HeaderRow;
 import com.musiccapehelper.ui.panels.Panel;
-import com.musiccapehelper.ui.rows.MusicRow;
 import com.musiccapehelper.ui.rows.Row;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.List;
-import java.util.Observable;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +20,6 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.WidgetLoaded;
-import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetID;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
@@ -66,11 +59,11 @@ public class MusicCapeHelperPlugin extends Plugin
 	private Panel panel;
 	@Getter
 	//private List<MusicWorldMapPoint> mapPoints;
-	private MapPoints mapPoints;
+	private MusicMapPoints musicMapPoints;
 	@Getter
-	private ExpandedRows expandedRows;
+	private MusicExpandedRows musicExpandedRows;
 	@Getter
-	private Music musicList;
+	private MusicList musicList;
 	@Getter
 	private MusicData hintArrowMusicData;
 
@@ -87,9 +80,9 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-		musicList = new Music(config);
-		expandedRows = new ExpandedRows(configManager, gson);
-		mapPoints = new MapPoints(this, config, worldMapPointManager,configManager, gson);
+		musicList = new MusicList(config);
+		musicExpandedRows = new MusicExpandedRows(configManager, gson);
+		musicMapPoints = new MusicMapPoints(this, config, worldMapPointManager,configManager, gson);
 
 		PropertyChangeListener propertyChangeListener = new PropertyChangeListener()
 		{
@@ -99,7 +92,7 @@ public class MusicCapeHelperPlugin extends Plugin
 				if (evt.getPropertyName().equals("musicList"))
 				{
 					panel.createAndRefreshRows("");
-					mapPoints.updateMapPoints();
+					musicMapPoints.updateMapPoints();
 				}
 				else
 				{
@@ -109,8 +102,8 @@ public class MusicCapeHelperPlugin extends Plugin
 		};
 
 		musicList.addPropertyChangeListener(propertyChangeListener);
-		expandedRows.addPropertyChangeListener(propertyChangeListener);
-		mapPoints.addPropertyChangeListener(propertyChangeListener);
+		musicExpandedRows.addPropertyChangeListener(propertyChangeListener);
+		musicMapPoints.addPropertyChangeListener(propertyChangeListener);
 
 		hintArrowMusicData = null;
 
@@ -128,8 +121,8 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Override
 	protected void shutDown() throws Exception
 	{
-		mapPoints.saveMapMarkers();
-		expandedRows.saveExpandedRows();
+		musicMapPoints.saveMapMarkers();
+		musicExpandedRows.saveExpandedRows();
 
 		clientToolbar.removeNavigation(navigationButton);
 		worldMapPointManager.removeIf(MusicWorldMapPoint.class::isInstance);
@@ -140,7 +133,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	{
 		if (configChanged.getKey().equals("differentiateQuestMarkers") || configChanged.getKey().equals("differentiateCompletedMarkers"))
 		{
-			clientThread.invokeAtTickEnd(mapPoints::updateMapPoints);
+			clientThread.invokeAtTickEnd(musicMapPoints::updateMapPoints);
 		}
 		else if (configChanged.getKey().equals("panelSettingLocked") || configChanged.getKey().equals("panelSettingQuest") ||
 			configChanged.getKey().equals("panelSettingRegion") || configChanged.getKey().equals("panelSettingOptional") ||

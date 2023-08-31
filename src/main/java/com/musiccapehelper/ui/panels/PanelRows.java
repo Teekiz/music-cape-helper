@@ -65,7 +65,7 @@ public class PanelRows extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.getMapPoints().addOrRemoveAllMapPoints(true);
+				plugin.getMusicMapPoints().addOrRemoveAllMapPoints(true);
 			}
 		});
 		controlPanel.add(pinAllControl);
@@ -78,7 +78,7 @@ public class PanelRows extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.getMapPoints().addOrRemoveAllMapPoints(false);
+				plugin.getMusicMapPoints().addOrRemoveAllMapPoints(false);
 			}
 		});
 
@@ -102,7 +102,7 @@ public class PanelRows extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.getExpandedRows().addOrRemoveAllExpandedRows(false, panel.getRows());
+				plugin.getMusicExpandedRows().addOrRemoveAllExpandedRows(false, panel.getRows());
 			}
 		});
 
@@ -114,7 +114,7 @@ public class PanelRows extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.getExpandedRows().addOrRemoveAllExpandedRows(true, panel.getRows());
+				plugin.getMusicExpandedRows().addOrRemoveAllExpandedRows(true, panel.getRows());
 			}
 		});
 
@@ -202,7 +202,7 @@ public class PanelRows extends JPanel
 			noRowsLabel.setHorizontalTextPosition(JLabel.CENTER);
 			noRowsLabel.setVerticalTextPosition(JLabel.BOTTOM);
 
-			if (isOnMapPanel && plugin.getMapPoints().getMapPoints().size() == 0)
+			if (isOnMapPanel && plugin.getMusicMapPoints().getMapPoints().size() == 0)
 			{
 				noRowsLabel.setText("<html>You have no markers on" +
 						"<br/> the map. Click the green" +

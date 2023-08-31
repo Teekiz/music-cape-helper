@@ -21,7 +21,7 @@ import java.util.List;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.ui.overlay.worldmap.WorldMapPointManager;
 
-public class MapPoints
+public class MusicMapPoints
 {
 	private final List<MusicWorldMapPoint> mapPoints;
 	private final MusicCapeHelperPlugin plugin;
@@ -32,7 +32,7 @@ public class MapPoints
 	private final PropertyChangeSupport propertyChangeSupport
 		= new PropertyChangeSupport(this);
 
-	public MapPoints(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, WorldMapPointManager worldMapPointManager, ConfigManager configManager, Gson gson)
+	public MusicMapPoints(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, WorldMapPointManager worldMapPointManager, ConfigManager configManager, Gson gson)
 	{
 		this.plugin = plugin;
 		this.config = config;
