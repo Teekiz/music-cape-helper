@@ -2,11 +2,11 @@ package com.musiccapehelper.ui.panels;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
-import com.musiccapehelper.MusicExpandedRows;
-import com.musiccapehelper.MusicHintArrow;
-import com.musiccapehelper.MusicList;
-import com.musiccapehelper.MusicMapPoints;
-import com.musiccapehelper.MusicPanelRows;
+import com.musiccapehelper.data.MusicExpandedRows;
+import com.musiccapehelper.data.MusicHintArrow;
+import com.musiccapehelper.data.MusicList;
+import com.musiccapehelper.data.MusicMapPoints;
+import com.musiccapehelper.data.MusicPanelRows;
 import com.musiccapehelper.ui.rows.HeaderRow;
 import com.musiccapehelper.ui.rows.MusicRow;
 import com.musiccapehelper.ui.rows.Row;

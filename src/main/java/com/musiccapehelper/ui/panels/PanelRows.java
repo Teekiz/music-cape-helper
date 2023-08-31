@@ -1,9 +1,9 @@
 package com.musiccapehelper.ui.panels;
 
-import com.musiccapehelper.MusicExpandedRows;
-import com.musiccapehelper.MusicHintArrow;
-import com.musiccapehelper.MusicMapPoints;
-import com.musiccapehelper.MusicPanelRows;
+import com.musiccapehelper.data.MusicExpandedRows;
+import com.musiccapehelper.data.MusicHintArrow;
+import com.musiccapehelper.data.MusicMapPoints;
+import com.musiccapehelper.data.MusicPanelRows;
 import com.musiccapehelper.enums.data.IconData;
 import com.musiccapehelper.ui.rows.Row;
 import java.awt.BorderLayout;

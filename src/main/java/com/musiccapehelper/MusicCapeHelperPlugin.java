@@ -2,6 +2,11 @@ package com.musiccapehelper;
 
 import com.google.gson.Gson;
 import com.google.inject.Provides;
+import com.musiccapehelper.data.MusicExpandedRows;
+import com.musiccapehelper.data.MusicHintArrow;
+import com.musiccapehelper.data.MusicList;
+import com.musiccapehelper.data.MusicMapPoints;
+import com.musiccapehelper.data.MusicPanelRows;
 import com.musiccapehelper.enums.data.IconData;
 import com.musiccapehelper.ui.map.MusicWorldMapPoint;
 import com.musiccapehelper.ui.panels.Panel;
@@ -56,21 +61,21 @@ public class MusicCapeHelperPlugin extends Plugin
 	private MusicPanelRows musicPanelRows;
 	private MusicHintArrow musicHintArrow;
 
-
-	//todo - update this
 	/*
-		Map Marker Creation
-		1) When the plugin is enabled a list of a music enums is created.
-		2) Update Music List is called, this checks to see if there has been any changes (requires the widget of music to be loaded)
-		3) This calls the panel update method which adds new rows then places them on the panel
-		4) Repeat step 2 for every update
+		Row Creation
+		1) When the plugin is enabled a list of a music enums is created in musicList.
+		2) Once start up has complete, updateMusicList is called which then causes a propertyChangeEvent to be fired.
+		3) This calls the panel which calls MusicPanelRows to create all rows found by the musicList object
+		4) The panel then adds these to the Panel PanelRows section.
+		5) updateMusicList will continue to fire propertyChangedEvent if settings or changes to the music list.
+		6) Other row specific changes (pin, expand and hint arrow) will lead to a similar propertyChangedEvents, however this will instead update all rows.
 	 */
 
 	@Override
 	protected void startUp() throws Exception
 	{
 		musicList = new MusicList(config);
-		musicHintArrow = new MusicHintArrow(client);
+		musicHintArrow = new MusicHintArrow(this, client);
 		musicPanelRows = new MusicPanelRows(this, config, musicList, itemManager, clientThread);
 		musicMapPoints = new MusicMapPoints(config, musicPanelRows, musicList, worldMapPointManager, configManager, gson);
 		musicExpandedRows = new MusicExpandedRows(configManager, gson);

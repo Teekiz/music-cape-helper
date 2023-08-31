@@ -2,7 +2,7 @@ package com.musiccapehelper.ui.panels;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
-import com.musiccapehelper.MusicList;
+import com.musiccapehelper.data.MusicList;
 import com.musiccapehelper.enums.settings.SettingsLocked;
 import com.musiccapehelper.enums.settings.SettingsOptional;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;

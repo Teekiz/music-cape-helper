@@ -1,5 +1,7 @@
-package com.musiccapehelper;
+package com.musiccapehelper.data;
 
+import com.musiccapehelper.MusicCapeHelperConfig;
+import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
 import com.musiccapehelper.ui.rows.HeaderRow;
 import com.musiccapehelper.ui.rows.MusicRow;

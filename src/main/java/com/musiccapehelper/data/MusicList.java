@@ -1,4 +1,4 @@
-package com.musiccapehelper;
+package com.musiccapehelper.data;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.enums.data.MusicData;

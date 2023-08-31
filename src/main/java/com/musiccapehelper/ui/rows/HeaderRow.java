@@ -1,9 +1,9 @@
 package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
-import com.musiccapehelper.MusicExpandedRows;
-import com.musiccapehelper.MusicMapPoints;
-import com.musiccapehelper.MusicPanelRows;
+import com.musiccapehelper.data.MusicExpandedRows;
+import com.musiccapehelper.data.MusicMapPoints;
+import com.musiccapehelper.data.MusicPanelRows;
 import com.musiccapehelper.enums.data.HeaderType;
 import com.musiccapehelper.enums.data.IconData;
 import com.musiccapehelper.enums.data.MusicData;

@@ -1,9 +1,10 @@
-package com.musiccapehelper;
+package com.musiccapehelper.data;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.enums.data.HeaderType;
 import com.musiccapehelper.enums.data.MusicData;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;

@@ -1,9 +1,7 @@
 package com.musiccapehelper.ui.rows;
 
-import com.musiccapehelper.MusicExpandedRows;
-import com.musiccapehelper.MusicMapPoints;
-import com.musiccapehelper.ui.rows.MusicRow;
-import com.musiccapehelper.ui.rows.Row;
+import com.musiccapehelper.data.MusicExpandedRows;
+import com.musiccapehelper.data.MusicMapPoints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;

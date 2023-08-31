@@ -2,10 +2,10 @@ package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
-import com.musiccapehelper.MusicExpandedRows;
-import com.musiccapehelper.MusicHintArrow;
-import com.musiccapehelper.MusicMapPoints;
-import com.musiccapehelper.MusicPanelRows;
+import com.musiccapehelper.data.MusicExpandedRows;
+import com.musiccapehelper.data.MusicHintArrow;
+import com.musiccapehelper.data.MusicMapPoints;
+import com.musiccapehelper.data.MusicPanelRows;
 import com.musiccapehelper.enums.data.IconData;
 import com.musiccapehelper.enums.data.MusicData;
 import java.awt.Color;
@@ -220,6 +220,7 @@ public class MusicRow extends Row
 		}
 
 		popupMenu.setText();
+		setHintArrowLabel();
 		revalidate();
 		repaint();
 	}
