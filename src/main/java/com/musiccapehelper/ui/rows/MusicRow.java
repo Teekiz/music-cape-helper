@@ -2,12 +2,12 @@ package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
+import com.musiccapehelper.MusicExpandedRows;
+import com.musiccapehelper.MusicHintArrow;
+import com.musiccapehelper.MusicMapPoints;
+import com.musiccapehelper.MusicPanelRows;
 import com.musiccapehelper.enums.data.IconData;
 import com.musiccapehelper.enums.data.MusicData;
-import com.musiccapehelper.ui.panels.Panel;
-import com.musiccapehelper.ui.rows.addons.MusicRowEvent;
-import com.musiccapehelper.ui.rows.addons.MusicRowItems;
-import com.musiccapehelper.ui.rows.addons.MusicRowQuest;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -24,16 +24,22 @@ import net.runelite.client.ui.FontManager;
 
 public class MusicRow extends Row
 {
+	private final MusicCapeHelperPlugin plugin;
 	@Getter
 	protected boolean completed;
 	private final JPanel informationPanel = new JPanel();
 	private final JLabel hintArrowLabel;
+	private final MusicHintArrow musicHintArrow;
 
 	public MusicRow(MusicData musicData, boolean completed, MusicCapeHelperPlugin plugin,
-					MusicCapeHelperConfig config, Panel panel, ItemManager itemManager, ClientThread clientThread)
+					MusicCapeHelperConfig config, ItemManager itemManager, ClientThread clientThread,
+					MusicPanelRows musicPanelRows, MusicMapPoints musicMapPoints, MusicExpandedRows musicExpandedRows,
+					MusicHintArrow musicHintArrow)
 	{
-		super(musicData, plugin, config, panel);
+		super(musicData, config, musicPanelRows, musicMapPoints, musicExpandedRows);
+		this.plugin = plugin;
 		this.completed = completed;
+		this.musicHintArrow = musicHintArrow;
 
 
 		//used to standardise all the label fonts (NOTE: description uses a custom version of this because it wouldn't update for some reason)
@@ -174,8 +180,8 @@ public class MusicRow extends Row
 	@Override
 	public void updateRowValues()
 	{
-		enabled = plugin.getMusicMapPoints().getMapPoints().stream().anyMatch(m -> m.getMusicData().equals(this.getMusicData()));
-		expanded = plugin.getMusicExpandedRows().getExpandedRows().stream().anyMatch(e -> e.equals(musicData));
+		enabled = musicMapPoints.getMapPoints().stream().anyMatch(m -> m.getMusicData().equals(this.getMusicData()));
+		expanded = musicExpandedRows.getExpandedRows().stream().anyMatch(e -> e.equals(musicData));
 		informationPanel.setVisible(expanded);
 
 		//enabled icon
@@ -220,7 +226,7 @@ public class MusicRow extends Row
 
 	public void setHintArrowLabel()
 	{
-		if (plugin.getHintArrowMusicData() == null || !plugin.getHintArrowMusicData().equals(this.getMusicData()))
+		if (musicHintArrow.getMusicHintArrow() == null || !musicHintArrow.getMusicHintArrow().equals(this.getMusicData()))
 		{
 			hintArrowLabel.setText("Set Arrow:");
 			hintArrowLabel.setIcon(IconData.SHOW_HINT_ARROW.getIcon());
@@ -241,7 +247,7 @@ public class MusicRow extends Row
 		{
 			if (e.getButton() == MouseEvent.BUTTON1)
 			{
-				plugin.getMusicMapPoints().rowPinClicked(this);
+				musicMapPoints.rowPinClicked(this);
 			}
 			else if (e.getButton() == MouseEvent.BUTTON3)
 			{
@@ -254,7 +260,7 @@ public class MusicRow extends Row
 		{
 			if (e.getButton() == MouseEvent.BUTTON1)
 			{
-				plugin.getMusicExpandedRows().updateExpandedRows(this);
+				musicExpandedRows.updateExpandedRows(this);
 				//panel.updateRow(this);
 
 			}
@@ -266,7 +272,7 @@ public class MusicRow extends Row
 
 		else if (e.getComponent().equals(hintArrowLabel))
 		{
-			plugin.setHintArrow(MusicRow.this);
+			musicHintArrow.setHintArrow(this.musicData);
 		}
 	}
 }

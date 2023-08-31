@@ -1,7 +1,9 @@
 package com.musiccapehelper.ui.panels;
 
-import com.musiccapehelper.MusicCapeHelperConfig;
-import com.musiccapehelper.MusicCapeHelperPlugin;
+import com.musiccapehelper.MusicExpandedRows;
+import com.musiccapehelper.MusicHintArrow;
+import com.musiccapehelper.MusicMapPoints;
+import com.musiccapehelper.MusicPanelRows;
 import com.musiccapehelper.enums.data.IconData;
 import com.musiccapehelper.ui.rows.Row;
 import java.awt.BorderLayout;
@@ -25,22 +27,23 @@ import net.runelite.client.ui.FontManager;
 
 public class PanelRows extends JPanel
 {
-	final MusicCapeHelperPlugin plugin;
-	final MusicCapeHelperConfig config;
+	private final MusicMapPoints musicMapPoints;
 	@Getter
 	boolean isOnMapPanel;
+
+
 	private final JScrollPane musicScrollPane;
 	private final JPanel musicScrollPaneContentPanel;
 	private JPanel emptySpacePanel;
 	private final JLabel songNameLabelHeader;
-	private final Panel panel;
+	private final MusicPanelRows musicPanelRows;
 
-	public PanelRows(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, Panel panel, boolean isOnMapPanel)
+	public PanelRows(boolean isOnMapPanel, MusicPanelRows musicPanelRows, MusicMapPoints musicMapPoints,
+					 MusicExpandedRows musicExpandedRows, MusicHintArrow musicHintArrow)
 	{
-		this.plugin = plugin;
-		this.config = config;
 		this.isOnMapPanel = isOnMapPanel;
-		this.panel = panel;
+		this.musicPanelRows = musicPanelRows;
+		this.musicMapPoints = musicMapPoints;
 
 		//name region required
 		setLayout(new BorderLayout(0, 10));
@@ -65,7 +68,7 @@ public class PanelRows extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.getMusicMapPoints().addOrRemoveAllMapPoints(true);
+				musicMapPoints.addOrRemoveAllMapPoints(true);
 			}
 		});
 		controlPanel.add(pinAllControl);
@@ -78,7 +81,7 @@ public class PanelRows extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.getMusicMapPoints().addOrRemoveAllMapPoints(false);
+				musicMapPoints.addOrRemoveAllMapPoints(false);
 			}
 		});
 
@@ -90,7 +93,7 @@ public class PanelRows extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.clearHintArrow();
+				musicHintArrow.clearHintArrow();
 			}
 		});
 
@@ -102,7 +105,7 @@ public class PanelRows extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.getMusicExpandedRows().addOrRemoveAllExpandedRows(false, panel.getRows());
+				musicExpandedRows.addOrRemoveAllExpandedRows(false, musicPanelRows.getRows());
 			}
 		});
 
@@ -114,7 +117,7 @@ public class PanelRows extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				plugin.getMusicExpandedRows().addOrRemoveAllExpandedRows(true, panel.getRows());
+				musicExpandedRows.addOrRemoveAllExpandedRows(true, musicPanelRows.getRows());
 			}
 		});
 
@@ -145,7 +148,7 @@ public class PanelRows extends JPanel
 		gridBagConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
 
-		panel.getRows().forEach(r ->
+		musicPanelRows.getRows().forEach(r ->
 		{
 			musicScrollPaneContentPanel.add(r, gridBagConstraints);
 			gridBagConstraints.gridy++;
@@ -202,7 +205,7 @@ public class PanelRows extends JPanel
 			noRowsLabel.setHorizontalTextPosition(JLabel.CENTER);
 			noRowsLabel.setVerticalTextPosition(JLabel.BOTTOM);
 
-			if (isOnMapPanel && plugin.getMusicMapPoints().getMapPoints().size() == 0)
+			if (isOnMapPanel && musicMapPoints.getMapPoints().size() == 0)
 			{
 				noRowsLabel.setText("<html>You have no markers on" +
 						"<br/> the map. Click the green" +

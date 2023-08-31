@@ -1,7 +1,7 @@
-package com.musiccapehelper.ui.rows.addons;
+package com.musiccapehelper.ui.rows;
 
-import com.musiccapehelper.MusicCapeHelperPlugin;
-import com.musiccapehelper.ui.panels.Panel;
+import com.musiccapehelper.MusicExpandedRows;
+import com.musiccapehelper.MusicMapPoints;
 import com.musiccapehelper.ui.rows.MusicRow;
 import com.musiccapehelper.ui.rows.Row;
 import java.awt.event.ActionEvent;
@@ -13,17 +13,17 @@ import net.runelite.client.ui.FontManager;
 
 public class PopupMenu extends JPopupMenu implements ActionListener
 {
-	private final MusicCapeHelperPlugin plugin;
-	private final Panel panel;
 	private final Row row;
+	private final MusicMapPoints musicMapPoints;
+	private final MusicExpandedRows musicExpandedRows;
 	private final JMenuItem popupMenuIconText;
 	private JMenuItem popupMenuBackgroundText;
 
-	public PopupMenu(Row row, MusicCapeHelperPlugin plugin, Panel panel)
+	public PopupMenu(Row row, MusicMapPoints musicMapPoints, MusicExpandedRows musicExpandedRows)
 	{
-		this.plugin = plugin;
-		this.panel = panel;
 		this.row = row;
+		this.musicMapPoints = musicMapPoints;
+		this.musicExpandedRows = musicExpandedRows;
 
 		setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -72,14 +72,13 @@ public class PopupMenu extends JPopupMenu implements ActionListener
 	{
 		if (e.getSource().equals(popupMenuIconText))
 		{
-			plugin.getMusicMapPoints().rowPinClicked(row);
+			musicMapPoints.rowPinClicked(row);
 			setVisible(false);
 		}
 
 		if (e.getSource().equals(popupMenuBackgroundText))
 		{
-			plugin.getMusicExpandedRows().updateExpandedRows((MusicRow) row);
-			panel.updateRow(row);
+			musicExpandedRows.updateExpandedRows((MusicRow) row);
 			setVisible(false);
 		}
 	}

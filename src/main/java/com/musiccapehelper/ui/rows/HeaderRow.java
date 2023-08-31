@@ -1,12 +1,13 @@
 package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
-import com.musiccapehelper.MusicCapeHelperPlugin;
+import com.musiccapehelper.MusicExpandedRows;
+import com.musiccapehelper.MusicMapPoints;
+import com.musiccapehelper.MusicPanelRows;
 import com.musiccapehelper.enums.data.HeaderType;
 import com.musiccapehelper.enums.data.IconData;
 import com.musiccapehelper.enums.data.MusicData;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
-import com.musiccapehelper.ui.panels.Panel;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import javax.swing.JLabel;
@@ -18,11 +19,13 @@ public class HeaderRow extends Row
 	@Getter
 	private HeaderType headerType;
 
-	public HeaderRow(MusicData musicData, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, Panel panel)
+	public HeaderRow(MusicData musicData, MusicCapeHelperConfig config,
+		MusicPanelRows musicPanelRows, MusicMapPoints musicMapPoints, MusicExpandedRows musicExpandedRows)
 	{
 		//could get the panel from plugin and use that
-		super(musicData, plugin, config, panel);
+		super(musicData, config, musicPanelRows, musicMapPoints, musicExpandedRows);
 
+		//todo check this
 		setRowTitle();
 		updateRowValues();
 	}
@@ -56,14 +59,9 @@ public class HeaderRow extends Row
 	@Override
 	public void updateRowValues()
 	{
-		if (panel == null)
-		{
-			return;
-		}
-
 		if (headerType.equals(HeaderType.REQUIRED))
 		{
-			enabled = panel.getRows()
+			enabled = musicPanelRows.getRows()
 				.stream()
 				.filter(r -> r instanceof MusicRow)
 				.filter(r -> r.getMusicData().isRequired())
@@ -71,7 +69,7 @@ public class HeaderRow extends Row
 		}
 		else if (headerType.equals(HeaderType.OPTIONAL))
 		{
-			enabled = panel.getRows()
+			enabled =  musicPanelRows.getRows()
 				.stream()
 				.filter(r -> r instanceof MusicRow)
 				.filter(r -> !r.getMusicData().isRequired())
@@ -79,7 +77,7 @@ public class HeaderRow extends Row
 		}
 		else
 		{
-			enabled = panel.getRows()
+			enabled =  musicPanelRows.getRows()
 				.stream()
 				.filter(r -> r instanceof MusicRow)
 				.filter(r -> r.getMusicData().getSettingsRegion().equals(headerType.getSettingsRegion()))
@@ -108,7 +106,7 @@ public class HeaderRow extends Row
 		{
 			if (e.getButton() == MouseEvent.BUTTON1)
 			{
-				plugin.getMusicMapPoints().rowPinClicked(this);
+				musicMapPoints.rowPinClicked(this);
 			}
 			else if (e.getButton() == MouseEvent.BUTTON3)
 			{

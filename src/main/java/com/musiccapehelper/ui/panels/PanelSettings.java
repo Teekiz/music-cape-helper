@@ -2,6 +2,7 @@ package com.musiccapehelper.ui.panels;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.MusicCapeHelperPlugin;
+import com.musiccapehelper.MusicList;
 import com.musiccapehelper.enums.settings.SettingsLocked;
 import com.musiccapehelper.enums.settings.SettingsOptional;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
@@ -30,7 +31,7 @@ public class PanelSettings extends JPanel
 	private final JComboBox<String> includeOptionalCombo;
 	private final JComboBox<String> orderCombo;
 
-	public PanelSettings(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, Panel panel)
+	public PanelSettings(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, Panel panel, MusicList musicList)
 	{
 
 		//Order of the panel Components - Search Bar, Settings tab, Music List
@@ -58,10 +59,10 @@ public class PanelSettings extends JPanel
 			@Override
 			public void keyPressed(KeyEvent e)
 			{
-				panel.createAndRefreshRows(searchBar.getText());
+				panel.addRowsToPanel(searchBar.getText());
 			}
 		});
-		searchBar.addClearListener(() -> plugin.getMusicList().updateMusicList());
+		searchBar.addClearListener(musicList::updateMusicList);
 		searchBar.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(searchBar);
 

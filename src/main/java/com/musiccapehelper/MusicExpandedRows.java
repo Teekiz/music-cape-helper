@@ -1,4 +1,4 @@
-package com.musiccapehelper.data;
+package com.musiccapehelper;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -113,7 +113,6 @@ public class MusicExpandedRows
 		propertyChangeSupport.removePropertyChangeListener(listener);
 	}
 
-	//todo change with new value
 	public void propertyChanged()
 	{
 		propertyChangeSupport.firePropertyChange("expandedRows", null, null);

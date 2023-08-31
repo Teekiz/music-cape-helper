@@ -2,18 +2,12 @@ package com.musiccapehelper;
 
 import com.google.gson.Gson;
 import com.google.inject.Provides;
-import com.musiccapehelper.data.MusicExpandedRows;
-import com.musiccapehelper.data.MusicMapPoints;
-import com.musiccapehelper.data.MusicList;
 import com.musiccapehelper.enums.data.IconData;
-import com.musiccapehelper.enums.data.MusicData;
 import com.musiccapehelper.ui.map.MusicWorldMapPoint;
 import com.musiccapehelper.ui.panels.Panel;
-import com.musiccapehelper.ui.rows.Row;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.inject.Inject;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
@@ -55,17 +49,12 @@ public class MusicCapeHelperPlugin extends Plugin
 	@Inject
 	private Gson gson;
 	private NavigationButton navigationButton;
-	@Getter
 	private Panel panel;
-	@Getter
-	//private List<MusicWorldMapPoint> mapPoints;
 	private MusicMapPoints musicMapPoints;
-	@Getter
 	private MusicExpandedRows musicExpandedRows;
-	@Getter
 	private MusicList musicList;
-	@Getter
-	private MusicData hintArrowMusicData;
+	private MusicPanelRows musicPanelRows;
+	private MusicHintArrow musicHintArrow;
 
 
 	//todo - update this
@@ -81,8 +70,13 @@ public class MusicCapeHelperPlugin extends Plugin
 	protected void startUp() throws Exception
 	{
 		musicList = new MusicList(config);
+		musicHintArrow = new MusicHintArrow(client);
+		musicPanelRows = new MusicPanelRows(this, config, musicList, itemManager, clientThread);
+		musicMapPoints = new MusicMapPoints(config, musicPanelRows, musicList, worldMapPointManager, configManager, gson);
 		musicExpandedRows = new MusicExpandedRows(configManager, gson);
-		musicMapPoints = new MusicMapPoints(this, config, worldMapPointManager,configManager, gson);
+
+		//this is so that rows can now get the information they require
+		musicPanelRows.updateRowDependencies(musicMapPoints, musicExpandedRows, musicHintArrow);
 
 		PropertyChangeListener propertyChangeListener = new PropertyChangeListener()
 		{
@@ -91,23 +85,24 @@ public class MusicCapeHelperPlugin extends Plugin
 			{
 				if (evt.getPropertyName().equals("musicList"))
 				{
-					panel.createAndRefreshRows("");
+					panel.addRowsToPanel("");
+					panel.checkMapRowPanels();
 					musicMapPoints.updateMapPoints();
 				}
 				else
 				{
+					log.info("update called");
 					panel.updateAllRows();
 				}
 			}
 		};
 
 		musicList.addPropertyChangeListener(propertyChangeListener);
+		musicHintArrow.addPropertyChangeListener(propertyChangeListener);
 		musicExpandedRows.addPropertyChangeListener(propertyChangeListener);
 		musicMapPoints.addPropertyChangeListener(propertyChangeListener);
 
-		hintArrowMusicData = null;
-
-		panel = new Panel(this, config, itemManager, clientThread);
+		panel = new Panel(this, config, musicList, musicPanelRows, musicMapPoints, musicExpandedRows, musicHintArrow);
 		navigationButton = NavigationButton.builder()
 			.tooltip("Music Cape Helper Panel")
 			.icon(IconData.PLUGIN_ICON.getImage())
@@ -179,30 +174,6 @@ public class MusicCapeHelperPlugin extends Plugin
 	public boolean isPlayerLoggedIn()
 	{
 		return client.getGameState().equals(GameState.LOGGED_IN);
-	}
-
-	public void clearHintArrow()
-	{
-		client.clearHintArrow();
-		panel.updateAllRows();
-	}
-
-	//clears the hint arrow and either sets it to null or updates the arrow to the new music unlock point
-	public void setHintArrow(Row row)
-	{
-		client.clearHintArrow();
-
-		//unsets the music
-		if (hintArrowMusicData != null && hintArrowMusicData.equals(row.getMusicData()))
-		{
-			hintArrowMusicData = null;
-		}
-		else
-		{
-			hintArrowMusicData = row.getMusicData();
-			client.setHintArrow(row.getMusicData().getSongUnlockPoint());
-		}
-		panel.updateAllRows();
 	}
 
 	@Provides

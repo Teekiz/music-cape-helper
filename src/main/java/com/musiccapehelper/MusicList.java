@@ -1,4 +1,4 @@
-package com.musiccapehelper.data;
+package com.musiccapehelper;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
 import com.musiccapehelper.enums.data.MusicData;
@@ -122,7 +122,6 @@ public class MusicList
 		propertyChangeSupport.removePropertyChangeListener(listener);
 	}
 
-	//todo change with new value
 	public void propertyChanged()
 	{
 		propertyChangeSupport.firePropertyChange("musicList", null, null);

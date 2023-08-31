@@ -1,4 +1,4 @@
-package com.musiccapehelper.ui.rows.addons;
+package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.enums.data.MusicData;
 import java.awt.BorderLayout;

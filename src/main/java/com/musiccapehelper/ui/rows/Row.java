@@ -1,10 +1,10 @@
 package com.musiccapehelper.ui.rows;
 
 import com.musiccapehelper.MusicCapeHelperConfig;
-import com.musiccapehelper.MusicCapeHelperPlugin;
+import com.musiccapehelper.MusicExpandedRows;
+import com.musiccapehelper.MusicMapPoints;
+import com.musiccapehelper.MusicPanelRows;
 import com.musiccapehelper.enums.data.MusicData;
-import com.musiccapehelper.ui.panels.Panel;
-import com.musiccapehelper.ui.rows.addons.PopupMenu;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -25,10 +25,11 @@ public abstract class Row extends JPanel implements MouseListener
 	@Getter
 	protected boolean expanded;
 
-	protected MusicCapeHelperPlugin plugin;
-
+	//dependencies
 	protected MusicCapeHelperConfig config;
-	protected Panel panel;
+	protected MusicPanelRows musicPanelRows;
+	protected MusicMapPoints musicMapPoints;
+	protected MusicExpandedRows musicExpandedRows;
 
 	//content
 	protected JLabel rowTitle = new JLabel();
@@ -36,15 +37,18 @@ public abstract class Row extends JPanel implements MouseListener
 	protected GridBagConstraints gbc = new GridBagConstraints();
 	protected PopupMenu popupMenu;
 
-	public Row(MusicData musicData, MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, Panel panel)
+	public Row(MusicData musicData, MusicCapeHelperConfig config,
+		MusicPanelRows musicPanelRows, MusicMapPoints musicMapPoints, MusicExpandedRows musicExpandedRows)
 	{
 		this.musicData = musicData;
-		this.plugin = plugin;
 		this.config = config;
-		this.panel = panel;
+		this.musicPanelRows = musicPanelRows;
+		this.musicMapPoints = musicMapPoints;
+		this.musicExpandedRows = musicExpandedRows;
+
 		this.expanded = false;
 
-		popupMenu = new PopupMenu(this, plugin, panel);
+		popupMenu = new PopupMenu(this, musicMapPoints, musicExpandedRows);
 		setComponentPopupMenu(popupMenu);
 
 		setLayout(new GridBagLayout());

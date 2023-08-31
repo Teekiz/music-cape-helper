@@ -1,11 +1,9 @@
-package com.musiccapehelper.data;
+package com.musiccapehelper;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.musiccapehelper.MusicCapeHelperConfig;
-import com.musiccapehelper.MusicCapeHelperPlugin;
 import com.musiccapehelper.enums.data.HeaderType;
 import com.musiccapehelper.enums.data.MusicData;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
@@ -24,18 +22,21 @@ import net.runelite.client.ui.overlay.worldmap.WorldMapPointManager;
 public class MusicMapPoints
 {
 	private final List<MusicWorldMapPoint> mapPoints;
-	private final MusicCapeHelperPlugin plugin;
 	private final MusicCapeHelperConfig config;
+	private final MusicPanelRows musicPanelRows;
+	private final MusicList musicList;
 	private final WorldMapPointManager worldMapPointManager;
 	private final ConfigManager configManager;
 	private final Gson gson;
 	private final PropertyChangeSupport propertyChangeSupport
 		= new PropertyChangeSupport(this);
 
-	public MusicMapPoints(MusicCapeHelperPlugin plugin, MusicCapeHelperConfig config, WorldMapPointManager worldMapPointManager, ConfigManager configManager, Gson gson)
+	public MusicMapPoints(MusicCapeHelperConfig config, MusicPanelRows musicPanelRows,
+						  MusicList musicList, WorldMapPointManager worldMapPointManager, ConfigManager configManager, Gson gson)
 	{
-		this.plugin = plugin;
 		this.config = config;
+		this.musicPanelRows = musicPanelRows;
+		this.musicList = musicList;
 		this.worldMapPointManager = worldMapPointManager;
 		this.configManager = configManager;
 		this.gson = gson;
@@ -73,7 +74,7 @@ public class MusicMapPoints
 			{
 				if (row.isEnabled())
 				{
-					plugin.getPanel().getRows().stream()
+					musicPanelRows.getRows().stream()
 						.filter(r -> r.getMusicData().getSettingsRegion().equals(((HeaderRow) row).getHeaderType().getSettingsRegion()))
 						.filter(r -> r.isEnabled())
 						.forEach(r ->
@@ -83,7 +84,7 @@ public class MusicMapPoints
 				}
 				else
 				{
-					plugin.getPanel().getRows().stream()
+					musicPanelRows.getRows().stream()
 						.filter(r -> r instanceof MusicRow)
 						.filter(r -> r.getMusicData().getSettingsRegion().equals(((HeaderRow) row).getHeaderType().getSettingsRegion()))
 						.filter(r -> !r.isEnabled())
@@ -99,7 +100,7 @@ public class MusicMapPoints
 				{
 					if (row.isEnabled())
 					{
-						plugin.getPanel().getRows().stream()
+						musicPanelRows.getRows().stream()
 							.filter(r -> r.getMusicData().isRequired())
 							.filter(r -> r.isEnabled())
 							.forEach(r ->
@@ -109,7 +110,7 @@ public class MusicMapPoints
 					}
 					else
 					{
-						plugin.getPanel().getRows().stream()
+						musicPanelRows.getRows().stream()
 							.filter(r -> r instanceof MusicRow)
 							.filter(r -> r.getMusicData().isRequired())
 							.filter(r -> !r.isEnabled())
@@ -123,7 +124,7 @@ public class MusicMapPoints
 				{
 					if (row.isEnabled())
 					{
-						plugin.getPanel().getRows().stream()
+						musicPanelRows.getRows().stream()
 							.filter(r -> !r.getMusicData().isRequired())
 							.filter(r -> r.isEnabled())
 							.forEach(r ->
@@ -133,7 +134,7 @@ public class MusicMapPoints
 					}
 					else
 					{
-						plugin.getPanel().getRows().stream()
+						musicPanelRows.getRows().stream()
 							.filter(r -> r instanceof MusicRow)
 							.filter(r -> !r.getMusicData().isRequired())
 							.filter(r -> !r.isEnabled())
@@ -148,8 +149,6 @@ public class MusicMapPoints
 
 		propertyChanged();
 		addMapPointsToMap();
-
-		plugin.getPanel().checkMapRowPanels();
 	}
 
 	public void addOrRemoveAllMapPoints(boolean addMapPoint)
@@ -157,7 +156,7 @@ public class MusicMapPoints
 		//if addMapPoint is true, add all the existing rows to the map
 		if (addMapPoint)
 		{
-			plugin.getPanel().getRows()
+			musicPanelRows.getRows()
 				.stream()
 				.filter(r -> r instanceof MusicRow)
 				.filter(r -> !r.isEnabled())
@@ -171,8 +170,6 @@ public class MusicMapPoints
 
 		propertyChanged();
 		addMapPointsToMap();
-
-		plugin.getPanel().checkMapRowPanels();
 	}
 
 	//this both adds and removes the markers, to update the map, add or remove from the mapPoint list
@@ -180,7 +177,7 @@ public class MusicMapPoints
 	{
 		//checks to see if the map point has been completed or not
 		mapPoints.forEach(p -> {
-			plugin.getMusicList().getDefaultMusicList().entrySet().forEach(m -> {
+			musicList.getDefaultMusicList().entrySet().forEach(m -> {
 				if (m.getKey().equals(p.getMusicData()))
 				{
 					p.setCompleted(m.getValue());
@@ -247,7 +244,6 @@ public class MusicMapPoints
 		propertyChangeSupport.removePropertyChangeListener(listener);
 	}
 
-	//todo change with new value
 	public void propertyChanged()
 	{
 		propertyChangeSupport.firePropertyChange("mapPoints", null, null);
