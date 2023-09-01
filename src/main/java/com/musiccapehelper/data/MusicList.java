@@ -53,6 +53,12 @@ public class MusicList
 		propertyChanged();
 	}
 
+	public void updateMusicTrack(MusicData music)
+	{
+		musicList.put(music, true);
+		propertyChanged();
+	}
+
 	public void updateGameMusicWidget(Widget[] updatedList)
 	{
 		gameMusicWidget = updatedList;

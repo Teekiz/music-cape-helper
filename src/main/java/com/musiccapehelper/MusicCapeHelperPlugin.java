@@ -146,6 +146,10 @@ public class MusicCapeHelperPlugin extends Plugin
 		{
 			panel.updateAllRows();
 		}
+		else if (configChanged.getKey().equals("panelAllowSetArrow") ||configChanged.getKey().equals("panelIncludeDescription"))
+		{
+			clientThread.invokeAtTickEnd(musicList::updateMusicList);
+		}
 		else if (configChanged.getKey().equals("worldMapMarkers"))
 		{
 			//if the map markers are saved, do nothing
@@ -171,7 +175,7 @@ public class MusicCapeHelperPlugin extends Plugin
 		if (chatMessage.getType().equals(ChatMessageType.GAMEMESSAGE)
 			&& chatMessage.getMessage().startsWith("You have unlocked a new music track: "))
 		{
-			//todo - remove hint arrow of that type
+			//todo - remove hint arrow of that type and to use updateMusicTrack
 			clientThread.invokeAtTickEnd(musicList::updateMusicList);
 		}
 	}

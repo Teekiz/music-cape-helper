@@ -70,14 +70,18 @@ public class MusicRow extends Row
 		informationPanel.add(songRegionLabel, gbcMusicRow);
 
 		hintArrowLabel = new JLabel();
-		hintArrowLabel.setFont(font);
-		hintArrowLabel.setHorizontalAlignment(JLabel.LEFT);
-		gbcMusicRow.anchor = GridBagConstraints.SOUTHEAST;
-		gbcMusicRow.gridx = 2;
-		gbcMusicRow.weighty = 0.0;
-		setHintArrowLabel();
-		informationPanel.add(hintArrowLabel, gbcMusicRow);
-		hintArrowLabel.addMouseListener(this);
+
+		if (config.panelAllowSetArrow())
+		{
+			hintArrowLabel.setFont(font);
+			hintArrowLabel.setHorizontalAlignment(JLabel.LEFT);
+			gbcMusicRow.anchor = GridBagConstraints.SOUTHEAST;
+			gbcMusicRow.gridx = 2;
+			gbcMusicRow.weighty = 0.0;
+			setHintArrowLabel();
+			informationPanel.add(hintArrowLabel, gbcMusicRow);
+			hintArrowLabel.addMouseListener(this);
+		}
 
 		JLabel songIsQuestLabel = new JLabel();
 		if (musicData.isQuest())
@@ -106,43 +110,48 @@ public class MusicRow extends Row
 		{
 			songIsRequiredLabel.setText("Optional       ");
 		}
+
 		songIsRequiredLabel.setFont(font);
 		songIsRequiredLabel.setHorizontalAlignment(JLabel.LEFT);
 		gbcMusicRow.gridx = 2;
 		gbcMusicRow.anchor = GridBagConstraints.SOUTHEAST;
 		informationPanel.add(songIsRequiredLabel, gbcMusicRow);
 
-		JLabel descriptionTextAreaLabel = new JLabel();
-		descriptionTextAreaLabel.setText("Description:");
-		descriptionTextAreaLabel.setFont(font);
-		descriptionTextAreaLabel.setHorizontalAlignment(JLabel.LEFT);
-		gbcMusicRow.gridy = 2;
+		if (config.panelIncludeDescription())
+		{
+			JLabel descriptionTextAreaLabel = new JLabel();
+			descriptionTextAreaLabel.setText("Description:");
+			descriptionTextAreaLabel.setFont(font);
+			descriptionTextAreaLabel.setHorizontalAlignment(JLabel.LEFT);
+			gbcMusicRow.gridy = 2;
+			gbcMusicRow.gridx = 0;
+			gbcMusicRow.weightx = 1.0;
+			gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
+			informationPanel.add(descriptionTextAreaLabel, gbcMusicRow);
+
+			JTextArea descriptionTextArea = new JTextArea();
+			descriptionTextArea.setLineWrap(true);
+			descriptionTextArea.setWrapStyleWord(true);
+			descriptionTextArea.setEditable(false);
+			descriptionTextArea.setOpaque(false);
+			descriptionTextArea.setFont(new Font(FontManager.getRunescapeSmallFont().getName(),
+				FontManager.getRunescapeSmallFont().getStyle(), 16));
+			descriptionTextArea.setFocusable(false);
+			descriptionTextArea.setForeground(Color.LIGHT_GRAY);
+			descriptionTextArea.append(musicData.getDescription());
+
+			gbcMusicRow.gridy = 3;
+			gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
+			gbcMusicRow.gridwidth = GridBagConstraints.REMAINDER;
+			gbcMusicRow.fill = GridBagConstraints.HORIZONTAL;
+			informationPanel.add(descriptionTextArea, gbcMusicRow);
+		}
+
 		gbcMusicRow.gridx = 0;
+		gbcMusicRow.gridy++;
 		gbcMusicRow.weightx = 1.0;
-		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
-		informationPanel.add(descriptionTextAreaLabel, gbcMusicRow);
-
-		JTextArea descriptionTextArea = new JTextArea();
-		descriptionTextArea.setLineWrap(true);
-		descriptionTextArea.setWrapStyleWord(true);
-		descriptionTextArea.setEditable(false);
-		descriptionTextArea.setOpaque(false);
-		descriptionTextArea.setFont(new Font(FontManager.getRunescapeSmallFont().getName(),
-		FontManager.getRunescapeSmallFont().getStyle(), 16));
-		descriptionTextArea.setFocusable(false);
-		descriptionTextArea.setForeground(Color.LIGHT_GRAY);
-		descriptionTextArea.append(musicData.getDescription());
-
-		gbcMusicRow.gridy = 3;
-		gbcMusicRow.weightx = 1.0;
-		gbcMusicRow.anchor = GridBagConstraints.SOUTHWEST;
 		gbcMusicRow.gridwidth = GridBagConstraints.REMAINDER;
 		gbcMusicRow.fill = GridBagConstraints.HORIZONTAL;
-		informationPanel.add(descriptionTextArea, gbcMusicRow);
-
-		gbcMusicRow.gridx = 0;
-		gbcMusicRow.gridy = 4;
-		gbcMusicRow.weightx = 1.0;
 		gbcMusicRow.anchor = GridBagConstraints.SOUTH;
 
 		//events

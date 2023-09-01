@@ -49,9 +49,31 @@ public interface MusicCapeHelperConfig extends Config
 	default Color panelDefaultTextColour() {return Color.WHITE;}
 
 	@ConfigSection(
-		name = "Map Settings",
+		name = "Panel Row Settings",
 		description = "",
 		position = 2
+	)
+	String panelRowSection = "Panel Row Settings";
+	@ConfigItem(
+		keyName = "panelAllowSetArrow",
+		name="Enable hint arrow feature:",
+		description = "When ticked, the player is able to set an which arrow points towards the unlock point when near.",
+		section = "Panel Row Settings"
+	)
+	default boolean panelAllowSetArrow() {return true;}
+
+	@ConfigItem(
+		keyName = "panelIncludeDescription",
+		name="Include description in row:",
+		description = "When ticked, the music tracks description is added.",
+		section = "Panel Row Settings"
+	)
+	default boolean panelIncludeDescription() {return true;}
+
+	@ConfigSection(
+		name = "Map Settings",
+		description = "",
+		position = 3
 	)
 	String mapSection = "Map Settings";
 
@@ -79,8 +101,12 @@ public interface MusicCapeHelperConfig extends Config
 		return true;
 	}
 
-	//todo - remove marker if completed? hide panel if all are unlocked, set the arrows to the default colours
+	//todo - remove marker if completed? hide panel if all are unlocked
 	//Panel settings
+
+	/*
+		The hidden settings for plugin functionality.
+	 */
 
 	@ConfigItem(
 		keyName = "panelSettingLocked",
