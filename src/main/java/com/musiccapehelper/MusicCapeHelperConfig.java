@@ -1,5 +1,6 @@
 package com.musiccapehelper;
 
+import com.musiccapehelper.enums.settings.SettingsHidePanel;
 import com.musiccapehelper.enums.settings.SettingsLocked;
 import com.musiccapehelper.enums.settings.SettingsOptional;
 import com.musiccapehelper.enums.settings.SettingsOrderBy;
@@ -48,6 +49,15 @@ public interface MusicCapeHelperConfig extends Config
 	)
 	default Color panelDefaultTextColour() {return Color.WHITE;}
 
+	@ConfigItem(
+		keyName = "panelHideIfComplete",
+		name="Hide panel once complete",
+		description = "Hides the panel if all tracks are completed",
+		section = "Panel Settings",
+		position = 4
+	)
+	default SettingsHidePanel panelHideIfComplete() {return SettingsHidePanel.NEVER;}
+
 	@ConfigSection(
 		name = "Panel Row Settings",
 		description = "",
@@ -81,7 +91,8 @@ public interface MusicCapeHelperConfig extends Config
 		keyName = "differentiateQuestMarkers",
 		name = "Differentiate quest unlocks:",
 		description = "Changes the markers shown to show a different icon if unlocked as part of a quest",
-		section = "Map Settings"
+		section = "Map Settings",
+		position = 1
 	)
 
 	default boolean differentiateQuestMarkers()
@@ -93,13 +104,31 @@ public interface MusicCapeHelperConfig extends Config
 		keyName = "differentiateCompletedMarkers",
 		name = "Differentiate completed markers: ",
 		description = "Changes the markers shown to show a different icon if the music track has been unlocked",
-		section = "Map Settings"
+		section = "Map Settings",
+		position = 2
 	)
-
 	default boolean differentiateCompletedMarkers()
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "removeMarkerIfComplete",
+		name="Unpin marker upon completion",
+		description = "Removes a map marker once the music track has been completed ",
+		section = "Map Settings",
+		position = 3
+	)
+	default boolean removeMarkerIfComplete() {return true;}
+
+	@ConfigItem(
+		keyName = "removeArrowIfComplete",
+		name="Remove arrow upon completion",
+		description = "Removes the hint arrow once the music track has been completed ",
+		section = "Map Settings",
+		position = 4
+	)
+	default boolean removeArrowIfComplete() {return true;}
 
 	//todo - remove marker if completed? hide panel if all are unlocked
 	//Panel settings
