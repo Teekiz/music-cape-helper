@@ -173,6 +173,16 @@ public class MusicMapPoints
 		addMapPointsToMap();
 	}
 
+	public void removeMapPoint(MusicData music)
+	{
+		MusicWorldMapPoint selectedPoint = mapPoints.stream().filter(r -> r.getMusicData().equals(music)).findFirst().orElse(null);
+		if (selectedPoint != null)
+		{
+			mapPoints.remove(selectedPoint);
+			updateMapPoints();
+		}
+	}
+
 	//this both adds and removes the markers, to update the map, add or remove from the mapPoint list
 	public void updateMapPoints()
 	{

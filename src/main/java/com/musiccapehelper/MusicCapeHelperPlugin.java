@@ -8,16 +8,20 @@ import com.musiccapehelper.data.MusicList;
 import com.musiccapehelper.data.MusicMapPoints;
 import com.musiccapehelper.data.MusicPanelRows;
 import com.musiccapehelper.enums.data.IconData;
+import com.musiccapehelper.enums.data.MusicData;
 import com.musiccapehelper.ui.map.MusicWorldMapPoint;
 import com.musiccapehelper.ui.panels.Panel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.events.ChatMessage;
+import net.runelite.api.events.GameTick;
+import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.WidgetID;
 import net.runelite.client.callback.ClientThread;
@@ -60,6 +64,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	private MusicList musicList;
 	private MusicPanelRows musicPanelRows;
 	private MusicHintArrow musicHintArrow;
+	private int completedCount = 0;
 
 	/*
 		Row Creation
@@ -107,14 +112,8 @@ public class MusicCapeHelperPlugin extends Plugin
 		musicExpandedRows.addPropertyChangeListener(propertyChangeListener);
 		musicMapPoints.addPropertyChangeListener(propertyChangeListener);
 
-		panel = new Panel(this, config, musicList, musicPanelRows, musicMapPoints, musicExpandedRows, musicHintArrow);
-		navigationButton = NavigationButton.builder()
-			.tooltip("Music Cape Helper Panel")
-			.icon(IconData.PLUGIN_ICON.getImage())
-			.panel(panel)
-			.build();
+		buildPanel();
 
-		clientToolbar.addNavigation(navigationButton);
 		clientThread.invokeAtTickEnd(musicList::updateMusicList);
 	}
 
@@ -123,8 +122,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	{
 		musicMapPoints.saveMapMarkers();
 		musicExpandedRows.saveExpandedRows();
-
-		clientToolbar.removeNavigation(navigationButton);
+		removePanel();
 		worldMapPointManager.removeIf(MusicWorldMapPoint.class::isInstance);
 	}
 
@@ -162,27 +160,68 @@ public class MusicCapeHelperPlugin extends Plugin
 		if (widgetLoaded.getGroupId() != WidgetID.MUSIC_GROUP_ID)
 		{
 			return;
-
 		}
+
 		musicList.updateGameMusicWidget(client.getWidget(239, 6).getChildren());
 		clientThread.invokeAtTickEnd(musicList::updateMusicList);
+		completedCount = musicList.getCompletedCount();
 	}
 
 	@Subscribe
-	public void onChatMessage(ChatMessage chatMessage)
+	public void onVarbitChanged(VarbitChanged varbitChanged)
 	{
-		//todo update
-		if (chatMessage.getType().equals(ChatMessageType.GAMEMESSAGE)
-			&& chatMessage.getMessage().startsWith("You have unlocked a new music track: "))
+		//todo - this might not be updating because it occurs before the UI updates
+		log.info("MUSIC CAPE - VARBIT CHANGED " + varbitChanged.getVarpId());
+		//the game has not loaded the music list so an update cannot be performed (used just in case)
+		if (musicList.getGameMusicWidget() == null)
 		{
-			//todo - remove hint arrow of that type and to use updateMusicTrack
-			clientThread.invokeAtTickEnd(musicList::updateMusicList);
+			return;
 		}
+
+		log.info("MUSIC CAPE - VARBIT CHANGED - MUSIC LIST NOT NULL");
+
+		clientThread.invokeAtTickEnd(() ->
+		{
+			musicList.getUpdatedTracks().forEach(music ->
+			{
+				if (config.removeArrowIfComplete() && musicHintArrow.getMusicHintArrow().equals(music))
+				{
+					//this unsets the music arrow
+					musicHintArrow.setHintArrow(music);
+					log.info("MusicCapeHelper - Arrow has been unset for " + music.getSongName());
+				}
+
+				if (config.removeMarkerIfComplete())
+				{
+					musicMapPoints.removeMapPoint(music);
+					log.info("MusicCapeHelper - Map marker has been unset for " + music.getSongName());
+				}
+
+				musicList.updateMusicTrack(music);
+			});
+		});
 	}
 
 	public boolean isPlayerLoggedIn()
 	{
 		return client.getGameState().equals(GameState.LOGGED_IN);
+	}
+
+	public void buildPanel()
+	{
+		panel = new Panel(this, config, musicList, musicPanelRows, musicMapPoints, musicExpandedRows, musicHintArrow);
+		navigationButton = NavigationButton.builder()
+			.tooltip("Music Cape Helper Panel")
+			.icon(IconData.PLUGIN_ICON.getImage())
+			.panel(panel)
+			.build();
+
+		clientToolbar.addNavigation(navigationButton);
+	}
+
+	public void removePanel()
+	{
+		clientToolbar.removeNavigation(navigationButton);
 	}
 
 	@Provides
