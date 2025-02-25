@@ -68,7 +68,7 @@ Further details include:
 - Items required (if applicable).
 <br> ![image](readmeimages/itemreq.PNG) ![image](readmeimages/itemeq.PNG)
 
-By clicking on the pin icon (![image](src/main/resources/addicon.png) AND ![image](src/main/resources/removeicon.png)), this will add or remove the location to the players map.
+By clicking on the pin icon (![image](src/main/resources/AddIcon.png) AND ![image](src/main/resources/RemoveIcon.png)), this will add or remove the location to the players map.
 
 <br>![image](readmeimages/map1.PNG)![image](readmeimages/map2.PNG)
 
