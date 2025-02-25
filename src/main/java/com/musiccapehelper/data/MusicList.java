@@ -153,12 +153,6 @@ public class MusicList
 		return updatedMusicData;
 	}
 
-	//returns the count of completed tracks
-	public int getCompletedCount()
-	{
-		return Long.valueOf(musicList.values().stream().filter(b -> b.equals(true)).count()).intValue();
-	}
-
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChangeSupport.addPropertyChangeListener(listener);
 	}

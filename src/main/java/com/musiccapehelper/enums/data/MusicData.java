@@ -38,7 +38,17 @@ public enum MusicData
 	RAT_A_TAT_TAT("Rat a Tat Tat", true, new WorldPoint(3266, 3400, 0), false, SettingsRegion.MITHALIN,
 	"This track unlocks at the Varrock Rat Pits.", Collections.emptyList()),
 	BEYOND_THE_MEADOW("Beyond the Meadow", true, new WorldPoint(1679, 3550, 0), false, SettingsRegion.GREAT_KOUREND,
-		"This track unlocks west of Hosidius.", Collections.emptyList())
+		"This track unlocks west of Hosidius.", Collections.emptyList()),
+	SORCERESS_GARDEN("Sorceress's Garden", true, new WorldPoint(3320, 3141, 0), false, SettingsRegion.KHARIDIAN_DESERT,
+	"This track unlocks in the Sorceress's Garden.", Collections.emptyList()),
+	GARDEN_OF_AUTUMN("Garden of Autumn", true, new WorldPoint(3320, 3141, 0), false, SettingsRegion.KHARIDIAN_DESERT,
+	"This track unlocks in the Sorceress' Garden minigame.", Collections.emptyList()),
+	GARDEN_OF_SPRING("Garden of Spring", true, new WorldPoint(3320, 3141, 0), false, SettingsRegion.KHARIDIAN_DESERT,
+		"This track unlocks in the Sorceress' Garden minigame.", Collections.emptyList()),
+	GARDEN_OF_SUMMER("Garden of Summer", true, new WorldPoint(3320, 3141, 0), false, SettingsRegion.KHARIDIAN_DESERT,
+		"This track unlocks in the Sorceress' Garden minigame.", Collections.emptyList()),
+	GARDEN_OF_WINTER("Garden of Winter", true, new WorldPoint(3320, 3141, 0), false, SettingsRegion.KHARIDIAN_DESERT,
+		"This track unlocks in the Sorceress' Garden minigame.", Collections.emptyList())
 	;
 
 	@Getter

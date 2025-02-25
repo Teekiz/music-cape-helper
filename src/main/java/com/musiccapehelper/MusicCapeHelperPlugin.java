@@ -8,18 +8,14 @@ import com.musiccapehelper.data.MusicList;
 import com.musiccapehelper.data.MusicMapPoints;
 import com.musiccapehelper.data.MusicPanelRows;
 import com.musiccapehelper.enums.data.IconData;
-import com.musiccapehelper.enums.data.MusicData;
 import com.musiccapehelper.ui.map.MusicWorldMapPoint;
 import com.musiccapehelper.ui.panels.Panel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Arrays;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.events.WidgetLoaded;
@@ -64,7 +60,7 @@ public class MusicCapeHelperPlugin extends Plugin
 	private MusicList musicList;
 	private MusicPanelRows musicPanelRows;
 	private MusicHintArrow musicHintArrow;
-	private int completedCount = 0;
+	private boolean varpUpdated = false;
 
 	/*
 		Row Creation
@@ -164,42 +160,52 @@ public class MusicCapeHelperPlugin extends Plugin
 
 		musicList.updateGameMusicWidget(client.getWidget(239, 6).getChildren());
 		clientThread.invokeAtTickEnd(musicList::updateMusicList);
-		completedCount = musicList.getCompletedCount();
 	}
 
 	@Subscribe
 	public void onVarbitChanged(VarbitChanged varbitChanged)
 	{
-		//todo - this might not be updating because it occurs before the UI updates
-		log.info("MUSIC CAPE - VARBIT CHANGED " + varbitChanged.getVarpId());
 		//the game has not loaded the music list so an update cannot be performed (used just in case)
 		if (musicList.getGameMusicWidget() == null)
 		{
 			return;
 		}
-
 		log.info("MUSIC CAPE - VARBIT CHANGED - MUSIC LIST NOT NULL");
 
-		clientThread.invokeAtTickEnd(() ->
+		varpUpdated = true;
+	}
+
+	@Subscribe
+	public void onGameTick(GameTick gameTick)
+	{
+		if (varpUpdated)
 		{
-			musicList.getUpdatedTracks().forEach(music ->
+			//todo - doesn't update because music list doesnt update
+			log.info("musiccape - post client tick");
+
+			clientThread.invokeLater(() ->
 			{
-				if (config.removeArrowIfComplete() && musicHintArrow.getMusicHintArrow().equals(music))
+				log.info("musiccape - post client tick " + musicList.getUpdatedTracks().size());
+				musicList.getUpdatedTracks().forEach(music ->
 				{
-					//this unsets the music arrow
-					musicHintArrow.setHintArrow(music);
-					log.info("MusicCapeHelper - Arrow has been unset for " + music.getSongName());
-				}
+					if (config.removeArrowIfComplete() && musicHintArrow.getMusicHintArrow().equals(music))
+					{
+						//this unsets the music arrow
+						musicHintArrow.setHintArrow(music);
+						log.info("MusicCapeHelper - Arrow has been unset for " + music.getSongName());
+					}
 
-				if (config.removeMarkerIfComplete())
-				{
-					musicMapPoints.removeMapPoint(music);
-					log.info("MusicCapeHelper - Map marker has been unset for " + music.getSongName());
-				}
+					if (config.removeMarkerIfComplete())
+					{
+						musicMapPoints.removeMapPoint(music);
+						log.info("MusicCapeHelper - Map marker has been unset for " + music.getSongName());
+					}
 
-				musicList.updateMusicTrack(music);
+					musicList.updateMusicTrack(music);
+				});
 			});
-		});
+			varpUpdated = false;
+		}
 	}
 
 	public boolean isPlayerLoggedIn()
